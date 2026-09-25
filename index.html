@@ -431,7 +431,6 @@
           call:
 
               adOneDone();
-
         -->
 
         <button
@@ -471,7 +470,6 @@
           call:
 
               adTwoDone();
-
         -->
 
         <button
@@ -499,12 +497,20 @@
       </p>
 
 
+      <!--
+        IMPORTANT:
+
+        This link is handled by JavaScript.
+
+        It does NOT open the PDF in a new tab.
+        JavaScript fetches the PDF and creates
+        a local browser download.
+      -->
+
       <a
         id="download-link"
         class="btn btn-primary"
         href="#"
-        target="_blank"
-        rel="noopener"
       >
         Download PDF
       </a>
@@ -536,7 +542,6 @@
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZXFzbGd1ZXByc2Z5YXpwbHdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNDAwODEsImV4cCI6MjEwNTkxNjA4MX0.MlTBZj6BcoUtN_dDf_8xMtUF9G4Lk5iTPhRKEnaxuCY"
       .replace(/\s/g, "");
 
-
   const BUCKET = "pdfs";
 
 
@@ -545,7 +550,6 @@
   ===================================================== */
 
   let supabaseClient = null;
-
 
   try {
 
@@ -632,10 +636,6 @@
 
   async function loadFileList() {
 
-    /*
-      First check that Supabase loaded.
-    */
-
     if (!supabaseClient) {
 
       fileListEl.innerHTML = "";
@@ -655,10 +655,6 @@
     }
 
 
-    /*
-      Show loading state.
-    */
-
     fileListEl.innerHTML = "";
 
     const loading =
@@ -674,10 +670,6 @@
 
 
     try {
-
-      /*
-        Get PDF records from the files table.
-      */
 
       const result =
         await supabaseClient
@@ -706,10 +698,6 @@
       );
 
 
-      /*
-        Supabase error.
-      */
-
       if (error) {
 
         console.error(
@@ -735,16 +723,9 @@
       }
 
 
-      /*
-        EMPTY TABLE
-
-        This is what you requested.
-
-        If there are no rows in the files
-        table, simply say:
-
-        No PDFs yet.
-      */
+      /* =================================================
+         EMPTY TABLE
+      ================================================= */
 
       if (
         !data ||
@@ -768,16 +749,12 @@
       }
 
 
-      /*
-        Clear loading message.
-      */
-
       fileListEl.innerHTML = "";
 
 
-      /*
-        Create each PDF card.
-      */
+      /* =================================================
+         CREATE PDF CARDS
+      ================================================= */
 
       data.forEach(file => {
 
@@ -787,10 +764,6 @@
         card.className =
           "file-card";
 
-
-        /*
-          File information.
-        */
 
         const info =
           document.createElement("div");
@@ -822,10 +795,6 @@
         info.appendChild(meta);
 
 
-        /*
-          Get file button.
-        */
-
         const button =
           document.createElement("button");
 
@@ -849,12 +818,7 @@
         );
 
 
-        /*
-          Build card.
-        */
-
         card.appendChild(info);
-
         card.appendChild(button);
 
         fileListEl.appendChild(card);
@@ -893,18 +857,10 @@
 
   async function showDownload(fileId) {
 
-    /*
-      Switch views.
-    */
-
     listView.classList.remove("active");
 
     downloadView.classList.add("active");
 
-
-    /*
-      Update URL.
-    */
 
     history.replaceState(
       null,
@@ -914,16 +870,8 @@
     );
 
 
-    /*
-      Reset gate.
-    */
-
     resetGate();
 
-
-    /*
-      Reset file information.
-    */
 
     titleEl.textContent =
       "Loading PDF…";
@@ -936,8 +884,11 @@
 
 
     /*
-      Check Supabase.
+      Remove any previous download handler.
     */
+
+    downloadLink.onclick = null;
+
 
     if (!supabaseClient) {
 
@@ -954,10 +905,6 @@
 
 
     try {
-
-      /*
-        Get selected PDF record.
-      */
 
       const result =
         await supabaseClient
@@ -1002,17 +949,9 @@
       }
 
 
-      /*
-        Store current file.
-      */
-
       currentFile =
         data;
 
-
-      /*
-        Display information.
-      */
 
       titleEl.textContent =
         data.title ||
@@ -1022,10 +961,6 @@
         data.meta ||
         "";
 
-
-      /*
-        Check storage path.
-      */
 
       if (
         !data.storage_path
@@ -1044,9 +979,9 @@
       }
 
 
-      /*
-        Get public Supabase Storage URL.
-      */
+      /* =================================================
+         GET PUBLIC STORAGE URL
+      ================================================= */
 
       const storageResult =
         supabaseClient
@@ -1077,28 +1012,243 @@
       }
 
 
-      /*
-        Set download URL.
+      console.log(
+        "PDF URL:",
+        publicUrl
+      );
+
+
+      /* =================================================
+         DIRECT DOWNLOAD HANDLER
+      =================================================
+
+         Instead of navigating to the PDF URL,
+         we fetch the PDF as a Blob.
+
+         Then we create a temporary local URL
+         and tell the browser to download it.
       */
 
       downloadLink.href =
         publicUrl;
 
 
-      /*
-        Tell browser this is a download.
-      */
+      downloadLink.onclick =
+        async function(event) {
 
-      downloadLink.setAttribute(
-        "download",
-        ""
-      );
+          event.preventDefault();
 
 
-      console.log(
-        "PDF URL:",
-        publicUrl
-      );
+          if (
+            downloadLink.dataset.downloading === "true"
+          ) {
+
+            return;
+
+          }
+
+
+          downloadLink.dataset.downloading =
+            "true";
+
+
+          const originalText =
+            downloadLink.textContent;
+
+
+          downloadLink.textContent =
+            "Downloading…";
+
+
+          downloadLink.style.pointerEvents =
+            "none";
+
+
+          try {
+
+            console.log(
+              "Starting PDF download..."
+            );
+
+
+            const response =
+              await fetch(
+                publicUrl,
+                {
+                  method: "GET"
+                }
+              );
+
+
+            if (!response.ok) {
+
+              throw new Error(
+                "Could not download the PDF. HTTP status: " +
+                response.status
+              );
+
+            }
+
+
+            /*
+              Convert the response into
+              a real file Blob.
+            */
+
+            const blob =
+              await response.blob();
+
+
+            /*
+              Make sure the browser treats
+              the file as a PDF.
+            */
+
+            const pdfBlob =
+              new Blob(
+                [blob],
+                {
+                  type: "application/pdf"
+                }
+              );
+
+
+            /*
+              Create temporary local URL.
+            */
+
+            const blobUrl =
+              URL.createObjectURL(
+                pdfBlob
+              );
+
+
+            /*
+              Determine filename.
+            */
+
+            let filename =
+              data.title ||
+              "download";
+
+
+            /*
+              Remove characters that can
+              cause filename problems.
+            */
+
+            filename =
+              filename
+                .replace(
+                  /[\\/:*?"<>|]/g,
+                  "_"
+                )
+                .trim();
+
+
+            /*
+              Add .pdf if necessary.
+            */
+
+            if (
+              !filename
+                .toLowerCase()
+                .endsWith(".pdf")
+            ) {
+
+              filename += ".pdf";
+
+            }
+
+
+            /*
+              Create temporary download link.
+            */
+
+            const temporaryLink =
+              document.createElement("a");
+
+
+            temporaryLink.href =
+              blobUrl;
+
+            temporaryLink.download =
+              filename;
+
+            temporaryLink.style.display =
+              "none";
+
+
+            document.body.appendChild(
+              temporaryLink
+            );
+
+
+            /*
+              Trigger browser download.
+            */
+
+            temporaryLink.click();
+
+
+            /*
+              Remove temporary link.
+            */
+
+            temporaryLink.remove();
+
+
+            /*
+              Release temporary URL
+              after the browser has started
+              the download.
+            */
+
+            setTimeout(
+              function() {
+
+                URL.revokeObjectURL(
+                  blobUrl
+                );
+
+              },
+              10000
+            );
+
+
+            console.log(
+              "PDF download started:",
+              filename
+            );
+
+          } catch (error) {
+
+            console.error(
+              "PDF download error:",
+              error
+            );
+
+
+            alert(
+              "The PDF could not be downloaded.\n\n" +
+              "Please try again."
+            );
+
+          } finally {
+
+            downloadLink.dataset.downloading =
+              "false";
+
+            downloadLink.textContent =
+              originalText;
+
+            downloadLink.style.pointerEvents =
+              "";
+
+          }
+
+        };
+
 
     } catch (error) {
 
@@ -1161,6 +1311,10 @@
     continue2.textContent =
       "Continue";
 
+
+    downloadLink.dataset.downloading =
+      "false";
+
   }
 
 
@@ -1169,10 +1323,6 @@
   ===================================================== */
 
   function adOneDone() {
-
-    /*
-      Prevent duplicate calls.
-    */
 
     if (
       step1.classList.contains(
@@ -1216,10 +1366,6 @@
 
   function adTwoDone() {
 
-    /*
-      Prevent duplicate calls.
-    */
-
     if (
       step2.classList.contains(
         "hidden"
@@ -1248,17 +1394,6 @@
       "hidden"
     );
 
-
-    /*
-      DO NOT automatically click the
-      download link here.
-
-      The user taps Download PDF.
-
-      This is more reliable on mobile
-      browsers.
-    */
-
   }
 
 
@@ -1267,23 +1402,16 @@
   ===================================================== */
 
   /*
-    These are only for testing.
+    These are temporary.
 
-    When you connect your real Adsterra
-    system, replace these with the
-    appropriate ad flow.
-
-    STEP 1:
-      adOneDone();
-
-    STEP 2:
-      adTwoDone();
+    Replace these with your actual
+    Adsterra completion flow later.
   */
 
 
   continue1.addEventListener(
     "click",
-    function () {
+    function() {
 
       continue1.disabled =
         true;
@@ -1292,12 +1420,8 @@
         "Please wait…";
 
 
-      /*
-        TEMPORARY 2-second test.
-      */
-
       setTimeout(
-        function () {
+        function() {
 
           adOneDone();
 
@@ -1311,7 +1435,7 @@
 
   continue2.addEventListener(
     "click",
-    function () {
+    function() {
 
       continue2.disabled =
         true;
@@ -1320,12 +1444,8 @@
         "Please wait…";
 
 
-      /*
-        TEMPORARY 2-second test.
-      */
-
       setTimeout(
-        function () {
+        function() {
 
           adTwoDone();
 
@@ -1352,20 +1472,12 @@
     );
 
 
-    /*
-      Remove ?file= from URL.
-    */
-
     history.replaceState(
       null,
       "",
       window.location.pathname
     );
 
-
-    /*
-      Reload PDFs.
-    */
 
     loadFileList();
 
@@ -1388,11 +1500,6 @@
 
   async function init() {
 
-    /*
-      Check whether a specific PDF
-      was requested in the URL.
-    */
-
     const params =
       new URLSearchParams(
         window.location.search
@@ -1402,12 +1509,6 @@
     const initialFile =
       params.get("file");
 
-
-    /*
-      If ?file= exists, open that PDF.
-
-      Otherwise show the PDF list.
-    */
 
     if (initialFile) {
 
@@ -1424,9 +1525,9 @@
   }
 
 
-  /*
-    START WEBSITE
-  */
+  /* =====================================================
+     START WEBSITE
+  ===================================================== */
 
   init();
 
