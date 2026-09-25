@@ -384,7 +384,7 @@
 
       <p>
         <strong>Step 3:</strong>
-        Your PDF downloads automatically.
+        Download your PDF.
       </p>
 
     </div>
@@ -407,7 +407,9 @@
     </div>
 
 
-    <!-- STEP 1 -->
+    <!-- =================================================
+         STEP 1
+    ================================================== -->
 
     <div
       id="step-1"
@@ -418,20 +420,14 @@
         <strong>Step 1 of 2</strong>
       </p>
 
-
       <div
         class="ad-slot"
         id="ad-slot-1"
       >
 
-        <!--
-          PUT YOUR FIRST ADSTERRA AD CODE HERE.
-
-          When your ad flow is finished,
-          call:
-
-              adOneDone();
-        -->
+        <p>
+          Continue when you're ready.
+        </p>
 
         <button
           class="btn"
@@ -446,7 +442,9 @@
     </div>
 
 
-    <!-- STEP 2 -->
+    <!-- =================================================
+         STEP 2
+    ================================================== -->
 
     <div
       id="step-2"
@@ -457,20 +455,14 @@
         <strong>Step 2 of 2</strong>
       </p>
 
-
       <div
         class="ad-slot"
         id="ad-slot-2"
       >
 
-        <!--
-          PUT YOUR SECOND ADSTERRA AD CODE HERE.
-
-          When your ad flow is finished,
-          call:
-
-              adTwoDone();
-        -->
+        <p>
+          One more step before your download.
+        </p>
 
         <button
           class="btn"
@@ -485,7 +477,9 @@
     </div>
 
 
-    <!-- DOWNLOAD READY -->
+    <!-- =================================================
+         DOWNLOAD READY
+    ================================================== -->
 
     <div
       id="step-unlocked"
@@ -495,17 +489,6 @@
       <p class="unlocked-msg">
         Your download is ready.
       </p>
-
-
-      <!--
-        IMPORTANT:
-
-        This link is handled by JavaScript.
-
-        It does NOT open the PDF in a new tab.
-        JavaScript fetches the PDF and creates
-        a local browser download.
-      -->
 
       <a
         id="download-link"
@@ -523,10 +506,34 @@
 
 
 <!-- =====================================================
-     SUPABASE
+     SUPABASE LIBRARY
 ===================================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<!-- =====================================================
+     ADSTERRA POPUNDER
+     
+     Popunder_1
+     Ad unit: 31407820
+===================================================== -->
+
+<script
+  src="https://ransomescapesmooth.com/6f/e5/89/6fe58908592b91e45dcd56e4e7954e6a.js">
+</script>
+
+
+<!-- =====================================================
+     ADSTERRA SOCIAL BAR
+     
+     SocialBar_1
+     Ad unit: 31407821
+===================================================== -->
+
+<script
+  src="https://ransomescapesmooth.com/66/6c/b2/666cb2bc5ddd134b877fc8a3f37964be.js">
+</script>
 
 
 <script>
@@ -539,7 +546,7 @@
     "https://lleqslgueprsfyazplwk.supabase.co";
 
   const SUPABASE_ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZXFzbGd1ZXByc2Z5YXpwbHdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNDAwODEsImV4cCI6MjEwNTkxNjA4MX0.MlTBZj6BcoUtN_dDf_8xMtUF9G4Lk5iTPhRKEnaxuCY"
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJsbGVxc2xndWVwcnNmZWF6cGx3ayIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzkwMzQwMDgxLCJleHAiOjIxMDU5MTYwODh9.MlTBZj6BcoUtN_dDf_8xMtUF9G4Lk5iTPhRKEnaxuCY"
       .replace(/\s/g, "");
 
   const BUCKET = "pdfs";
@@ -725,7 +732,7 @@
 
       /* =================================================
          EMPTY TABLE
-      ================================================= */
+      ================================================== */
 
       if (
         !data ||
@@ -753,8 +760,8 @@
 
 
       /* =================================================
-         CREATE PDF CARDS
-      ================================================= */
+         CREATE FILE CARDS
+      ================================================== */
 
       data.forEach(file => {
 
@@ -882,12 +889,8 @@
     downloadLink.href =
       "#";
 
-
-    /*
-      Remove any previous download handler.
-    */
-
-    downloadLink.onclick = null;
+    downloadLink.onclick =
+      null;
 
 
     if (!supabaseClient) {
@@ -981,7 +984,7 @@
 
       /* =================================================
          GET PUBLIC STORAGE URL
-      ================================================= */
+      ================================================== */
 
       const storageResult =
         supabaseClient
@@ -1019,15 +1022,8 @@
 
 
       /* =================================================
-         DIRECT DOWNLOAD HANDLER
-      =================================================
-
-         Instead of navigating to the PDF URL,
-         we fetch the PDF as a Blob.
-
-         Then we create a temporary local URL
-         and tell the browser to download it.
-      */
+         DIRECT PDF DOWNLOAD
+      ================================================== */
 
       downloadLink.href =
         publicUrl;
@@ -1040,7 +1036,8 @@
 
 
           if (
-            downloadLink.dataset.downloading === "true"
+            downloadLink.dataset.downloading ===
+            "true"
           ) {
 
             return;
@@ -1066,11 +1063,6 @@
 
           try {
 
-            console.log(
-              "Starting PDF download..."
-            );
-
-
             const response =
               await fetch(
                 publicUrl,
@@ -1083,26 +1075,16 @@
             if (!response.ok) {
 
               throw new Error(
-                "Could not download the PDF. HTTP status: " +
+                "Download failed. HTTP status: " +
                 response.status
               );
 
             }
 
 
-            /*
-              Convert the response into
-              a real file Blob.
-            */
-
             const blob =
               await response.blob();
 
-
-            /*
-              Make sure the browser treats
-              the file as a PDF.
-            */
 
             const pdfBlob =
               new Blob(
@@ -1113,29 +1095,20 @@
               );
 
 
-            /*
-              Create temporary local URL.
-            */
-
             const blobUrl =
               URL.createObjectURL(
                 pdfBlob
               );
 
 
-            /*
-              Determine filename.
-            */
+            /* =============================================
+               CREATE SAFE FILENAME
+            ============================================== */
 
             let filename =
               data.title ||
               "download";
 
-
-            /*
-              Remove characters that can
-              cause filename problems.
-            */
 
             filename =
               filename
@@ -1145,10 +1118,6 @@
                 )
                 .trim();
 
-
-            /*
-              Add .pdf if necessary.
-            */
 
             if (
               !filename
@@ -1161,9 +1130,9 @@
             }
 
 
-            /*
-              Create temporary download link.
-            */
+            /* =============================================
+               TRIGGER DOWNLOAD
+            ============================================== */
 
             const temporaryLink =
               document.createElement("a");
@@ -1184,28 +1153,18 @@
             );
 
 
-            /*
-              Trigger browser download.
-            */
-
             temporaryLink.click();
 
-
-            /*
-              Remove temporary link.
-            */
 
             temporaryLink.remove();
 
 
-            /*
-              Release temporary URL
-              after the browser has started
-              the download.
-            */
+            /* =============================================
+               CLEAN UP
+            ============================================== */
 
             setTimeout(
-              function() {
+              () => {
 
                 URL.revokeObjectURL(
                   blobUrl
@@ -1217,7 +1176,7 @@
 
 
             console.log(
-              "PDF download started:",
+              "Download started:",
               filename
             );
 
@@ -1319,15 +1278,13 @@
 
 
   /* =====================================================
-     STEP 1 COMPLETE
+     STEP 1
   ===================================================== */
 
   function adOneDone() {
 
     if (
-      step1.classList.contains(
-        "hidden"
-      )
+      step1.classList.contains("hidden")
     ) {
 
       return;
@@ -1361,15 +1318,13 @@
 
 
   /* =====================================================
-     STEP 2 COMPLETE
+     STEP 2
   ===================================================== */
 
   function adTwoDone() {
 
     if (
-      step2.classList.contains(
-        "hidden"
-      )
+      step2.classList.contains("hidden")
     ) {
 
       return;
@@ -1398,16 +1353,12 @@
 
 
   /* =====================================================
-     TEMPORARY TEST BUTTONS
+     CONTINUE BUTTONS
+     
+     These control the website's two-step flow.
+     They do NOT claim that an advertisement was
+     completed or clicked.
   ===================================================== */
-
-  /*
-    These are temporary.
-
-    Replace these with your actual
-    Adsterra completion flow later.
-  */
-
 
   continue1.addEventListener(
     "click",
@@ -1420,13 +1371,19 @@
         "Please wait…";
 
 
+      /*
+        Small delay for the page transition.
+        The advertising scripts are independent
+        and manage their own behavior.
+      */
+
       setTimeout(
         function() {
 
           adOneDone();
 
         },
-        2000
+        1200
       );
 
     }
@@ -1450,7 +1407,7 @@
           adTwoDone();
 
         },
-        2000
+        1200
       );
 
     }
@@ -1458,7 +1415,7 @@
 
 
   /* =====================================================
-     SHOW FILE LIST
+     SHOW LIST
   ===================================================== */
 
   function showList() {
@@ -1526,7 +1483,7 @@
 
 
   /* =====================================================
-     START WEBSITE
+     START
   ===================================================== */
 
   init();
