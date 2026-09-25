@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Busy Brains</title>
+
+<style>
+  :root {
+    --stone: #1c1a17;
+    --clay: #a8623f;
+    --sand: #ece6da;
+    --line: #d8cfbe;
+    --ok: #2f6b4f;
+    --error: #9b3d32;
+
+    font-size: 16px;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--sand);
+    color: var(--stone);
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+  }
+
+  .wrap {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* HEADER */
+
+  .site-header {
+    border-bottom: 2px solid var(--stone);
+    padding: 18px 0;
+  }
+
+  .site-header .wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .logo {
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    color: var(--stone);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  /* INTRO */
+
+  .intro {
+    padding: 32px 0 16px;
+  }
+
+  .intro h1 {
+    font-size: 1.6rem;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .intro p {
+    color: #4d473d;
+  }
+
+  /* FILE LIST */
+
+  .file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 60px;
+  }
+
+  .file-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+
+    padding: 18px 20px;
+  }
+
+  .file-info {
+    min-width: 0;
+  }
+
+  .file-card h2 {
+    font-size: 1.05rem;
+    margin: 0 0 4px;
+    word-break: break-word;
+  }
+
+  .meta {
+    font-size: 0.85rem;
+    color: #7a725f;
+    margin: 0;
+  }
+
+  /* BUTTONS */
+
+  .btn {
+    display: inline-block;
+
+    background: var(--stone);
+    color: #fff;
+
+    text-decoration: none;
+
+    padding: 10px 18px;
+    border-radius: 7px;
+
+    font-weight: 600;
+    font-size: 0.9rem;
+
+    border: none;
+    cursor: pointer;
+
+    white-space: nowrap;
+  }
+
+  .btn:hover {
+    opacity: 0.9;
+  }
+
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .btn-primary {
+    background: var(--ok);
+  }
+
+  /* CARD */
+
+  .card {
+    margin: 48px 0;
+
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+
+    padding: 32px;
+
+    text-align: center;
+  }
+
+  .card h1 {
+    font-size: 1.3rem;
+    margin: 0 0 4px;
+  }
+
+  /* HOW TO */
+
+  .how-to {
+    text-align: left;
+
+    background: #fbf9f4;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+
+    padding: 16px 18px;
+    margin: 20px 0;
+  }
+
+  .how-to-title {
+    font-weight: 800;
+    margin: 0 0 8px;
+  }
+
+  .how-to p {
+    margin: 4px 0;
+    font-size: 0.92rem;
+  }
+
+  /* PROGRESS */
+
+  .progress {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: var(--line);
+  }
+
+  .dot.done {
+    background: var(--ok);
+  }
+
+  .dot.active {
+    background: var(--clay);
+  }
+
+  /* STEPS */
+
+  .step {
+    margin-top: 20px;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .ad-slot {
+    padding: 40px 20px;
+
+    border: 2px dashed var(--line);
+    border-radius: 10px;
+
+    background: #fbf9f4;
+  }
+
+  .step-label {
+    font-size: 0.85rem;
+    color: #7a725f;
+    margin-bottom: 10px;
+  }
+
+  .unlocked-msg {
+    color: var(--ok);
+    font-weight: 600;
+  }
+
+  /* STATUS */
+
+  .state-msg {
+    color: #7a725f;
+
+    padding: 30px 0;
+
+    text-align: center;
+  }
+
+  .error-msg {
+    color: var(--error);
+  }
+
+  .view {
+    display: none;
+  }
+
+  .view.active {
+    display: block;
+  }
+
+  /* MOBILE */
+
+  @media (max-width: 420px) {
+    .file-card {
+      align-items: flex-start;
+    }
+
+    .file-card .btn {
+      padding: 9px 13px;
+      font-size: 0.85rem;
+    }
+
+    .card {
+      padding: 24px 18px;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="site-header">
+
+  <div class="wrap">
+
+    <button
+      class="logo"
+      id="logo-button"
+      type="button"
+    >
+      Busy Brains
+    </button>
+
+  </div>
+
+</header>
+
+
+<!-- =====================================================
+     FILE LIST VIEW
+===================================================== -->
+
+<main
+  id="view-list"
+  class="view active wrap"
+>
+
+  <section class="intro">
+
+    <h1>Files</h1>
+
+    <p>Pick a file below.</p>
+
+  </section>
+
+
+  <section
+    class="file-list"
+    id="file-list"
+  >
+
+    <p class="state-msg">
+      Loading PDFs…
+    </p>
+
+  </section>
+
+</main>
+
+
+<!-- =====================================================
+     DOWNLOAD VIEW
+===================================================== -->
+
+<main
+  id="view-download"
+  class="view wrap"
+>
+
+  <section class="card">
+
+    <h1 id="file-title">
+      Loading PDF…
+    </h1>
+
+    <p
+      class="meta"
+      id="file-meta"
+    ></p>
+
+
+    <!-- HOW TO -->
+
+    <div class="how-to">
+
+      <p class="how-to-title">
+        How to download:
+      </p>
+
+      <p>
+        <strong>Step 1:</strong>
+        Tap Continue below.
+      </p>
+
+      <p>
+        <strong>Step 2:</strong>
+        Tap Continue again.
+      </p>
+
+      <p>
+        <strong>Step 3:</strong>
+        Your PDF downloads automatically.
+      </p>
+
+    </div>
+
+
+    <!-- PROGRESS -->
+
+    <div class="progress">
+
+      <span
+        class="dot active"
+        id="dot-1"
+      ></span>
+
+      <span
+        class="dot"
+        id="dot-2"
+      ></span>
+
+    </div>
+
+
+    <!-- STEP 1 -->
+
+    <div
+      id="step-1"
+      class="step"
+    >
+
+      <p class="step-label">
+        <strong>Step 1 of 2</strong>
+      </p>
+
+
+      <div
+        class="ad-slot"
+        id="ad-slot-1"
+      >
+
+        <!--
+          PUT YOUR FIRST ADSTERRA AD CODE HERE.
+
+          When your ad flow is finished,
+          call:
+
+              adOneDone();
+
+        -->
+
+        <button
+          class="btn"
+          id="continue-1"
+          type="button"
+        >
+          Continue
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- STEP 2 -->
+
+    <div
+      id="step-2"
+      class="step hidden"
+    >
+
+      <p class="step-label">
+        <strong>Step 2 of 2</strong>
+      </p>
+
+
+      <div
+        class="ad-slot"
+        id="ad-slot-2"
+      >
+
+        <!--
+          PUT YOUR SECOND ADSTERRA AD CODE HERE.
+
+          When your ad flow is finished,
+          call:
+
+              adTwoDone();
+
+        -->
+
+        <button
+          class="btn"
+          id="continue-2"
+          type="button"
+        >
+          Continue
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- DOWNLOAD READY -->
+
+    <div
+      id="step-unlocked"
+      class="step hidden"
+    >
+
+      <p class="unlocked-msg">
+        Your download is ready.
+      </p>
+
+
+      <a
+        id="download-link"
+        class="btn btn-primary"
+        href="#"
+        target="_blank"
+        rel="noopener"
+      >
+        Download PDF
+      </a>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<!-- =====================================================
+     SUPABASE
+===================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+  /* =====================================================
+     SUPABASE CONFIGURATION
+  ===================================================== */
+
+  const SUPABASE_URL =
+    "https://lleqslgueprsfyazplwk.supabase.co";
+
+  const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJsbGVxc2xndWVwcnNm eWF6cGx3ayIsInJvbGUiOiJhbm9uIiwiaWF0IjoxNzkwMzQwMDgxLCJleHAiOjIxMDU5MTYwODh9.MlTBZj6BcoUtN_dDf_8xMtUF9G4Lk5iTPhRKEnaxuCY"
+      .replace(/\s/g, "");
+
+
+  const BUCKET = "pdfs";
+
+
+  /* =====================================================
+     CREATE SUPABASE CLIENT
+  ===================================================== */
+
+  let supabaseClient = null;
+
+
+  try {
+
+    if (
+      window.supabase &&
+      typeof window.supabase.createClient === "function"
+    ) {
+
+      supabaseClient =
+        window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_ANON_KEY
+        );
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Supabase initialization error:",
+      error
+    );
+
+  }
+
+
+  /* =====================================================
+     ELEMENTS
+  ===================================================== */
+
+  const listView =
+    document.getElementById("view-list");
+
+  const downloadView =
+    document.getElementById("view-download");
+
+  const fileListEl =
+    document.getElementById("file-list");
+
+  const titleEl =
+    document.getElementById("file-title");
+
+  const metaEl =
+    document.getElementById("file-meta");
+
+  const downloadLink =
+    document.getElementById("download-link");
+
+  const step1 =
+    document.getElementById("step-1");
+
+  const step2 =
+    document.getElementById("step-2");
+
+  const stepUnlocked =
+    document.getElementById("step-unlocked");
+
+  const dot1 =
+    document.getElementById("dot-1");
+
+  const dot2 =
+    document.getElementById("dot-2");
+
+  const continue1 =
+    document.getElementById("continue-1");
+
+  const continue2 =
+    document.getElementById("continue-2");
+
+  const logoButton =
+    document.getElementById("logo-button");
+
+
+  /* =====================================================
+     CURRENT FILE
+  ===================================================== */
+
+  let currentFile = null;
+
+
+  /* =====================================================
+     LOAD PDF LIST
+  ===================================================== */
+
+  async function loadFileList() {
+
+    /*
+      First check that Supabase loaded.
+    */
+
+    if (!supabaseClient) {
+
+      fileListEl.innerHTML = "";
+
+      const message =
+        document.createElement("p");
+
+      message.className =
+        "state-msg error-msg";
+
+      message.textContent =
+        "Supabase could not be initialized.";
+
+      fileListEl.appendChild(message);
+
+      return;
+    }
+
+
+    /*
+      Show loading state.
+    */
+
+    fileListEl.innerHTML = "";
+
+    const loading =
+      document.createElement("p");
+
+    loading.className =
+      "state-msg";
+
+    loading.textContent =
+      "Loading PDFs…";
+
+    fileListEl.appendChild(loading);
+
+
+    try {
+
+      /*
+        Get PDF records from the files table.
+      */
+
+      const result =
+        await supabaseClient
+          .from("files")
+          .select(
+            "id, title, meta, storage_path"
+          )
+          .order(
+            "created_at",
+            {
+              ascending: false
+            }
+          );
+
+
+      const data =
+        result.data;
+
+      const error =
+        result.error;
+
+
+      console.log(
+        "Supabase files result:",
+        result
+      );
+
+
+      /*
+        Supabase error.
+      */
+
+      if (error) {
+
+        console.error(
+          "Supabase error:",
+          error
+        );
+
+        fileListEl.innerHTML = "";
+
+        const message =
+          document.createElement("p");
+
+        message.className =
+          "state-msg error-msg";
+
+        message.textContent =
+          "Couldn't load PDFs: " +
+          error.message;
+
+        fileListEl.appendChild(message);
+
+        return;
+      }
+
+
+      /*
+        EMPTY TABLE
+
+        This is what you requested.
+
+        If there are no rows in the files
+        table, simply say:
+
+        No PDFs yet.
+      */
+
+      if (
+        !data ||
+        data.length === 0
+      ) {
+
+        fileListEl.innerHTML = "";
+
+        const message =
+          document.createElement("p");
+
+        message.className =
+          "state-msg";
+
+        message.textContent =
+          "No PDFs yet.";
+
+        fileListEl.appendChild(message);
+
+        return;
+      }
+
+
+      /*
+        Clear loading message.
+      */
+
+      fileListEl.innerHTML = "";
+
+
+      /*
+        Create each PDF card.
+      */
+
+      data.forEach(file => {
+
+        const card =
+          document.createElement("article");
+
+        card.className =
+          "file-card";
+
+
+        /*
+          File information.
+        */
+
+        const info =
+          document.createElement("div");
+
+        info.className =
+          "file-info";
+
+
+        const title =
+          document.createElement("h2");
+
+        title.textContent =
+          file.title ||
+          "Untitled PDF";
+
+
+        const meta =
+          document.createElement("p");
+
+        meta.className =
+          "meta";
+
+        meta.textContent =
+          file.meta ||
+          "";
+
+
+        info.appendChild(title);
+        info.appendChild(meta);
+
+
+        /*
+          Get file button.
+        */
+
+        const button =
+          document.createElement("button");
+
+        button.className =
+          "btn";
+
+        button.type =
+          "button";
+
+        button.textContent =
+          "Get file";
+
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            showDownload(file.id);
+
+          }
+        );
+
+
+        /*
+          Build card.
+        */
+
+        card.appendChild(info);
+
+        card.appendChild(button);
+
+        fileListEl.appendChild(card);
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Unexpected error:",
+        error
+      );
+
+
+      fileListEl.innerHTML = "";
+
+      const message =
+        document.createElement("p");
+
+      message.className =
+        "state-msg error-msg";
+
+      message.textContent =
+        "Something went wrong while loading the PDFs.";
+
+      fileListEl.appendChild(message);
+
+    }
+
+  }
+
+
+  /* =====================================================
+     SHOW DOWNLOAD PAGE
+  ===================================================== */
+
+  async function showDownload(fileId) {
+
+    /*
+      Switch views.
+    */
+
+    listView.classList.remove("active");
+
+    downloadView.classList.add("active");
+
+
+    /*
+      Update URL.
+    */
+
+    history.replaceState(
+      null,
+      "",
+      "?file=" +
+      encodeURIComponent(fileId)
+    );
+
+
+    /*
+      Reset gate.
+    */
+
+    resetGate();
+
+
+    /*
+      Reset file information.
+    */
+
+    titleEl.textContent =
+      "Loading PDF…";
+
+    metaEl.textContent =
+      "";
+
+    downloadLink.href =
+      "#";
+
+
+    /*
+      Check Supabase.
+    */
+
+    if (!supabaseClient) {
+
+      titleEl.textContent =
+        "Connection error";
+
+      metaEl.textContent =
+        "Supabase could not be initialized.";
+
+      step1.classList.add("hidden");
+
+      return;
+    }
+
+
+    try {
+
+      /*
+        Get selected PDF record.
+      */
+
+      const result =
+        await supabaseClient
+          .from("files")
+          .select(
+            "id, title, meta, storage_path"
+          )
+          .eq(
+            "id",
+            fileId
+          )
+          .single();
+
+
+      const data =
+        result.data;
+
+      const error =
+        result.error;
+
+
+      if (
+        error ||
+        !data
+      ) {
+
+        console.error(
+          "File lookup error:",
+          error
+        );
+
+
+        titleEl.textContent =
+          "PDF not found";
+
+        metaEl.textContent =
+          "Go back and choose another PDF.";
+
+        step1.classList.add("hidden");
+
+        return;
+      }
+
+
+      /*
+        Store current file.
+      */
+
+      currentFile =
+        data;
+
+
+      /*
+        Display information.
+      */
+
+      titleEl.textContent =
+        data.title ||
+        "Untitled PDF";
+
+      metaEl.textContent =
+        data.meta ||
+        "";
+
+
+      /*
+        Check storage path.
+      */
+
+      if (
+        !data.storage_path
+      ) {
+
+        titleEl.textContent =
+          data.title ||
+          "PDF";
+
+        metaEl.textContent =
+          "This PDF does not have a storage path configured.";
+
+        step1.classList.add("hidden");
+
+        return;
+      }
+
+
+      /*
+        Get public Supabase Storage URL.
+      */
+
+      const storageResult =
+        supabaseClient
+          .storage
+          .from(BUCKET)
+          .getPublicUrl(
+            data.storage_path
+          );
+
+
+      const publicUrl =
+        storageResult
+          .data
+          .publicUrl;
+
+
+      if (!publicUrl) {
+
+        titleEl.textContent =
+          "Download unavailable";
+
+        metaEl.textContent =
+          "Could not create the PDF URL.";
+
+        step1.classList.add("hidden");
+
+        return;
+      }
+
+
+      /*
+        Set download URL.
+      */
+
+      downloadLink.href =
+        publicUrl;
+
+
+      /*
+        Tell browser this is a download.
+      */
+
+      downloadLink.setAttribute(
+        "download",
+        ""
+      );
+
+
+      console.log(
+        "PDF URL:",
+        publicUrl
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Download page error:",
+        error
+      );
+
+
+      titleEl.textContent =
+        "Error loading PDF";
+
+      metaEl.textContent =
+        error.message ||
+        "Something went wrong.";
+
+      step1.classList.add("hidden");
+
+    }
+
+  }
+
+
+  /* =====================================================
+     RESET GATE
+  ===================================================== */
+
+  function resetGate() {
+
+    step1.classList.remove(
+      "hidden"
+    );
+
+    step2.classList.add(
+      "hidden"
+    );
+
+    stepUnlocked.classList.add(
+      "hidden"
+    );
+
+
+    dot1.className =
+      "dot active";
+
+    dot2.className =
+      "dot";
+
+
+    continue1.disabled =
+      false;
+
+    continue1.textContent =
+      "Continue";
+
+
+    continue2.disabled =
+      false;
+
+    continue2.textContent =
+      "Continue";
+
+  }
+
+
+  /* =====================================================
+     STEP 1 COMPLETE
+  ===================================================== */
+
+  function adOneDone() {
+
+    /*
+      Prevent duplicate calls.
+    */
+
+    if (
+      step1.classList.contains(
+        "hidden"
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    dot1.classList.remove(
+      "active"
+    );
+
+    dot1.classList.add(
+      "done"
+    );
+
+
+    dot2.classList.add(
+      "active"
+    );
+
+
+    step1.classList.add(
+      "hidden"
+    );
+
+    step2.classList.remove(
+      "hidden"
+    );
+
+  }
+
+
+  /* =====================================================
+     STEP 2 COMPLETE
+  ===================================================== */
+
+  function adTwoDone() {
+
+    /*
+      Prevent duplicate calls.
+    */
+
+    if (
+      step2.classList.contains(
+        "hidden"
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    dot2.classList.remove(
+      "active"
+    );
+
+    dot2.classList.add(
+      "done"
+    );
+
+
+    step2.classList.add(
+      "hidden"
+    );
+
+    stepUnlocked.classList.remove(
+      "hidden"
+    );
+
+
+    /*
+      DO NOT automatically click the
+      download link here.
+
+      The user taps Download PDF.
+
+      This is more reliable on mobile
+      browsers.
+    */
+
+  }
+
+
+  /* =====================================================
+     TEMPORARY TEST BUTTONS
+  ===================================================== */
+
+  /*
+    These are only for testing.
+
+    When you connect your real Adsterra
+    system, replace these with the
+    appropriate ad flow.
+
+    STEP 1:
+      adOneDone();
+
+    STEP 2:
+      adTwoDone();
+  */
+
+
+  continue1.addEventListener(
+    "click",
+    function () {
+
+      continue1.disabled =
+        true;
+
+      continue1.textContent =
+        "Please wait…";
+
+
+      /*
+        TEMPORARY 2-second test.
+      */
+
+      setTimeout(
+        function () {
+
+          adOneDone();
+
+        },
+        2000
+      );
+
+    }
+  );
+
+
+  continue2.addEventListener(
+    "click",
+    function () {
+
+      continue2.disabled =
+        true;
+
+      continue2.textContent =
+        "Please wait…";
+
+
+      /*
+        TEMPORARY 2-second test.
+      */
+
+      setTimeout(
+        function () {
+
+          adTwoDone();
+
+        },
+        2000
+      );
+
+    }
+  );
+
+
+  /* =====================================================
+     SHOW FILE LIST
+  ===================================================== */
+
+  function showList() {
+
+    downloadView.classList.remove(
+      "active"
+    );
+
+    listView.classList.add(
+      "active"
+    );
+
+
+    /*
+      Remove ?file= from URL.
+    */
+
+    history.replaceState(
+      null,
+      "",
+      window.location.pathname
+    );
+
+
+    /*
+      Reload PDFs.
+    */
+
+    loadFileList();
+
+  }
+
+
+  /* =====================================================
+     LOGO BUTTON
+  ===================================================== */
+
+  logoButton.addEventListener(
+    "click",
+    showList
+  );
+
+
+  /* =====================================================
+     INITIALIZATION
+  ===================================================== */
+
+  async function init() {
+
+    /*
+      Check whether a specific PDF
+      was requested in the URL.
+    */
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+
+    const initialFile =
+      params.get("file");
+
+
+    /*
+      If ?file= exists, open that PDF.
+
+      Otherwise show the PDF list.
+    */
+
+    if (initialFile) {
+
+      await showDownload(
+        initialFile
+      );
+
+    } else {
+
+      await loadFileList();
+
+    }
+
+  }
+
+
+  /*
+    START WEBSITE
+  */
+
+  init();
+
+</script>
+
+</body>
+</html>
