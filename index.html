@@ -1,815 +1,746 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Busy Brains</title>
-
-<style>
-  :root {
-    --stone: #1c1a17;
-    --clay: #a8623f;
-    --sand: #ece6da;
-    --line: #d8cfbe;
-    --ok: #2f6b4f;
-    --error: #9b3d32;
-
-    font-size: 16px;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0;
-    background: var(--sand);
-    color: var(--stone);
-    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
-    line-height: 1.5;
-  }
-
-  .wrap {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
-
-  /* HEADER */
-
-  .site-header {
-    border-bottom: 2px solid var(--stone);
-    padding: 18px 0;
-  }
-
-  .site-header .wrap {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-  }
-
-  .logo {
-    font-weight: 800;
-    font-size: 1.2rem;
-    letter-spacing: -0.02em;
-    color: var(--stone);
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-  }
-
-  /* INTRO */
-
-  .intro {
-    padding: 32px 0 16px;
-  }
-
-  .intro h1 {
-    font-size: 1.6rem;
-    margin: 0 0 8px;
-    letter-spacing: -0.02em;
-  }
-
-  .intro p {
-    color: #4d473d;
-  }
-
-  /* FILE LIST */
-
-  .file-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding-bottom: 60px;
-  }
-
-  .file-card {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 10px;
-
-    padding: 18px 20px;
-  }
-
-  .file-info {
-    min-width: 0;
-  }
-
-  .file-card h2 {
-    font-size: 1.05rem;
-    margin: 0 0 4px;
-    word-break: break-word;
-  }
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Busy Brains</title>
+
+  <style>
+    :root {
+      --stone: #1c1a17;
+      --muted: #716b62;
+      --sand: #ece6da;
+      --card: #f7f3eb;
+      --clay: #a8623f;
+      --green: #2f6b4f;
+      --red: #9b3d32;
+      --border: #d8d0c2;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--sand);
+      color: var(--stone);
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    h1 {
+      font-size: 25px;
+      margin: 0 0 8px;
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 0 0 10px;
+    }
+
+    p {
+      line-height: 1.5;
+    }
+
+    .intro {
+      color: var(--muted);
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    /* PDF cards */
+
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
 
-  .meta {
-    font-size: 0.85rem;
-    color: #7a725f;
-    margin: 0;
-  }
-
-  /* BUTTONS */
-
-  .btn {
-    display: inline-block;
-
-    background: var(--stone);
-    color: #fff;
-
-    text-decoration: none;
-
-    padding: 10px 18px;
-    border-radius: 7px;
-
-    font-weight: 600;
-    font-size: 0.9rem;
-
-    border: none;
-    cursor: pointer;
-
-    white-space: nowrap;
-  }
-
-  .btn:hover {
-    opacity: 0.9;
-  }
-
-  .btn:disabled {
-    opacity: 0.6;
-    cursor: default;
-  }
-
-  .btn-primary {
-    background: var(--ok);
-  }
-
-  /* CARD */
-
-  .card {
-    margin: 48px 0;
-
-    background: #fff;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-
-    padding: 32px;
-
-    text-align: center;
-  }
-
-  .card h1 {
-    font-size: 1.3rem;
-    margin: 0 0 4px;
-  }
-
-  /* HOW TO */
-
-  .how-to {
-    text-align: left;
-
-    background: #fbf9f4;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-
-    padding: 16px 18px;
-    margin: 20px 0;
-  }
-
-  .how-to-title {
-    font-weight: 800;
-    margin: 0 0 8px;
-  }
-
-  .how-to p {
-    margin: 4px 0;
-    font-size: 0.92rem;
-  }
-
-  /* PROGRESS */
-
-  .progress {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-
-  .dot {
-    width: 8px;
-    height: 8px;
-
-    border-radius: 50%;
-
-    background: var(--line);
-  }
-
-  .dot.done {
-    background: var(--ok);
-  }
-
-  .dot.active {
-    background: var(--clay);
-  }
-
-  /* STEPS */
-
-  .step {
-    margin-top: 20px;
-  }
-
-  .hidden {
-    display: none !important;
-  }
-
-  .ad-slot {
-    padding: 40px 20px;
-
-    border: 2px dashed var(--line);
-    border-radius: 10px;
-
-    background: #fbf9f4;
-  }
-
-  .step-label {
-    font-size: 0.85rem;
-    color: #7a725f;
-    margin-bottom: 10px;
-  }
-
-  .unlocked-msg {
-    color: var(--ok);
-    font-weight: 600;
-  }
-
-  /* STATUS */
-
-  .state-msg {
-    color: #7a725f;
-
-    padding: 30px 0;
-
-    text-align: center;
-  }
-
-  .error-msg {
-    color: var(--error);
-  }
-
-  .view {
-    display: none;
-  }
-
-  .view.active {
-    display: block;
-  }
-
-  /* MOBILE */
-
-  @media (max-width: 420px) {
     .file-card {
-      align-items: flex-start;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
     }
 
-    .file-card .btn {
-      padding: 9px 13px;
-      font-size: 0.85rem;
+    .file-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      word-break: break-word;
     }
 
-    .card {
-      padding: 24px 18px;
+    .file-meta {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 14px;
     }
-  }
-</style>
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 48px;
+      border-radius: 12px;
+      border: 0;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--clay);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--stone);
+      border: 1px solid var(--border);
+      margin-top: 10px;
+    }
+
+    /* Ads */
+
+    .ad-box {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+
+    .banner-ad {
+      min-height: 50px;
+    }
+
+    .native-ad {
+      min-height: 100px;
+    }
+
+    /* Empty state */
+
+    .empty {
+      padding: 30px 15px;
+      text-align: center;
+      color: var(--muted);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    /* Download page */
+
+    .download-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .download-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 5px;
+      word-break: break-word;
+    }
+
+    .download-meta {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .instructions {
+      background: #eee7da;
+      border-radius: 14px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+
+    .instructions-title {
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .instructions ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .instructions li {
+      margin-bottom: 7px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Steps */
+
+    .steps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      margin: 20px 0;
+    }
+
+    .step-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+    }
+
+    .step-dot.active {
+      background: var(--clay);
+    }
+
+    .step-dot.done {
+      background: var(--green);
+    }
+
+    .gate-step {
+      display: none;
+    }
+
+    .gate-step.active {
+      display: block;
+    }
+
+    .step-text {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .ready {
+      display: none;
+      text-align: center;
+    }
+
+    .ready.active {
+      display: block;
+    }
+
+    .ready-icon {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: #dce9df;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+      font-size: 25px;
+      font-weight: 800;
+    }
+
+    .ready p {
+      color: var(--muted);
+    }
+
+    .loading {
+      text-align: center;
+      color: var(--muted);
+      padding: 30px 10px;
+    }
+
+    .error {
+      color: var(--red);
+      background: #f4dfdc;
+      border-radius: 12px;
+      padding: 14px;
+      line-height: 1.4;
+    }
+
+    footer {
+      margin-top: 35px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
+  <div class="app">
 
-<header class="site-header">
+    <header>
+      <div>
+        <div class="logo">Busy Brains</div>
+        <div class="subtitle">Study smarter</div>
+      </div>
+    </header>
 
-  <div class="wrap">
 
-    <button
-      class="logo"
-      id="logo-button"
-      type="button"
-    >
+    <!-- =========================
+         FILE LIST SCREEN
+    ========================== -->
+
+    <section id="list-screen" class="screen active">
+
+      <h1>PDF Library</h1>
+
+      <p class="intro">
+        Find study materials and download the PDFs you need.
+      </p>
+
+
+      <!-- 320x50 BANNER -->
+
+      <div class="ad-box banner-ad">
+
+        <script>
+          atOptions = {
+            'key' : '232ed7b82026d98d03cefffdaacb5d80',
+            'format' : 'iframe',
+            'height' : 50,
+            'width' : 320,
+            'params' : {}
+          };
+        </script>
+
+        <script
+          src="https://ransomescapesmooth.com/232ed7b82026d98d03cefffdaacb5d80/invoke.js">
+        </script>
+
+      </div>
+
+
+      <div id="file-list" class="file-list">
+
+        <div class="loading">
+          Loading PDFs…
+        </div>
+
+      </div>
+
+
+      <!-- NATIVE BANNER -->
+
+      <div class="ad-box native-ad">
+
+        <script
+          async="async"
+          data-cfasync="false"
+          src="https://ransomescapesmooth.com/2aaa6d636939a9cc6825010316fd8ca6/invoke.js">
+        </script>
+
+        <div
+          id="container-2aaa6d636939a9cc6825010316fd8ca6">
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         DOWNLOAD SCREEN
+    ========================== -->
+
+    <section id="download-screen" class="screen">
+
+      <div class="download-card">
+
+        <div
+          id="download-title"
+          class="download-title">
+          PDF
+        </div>
+
+        <div
+          id="download-meta"
+          class="download-meta">
+        </div>
+
+
+        <div class="instructions">
+
+          <div class="instructions-title">
+            How to download
+          </div>
+
+          <ol>
+            <li>Tap Continue below.</li>
+            <li>Tap Continue again.</li>
+            <li>Download your PDF.</li>
+          </ol>
+
+        </div>
+
+
+        <!-- Progress dots -->
+
+        <div class="steps">
+
+          <div
+            id="dot-1"
+            class="step-dot active">
+          </div>
+
+          <div
+            id="dot-2"
+            class="step-dot">
+          </div>
+
+          <div
+            id="dot-3"
+            class="step-dot">
+          </div>
+
+        </div>
+
+
+        <!-- STEP 1 -->
+
+        <div
+          id="step-1"
+          class="gate-step active">
+
+          <p class="step-text">
+            Continue when you're ready.
+          </p>
+
+          <button
+            id="continue-1"
+            class="btn btn-primary">
+            Continue
+          </button>
+
+        </div>
+
+
+        <!-- STEP 2 -->
+
+        <div
+          id="step-2"
+          class="gate-step">
+
+          <p class="step-text">
+            One more step before your download.
+          </p>
+
+          <button
+            id="continue-2"
+            class="btn btn-primary">
+            Continue
+          </button>
+
+        </div>
+
+
+        <!-- READY -->
+
+        <div
+          id="ready"
+          class="ready">
+
+          <div class="ready-icon">
+            ✓
+          </div>
+
+          <h2>
+            Your download is ready
+          </h2>
+
+          <p>
+            Tap the button below to download your PDF.
+          </p>
+
+          <a
+            id="download-link"
+            class="btn btn-primary"
+            href="#">
+            Download PDF
+          </a>
+
+        </div>
+
+
+        <button
+          id="back-button"
+          class="btn btn-secondary">
+          Back to PDFs
+        </button>
+
+      </div>
+
+
+      <!-- Banner on download page -->
+
+      <div class="ad-box banner-ad">
+
+        <script>
+          atOptions = {
+            'key' : '232ed7b82026d98d03cefffdaacb5d80',
+            'format' : 'iframe',
+            'height' : 50,
+            'width' : 320,
+            'params' : {}
+          };
+        </script>
+
+        <script
+          src="https://ransomescapesmooth.com/232ed7b82026d98d03cefffdaacb5d80/invoke.js">
+        </script>
+
+      </div>
+
+
+      <!-- Native Banner -->
+
+      <div class="ad-box native-ad">
+
+        <script
+          async="async"
+          data-cfasync="false"
+          src="https://ransomescapesmooth.com/2aaa6d636939a9cc6825010316fd8ca6/invoke.js">
+        </script>
+
+        <div
+          id="container-2aaa6d636939a9cc6825010316fd8ca6">
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <footer>
       Busy Brains
-    </button>
+    </footer>
 
   </div>
 
-</header>
 
+  <!-- Supabase -->
 
-<!-- =====================================================
-     FILE LIST VIEW
-===================================================== -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<main
-  id="view-list"
-  class="view active wrap"
->
 
-  <section class="intro">
+  <script>
 
-    <h1>Files</h1>
+    /* =========================
+       SUPABASE
+    ========================== */
 
-    <p>Pick a file below.</p>
+    const SUPABASE_URL =
+      "https://lleqslgueprsfyazplwk.supabase.co";
 
-  </section>
-
-
-  <section
-    class="file-list"
-    id="file-list"
-  >
-
-    <p class="state-msg">
-      Loading PDFs…
-    </p>
-
-  </section>
-
-</main>
-
-
-<!-- =====================================================
-     DOWNLOAD VIEW
-===================================================== -->
-
-<main
-  id="view-download"
-  class="view wrap"
->
-
-  <section class="card">
-
-    <h1 id="file-title">
-      Loading PDF…
-    </h1>
-
-    <p
-      class="meta"
-      id="file-meta"
-    ></p>
-
-
-    <!-- HOW TO -->
-
-    <div class="how-to">
-
-      <p class="how-to-title">
-        How to download:
-      </p>
-
-      <p>
-        <strong>Step 1:</strong>
-        Tap Continue below.
-      </p>
-
-      <p>
-        <strong>Step 2:</strong>
-        Tap Continue again.
-      </p>
-
-      <p>
-        <strong>Step 3:</strong>
-        Download your PDF.
-      </p>
-
-    </div>
-
-
-    <!-- PROGRESS -->
-
-    <div class="progress">
-
-      <span
-        class="dot active"
-        id="dot-1"
-      ></span>
-
-      <span
-        class="dot"
-        id="dot-2"
-      ></span>
-
-    </div>
-
-
-    <!-- =================================================
-         STEP 1
-    ================================================== -->
-
-    <div
-      id="step-1"
-      class="step"
-    >
-
-      <p class="step-label">
-        <strong>Step 1 of 2</strong>
-      </p>
-
-      <div
-        class="ad-slot"
-        id="ad-slot-1"
-      >
-
-        <p>
-          Continue when you're ready.
-        </p>
-
-        <button
-          class="btn"
-          id="continue-1"
-          type="button"
-        >
-          Continue
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <!-- =================================================
-         STEP 2
-    ================================================== -->
-
-    <div
-      id="step-2"
-      class="step hidden"
-    >
-
-      <p class="step-label">
-        <strong>Step 2 of 2</strong>
-      </p>
-
-      <div
-        class="ad-slot"
-        id="ad-slot-2"
-      >
-
-        <p>
-          One more step before your download.
-        </p>
-
-        <button
-          class="btn"
-          id="continue-2"
-          type="button"
-        >
-          Continue
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <!-- =================================================
-         DOWNLOAD READY
-    ================================================== -->
-
-    <div
-      id="step-unlocked"
-      class="step hidden"
-    >
-
-      <p class="unlocked-msg">
-        Your download is ready.
-      </p>
-
-      <a
-        id="download-link"
-        class="btn btn-primary"
-        href="#"
-      >
-        Download PDF
-      </a>
-
-    </div>
-
-  </section>
-
-</main>
-
-
-<!-- =====================================================
-     SUPABASE LIBRARY
-===================================================== -->
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-
-<!-- =====================================================
-     ADSTERRA POPUNDER
-     
-     Popunder_1
-     Ad unit: 31407820
-===================================================== -->
-
-<script
-  src="https://ransomescapesmooth.com/6f/e5/89/6fe58908592b91e45dcd56e4e7954e6a.js">
-</script>
-
-
-<!-- =====================================================
-     ADSTERRA SOCIAL BAR
-     
-     SocialBar_1
-     Ad unit: 31407821
-===================================================== -->
-
-<script
-  src="https://ransomescapesmooth.com/66/6c/b2/666cb2bc5ddd134b877fc8a3f37964be.js">
-</script>
-
-
-<script>
-
-  /* =====================================================
-     SUPABASE CONFIGURATION
-  ===================================================== */
-
-  const SUPABASE_URL =
-    "https://lleqslgueprsfyazplwk.supabase.co";
-
-  const SUPABASE_ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZXFzbGd1ZXByc2Z5YXpwbHdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNDAwODEsImV4cCI6MjEwNTkxNjA4MX0.MlTBZj6BcoUtN_dDf_8xMtUF9G4Lk5iTPhRKEnaxuCY"
+    const SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZXFzbGd1ZXByc2Z5YXpwbHdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNDAwODEsImV4cCI6MjEwNTkxNjA4MX0.MlTBZj6BcoUtN_dDf_8xMtUF9G4Lk5iTPhRKEnaxuCY"
       .replace(/\s/g, "");
 
-  const BUCKET = "pdfs";
+    const BUCKET = "pdfs";
 
-
-  /* =====================================================
-     CREATE SUPABASE CLIENT
-  ===================================================== */
-
-  let supabaseClient = null;
-
-  try {
-
-    if (
-      window.supabase &&
-      typeof window.supabase.createClient === "function"
-    ) {
-
-      supabaseClient =
-        window.supabase.createClient(
-          SUPABASE_URL,
-          SUPABASE_ANON_KEY
-        );
-
-    }
-
-  } catch (error) {
-
-    console.error(
-      "Supabase initialization error:",
-      error
-    );
-
-  }
-
-
-  /* =====================================================
-     ELEMENTS
-  ===================================================== */
-
-  const listView =
-    document.getElementById("view-list");
-
-  const downloadView =
-    document.getElementById("view-download");
-
-  const fileListEl =
-    document.getElementById("file-list");
-
-  const titleEl =
-    document.getElementById("file-title");
-
-  const metaEl =
-    document.getElementById("file-meta");
-
-  const downloadLink =
-    document.getElementById("download-link");
-
-  const step1 =
-    document.getElementById("step-1");
-
-  const step2 =
-    document.getElementById("step-2");
-
-  const stepUnlocked =
-    document.getElementById("step-unlocked");
-
-  const dot1 =
-    document.getElementById("dot-1");
-
-  const dot2 =
-    document.getElementById("dot-2");
-
-  const continue1 =
-    document.getElementById("continue-1");
-
-  const continue2 =
-    document.getElementById("continue-2");
-
-  const logoButton =
-    document.getElementById("logo-button");
-
-
-  /* =====================================================
-     CURRENT FILE
-  ===================================================== */
-
-  let currentFile = null;
-
-
-  /* =====================================================
-     LOAD PDF LIST
-  ===================================================== */
-
-  async function loadFileList() {
-
-    if (!supabaseClient) {
-
-      fileListEl.innerHTML = "";
-
-      const message =
-        document.createElement("p");
-
-      message.className =
-        "state-msg error-msg";
-
-      message.textContent =
-        "Supabase could not be initialized.";
-
-      fileListEl.appendChild(message);
-
-      return;
-    }
-
-
-    fileListEl.innerHTML = "";
-
-    const loading =
-      document.createElement("p");
-
-    loading.className =
-      "state-msg";
-
-    loading.textContent =
-      "Loading PDFs…";
-
-    fileListEl.appendChild(loading);
-
-
-    try {
-
-      const result =
-        await supabaseClient
-          .from("files")
-          .select(
-            "id, title, meta, storage_path"
-          )
-          .order(
-            "created_at",
-            {
-              ascending: false
-            }
-          );
-
-
-      const data =
-        result.data;
-
-      const error =
-        result.error;
-
-
-      console.log(
-        "Supabase files result:",
-        result
+    const supabaseClient =
+      window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
       );
+
+
+    /* =========================
+       ELEMENTS
+    ========================== */
+
+    const listScreen =
+      document.getElementById("list-screen");
+
+    const downloadScreen =
+      document.getElementById("download-screen");
+
+    const fileList =
+      document.getElementById("file-list");
+
+    const downloadTitle =
+      document.getElementById("download-title");
+
+    const downloadMeta =
+      document.getElementById("download-meta");
+
+    const step1 =
+      document.getElementById("step-1");
+
+    const step2 =
+      document.getElementById("step-2");
+
+    const ready =
+      document.getElementById("ready");
+
+    const dot1 =
+      document.getElementById("dot-1");
+
+    const dot2 =
+      document.getElementById("dot-2");
+
+    const dot3 =
+      document.getElementById("dot-3");
+
+    const continue1 =
+      document.getElementById("continue-1");
+
+    const continue2 =
+      document.getElementById("continue-2");
+
+    const downloadLink =
+      document.getElementById("download-link");
+
+    const backButton =
+      document.getElementById("back-button");
+
+
+    let currentFile = null;
+
+
+    /* =========================
+       LOAD PDF LIST
+    ========================== */
+
+    async function loadFiles() {
+
+      fileList.innerHTML =
+        '<div class="loading">Loading PDFs…</div>';
+
+      const {
+        data,
+        error
+      } = await supabaseClient
+        .from("files")
+        .select(
+          "id, title, meta, storage_path"
+        )
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        );
 
 
       if (error) {
 
         console.error(
-          "Supabase error:",
+          "Supabase files error:",
           error
         );
 
-        fileListEl.innerHTML = "";
-
-        const message =
-          document.createElement("p");
-
-        message.className =
-          "state-msg error-msg";
-
-        message.textContent =
-          "Couldn't load PDFs: " +
-          error.message;
-
-        fileListEl.appendChild(message);
+        fileList.innerHTML = `
+          <div class="error">
+            Could not load the PDFs.
+            <br><br>
+            Please try again later.
+          </div>
+        `;
 
         return;
       }
 
 
-      /* =================================================
-         EMPTY TABLE
-      ================================================== */
+      if (!data || data.length === 0) {
 
-      if (
-        !data ||
-        data.length === 0
-      ) {
-
-        fileListEl.innerHTML = "";
-
-        const message =
-          document.createElement("p");
-
-        message.className =
-          "state-msg";
-
-        message.textContent =
-          "No PDFs yet.";
-
-        fileListEl.appendChild(message);
+        fileList.innerHTML = `
+          <div class="empty">
+            No PDFs yet.
+          </div>
+        `;
 
         return;
       }
 
 
-      fileListEl.innerHTML = "";
+      fileList.innerHTML = "";
 
 
-      /* =================================================
-         CREATE FILE CARDS
-      ================================================== */
-
-      data.forEach(file => {
+      data.forEach(function(file) {
 
         const card =
-          document.createElement("article");
-
-        card.className =
-          "file-card";
-
-
-        const info =
           document.createElement("div");
 
-        info.className =
-          "file-info";
+        card.className = "file-card";
 
 
         const title =
-          document.createElement("h2");
+          document.createElement("div");
+
+        title.className = "file-title";
 
         title.textContent =
-          file.title ||
-          "Untitled PDF";
+          file.title || "Untitled PDF";
 
 
         const meta =
-          document.createElement("p");
+          document.createElement("div");
 
-        meta.className =
-          "meta";
+        meta.className = "file-meta";
 
         meta.textContent =
-          file.meta ||
-          "";
-
-
-        info.appendChild(title);
-        info.appendChild(meta);
+          file.meta || "PDF document";
 
 
         const button =
           document.createElement("button");
 
         button.className =
-          "btn";
-
-        button.type =
-          "button";
+          "btn btn-primary";
 
         button.textContent =
           "Get file";
@@ -817,7 +748,7 @@
 
         button.addEventListener(
           "click",
-          () => {
+          function() {
 
             showDownload(file.id);
 
@@ -825,670 +756,384 @@
         );
 
 
-        card.appendChild(info);
+        card.appendChild(title);
+        card.appendChild(meta);
         card.appendChild(button);
 
-        fileListEl.appendChild(card);
+        fileList.appendChild(card);
 
       });
 
-    } catch (error) {
+    }
 
-      console.error(
-        "Unexpected error:",
+
+    /* =========================
+       SHOW DOWNLOAD SCREEN
+    ========================== */
+
+    async function showDownload(fileId) {
+
+      const {
+        data,
         error
-      );
+      } = await supabaseClient
+        .from("files")
+        .select(
+          "id, title, meta, storage_path"
+        )
+        .eq("id", fileId)
+        .single();
 
 
-      fileListEl.innerHTML = "";
-
-      const message =
-        document.createElement("p");
-
-      message.className =
-        "state-msg error-msg";
-
-      message.textContent =
-        "Something went wrong while loading the PDFs.";
-
-      fileListEl.appendChild(message);
-
-    }
-
-  }
-
-
-  /* =====================================================
-     SHOW DOWNLOAD PAGE
-  ===================================================== */
-
-  async function showDownload(fileId) {
-
-    listView.classList.remove("active");
-
-    downloadView.classList.add("active");
-
-
-    history.replaceState(
-      null,
-      "",
-      "?file=" +
-      encodeURIComponent(fileId)
-    );
-
-
-    resetGate();
-
-
-    titleEl.textContent =
-      "Loading PDF…";
-
-    metaEl.textContent =
-      "";
-
-    downloadLink.href =
-      "#";
-
-    downloadLink.onclick =
-      null;
-
-
-    if (!supabaseClient) {
-
-      titleEl.textContent =
-        "Connection error";
-
-      metaEl.textContent =
-        "Supabase could not be initialized.";
-
-      step1.classList.add("hidden");
-
-      return;
-    }
-
-
-    try {
-
-      const result =
-        await supabaseClient
-          .from("files")
-          .select(
-            "id, title, meta, storage_path"
-          )
-          .eq(
-            "id",
-            fileId
-          )
-          .single();
-
-
-      const data =
-        result.data;
-
-      const error =
-        result.error;
-
-
-      if (
-        error ||
-        !data
-      ) {
+      if (error || !data) {
 
         console.error(
-          "File lookup error:",
+          "File loading error:",
           error
         );
 
-
-        titleEl.textContent =
-          "PDF not found";
-
-        metaEl.textContent =
-          "Go back and choose another PDF.";
-
-        step1.classList.add("hidden");
+        alert(
+          "This PDF could not be loaded."
+        );
 
         return;
       }
 
 
-      currentFile =
-        data;
+      currentFile = data;
 
 
-      titleEl.textContent =
-        data.title ||
-        "Untitled PDF";
-
-      metaEl.textContent =
-        data.meta ||
-        "";
+      downloadTitle.textContent =
+        data.title || "PDF";
 
 
-      if (
-        !data.storage_path
-      ) {
+      downloadMeta.textContent =
+        data.meta || "PDF document";
 
-        titleEl.textContent =
-          data.title ||
-          "PDF";
 
-        metaEl.textContent =
-          "This PDF does not have a storage path configured.";
+      resetGate();
 
-        step1.classList.add("hidden");
 
-        return;
+      listScreen.classList.remove("active");
+
+      downloadScreen.classList.add("active");
+
+      window.scrollTo(0, 0);
+
+    }
+
+
+    /* =========================
+       RESET DOWNLOAD GATE
+    ========================== */
+
+    function resetGate() {
+
+      step1.classList.add("active");
+      step2.classList.remove("active");
+      ready.classList.remove("active");
+
+
+      dot1.classList.add("active");
+      dot1.classList.remove("done");
+
+      dot2.classList.remove("active");
+      dot2.classList.remove("done");
+
+      dot3.classList.remove("active");
+      dot3.classList.remove("done");
+
+
+      continue1.disabled = false;
+      continue1.textContent = "Continue";
+
+      continue2.disabled = false;
+      continue2.textContent = "Continue";
+
+
+      downloadLink.dataset.downloading =
+        "false";
+
+    }
+
+
+    /* =========================
+       STEP 1
+    ========================== */
+
+    continue1.addEventListener(
+      "click",
+      function() {
+
+        continue1.disabled = true;
+        continue1.textContent =
+          "Please wait…";
+
+
+        setTimeout(
+          function() {
+
+            step1.classList.remove("active");
+            step2.classList.add("active");
+
+
+            dot1.classList.remove("active");
+            dot1.classList.add("done");
+
+
+            dot2.classList.add("active");
+
+          },
+          1200
+        );
+
       }
+    );
 
 
-      /* =================================================
-         GET PUBLIC STORAGE URL
-      ================================================== */
+    /* =========================
+       STEP 2
+    ========================== */
 
-      const storageResult =
-        supabaseClient
-          .storage
-          .from(BUCKET)
-          .getPublicUrl(
-            data.storage_path
+    continue2.addEventListener(
+      "click",
+      function() {
+
+        continue2.disabled = true;
+        continue2.textContent =
+          "Please wait…";
+
+
+        setTimeout(
+          function() {
+
+            step2.classList.remove("active");
+            ready.classList.add("active");
+
+
+            dot2.classList.remove("active");
+            dot2.classList.add("done");
+
+
+            dot3.classList.add("active");
+
+          },
+          1200
+        );
+
+      }
+    );
+
+
+    /* =========================
+       DOWNLOAD PDF
+    ========================== */
+
+    downloadLink.addEventListener(
+      "click",
+      async function(event) {
+
+        event.preventDefault();
+
+
+        if (
+          !currentFile ||
+          !currentFile.storage_path
+        ) {
+
+          alert(
+            "The PDF file is unavailable."
           );
 
-
-      const publicUrl =
-        storageResult
-          .data
-          .publicUrl;
+          return;
+        }
 
 
-      if (!publicUrl) {
+        if (
+          downloadLink.dataset.downloading ===
+          "true"
+        ) {
 
-        titleEl.textContent =
-          "Download unavailable";
+          return;
 
-        metaEl.textContent =
-          "Could not create the PDF URL.";
-
-        step1.classList.add("hidden");
-
-        return;
-      }
+        }
 
 
-      console.log(
-        "PDF URL:",
-        publicUrl
-      );
+        downloadLink.dataset.downloading =
+          "true";
 
 
-      /* =================================================
-         DIRECT PDF DOWNLOAD
-      ================================================== */
-
-      downloadLink.href =
-        publicUrl;
+        const originalText =
+          downloadLink.textContent;
 
 
-      downloadLink.onclick =
-        async function(event) {
+        downloadLink.textContent =
+          "Downloading…";
 
-          event.preventDefault();
+
+        downloadLink.style.pointerEvents =
+          "none";
+
+
+        try {
+
+          /*
+           * Use Supabase Storage directly.
+           */
+
+          const {
+            data: blob,
+            error
+          } =
+            await supabaseClient.storage
+              .from(BUCKET)
+              .download(
+                currentFile.storage_path
+              );
+
+
+          if (error) {
+
+            throw error;
+
+          }
+
+
+          if (!blob) {
+
+            throw new Error(
+              "No PDF data was returned."
+            );
+
+          }
+
+
+          const blobUrl =
+            URL.createObjectURL(blob);
+
+
+          let filename =
+            currentFile.title ||
+            "download";
+
+
+          filename =
+            filename
+              .replace(
+                /[\\/:*?"<>|]/g,
+                "_"
+              )
+              .trim();
 
 
           if (
-            downloadLink.dataset.downloading ===
-            "true"
+            !filename
+              .toLowerCase()
+              .endsWith(".pdf")
           ) {
 
-            return;
+            filename += ".pdf";
 
           }
 
 
-          downloadLink.dataset.downloading =
-            "true";
+          const temporaryLink =
+            document.createElement("a");
 
 
-          const originalText =
-            downloadLink.textContent;
+          temporaryLink.href =
+            blobUrl;
 
+          temporaryLink.download =
+            filename;
 
-          downloadLink.textContent =
-            "Downloading…";
-
-
-          downloadLink.style.pointerEvents =
+          temporaryLink.style.display =
             "none";
 
 
-          try {
+          document.body.appendChild(
+            temporaryLink
+          );
 
-            const response =
-              await fetch(
-                publicUrl,
-                {
-                  method: "GET"
-                }
+
+          temporaryLink.click();
+
+
+          temporaryLink.remove();
+
+
+          setTimeout(
+            function() {
+
+              URL.revokeObjectURL(
+                blobUrl
               );
 
-
-            if (!response.ok) {
-
-              throw new Error(
-                "Download failed. HTTP status: " +
-                response.status
-              );
-
-            }
+            },
+            10000
+          );
 
 
-            const blob =
-              await response.blob();
+        } catch (error) {
+
+          console.error(
+            "PDF download error:",
+            error
+          );
 
 
-            const pdfBlob =
-              new Blob(
-                [blob],
-                {
-                  type: "application/pdf"
-                }
-              );
+          alert(
+            "The PDF could not be downloaded.\n\nPlease try again."
+          );
 
+        } finally {
 
-            const blobUrl =
-              URL.createObjectURL(
-                pdfBlob
-              );
+          downloadLink.dataset.downloading =
+            "false";
 
+          downloadLink.textContent =
+            originalText;
 
-            /* =============================================
-               CREATE SAFE FILENAME
-            ============================================== */
+          downloadLink.style.pointerEvents =
+            "";
 
-            let filename =
-              data.title ||
-              "download";
+        }
 
-
-            filename =
-              filename
-                .replace(
-                  /[\\/:*?"<>|]/g,
-                  "_"
-                )
-                .trim();
-
-
-            if (
-              !filename
-                .toLowerCase()
-                .endsWith(".pdf")
-            ) {
-
-              filename += ".pdf";
-
-            }
-
-
-            /* =============================================
-               TRIGGER DOWNLOAD
-            ============================================== */
-
-            const temporaryLink =
-              document.createElement("a");
-
-
-            temporaryLink.href =
-              blobUrl;
-
-            temporaryLink.download =
-              filename;
-
-            temporaryLink.style.display =
-              "none";
-
-
-            document.body.appendChild(
-              temporaryLink
-            );
-
-
-            temporaryLink.click();
-
-
-            temporaryLink.remove();
-
-
-            /* =============================================
-               CLEAN UP
-            ============================================== */
-
-            setTimeout(
-              () => {
-
-                URL.revokeObjectURL(
-                  blobUrl
-                );
-
-              },
-              10000
-            );
-
-
-            console.log(
-              "Download started:",
-              filename
-            );
-
-          } catch (error) {
-
-            console.error(
-              "PDF download error:",
-              error
-            );
-
-
-            alert(
-              "The PDF could not be downloaded.\n\n" +
-              "Please try again."
-            );
-
-          } finally {
-
-            downloadLink.dataset.downloading =
-              "false";
-
-            downloadLink.textContent =
-              originalText;
-
-            downloadLink.style.pointerEvents =
-              "";
-
-          }
-
-        };
-
-
-    } catch (error) {
-
-      console.error(
-        "Download page error:",
-        error
-      );
-
-
-      titleEl.textContent =
-        "Error loading PDF";
-
-      metaEl.textContent =
-        error.message ||
-        "Something went wrong.";
-
-      step1.classList.add("hidden");
-
-    }
-
-  }
-
-
-  /* =====================================================
-     RESET GATE
-  ===================================================== */
-
-  function resetGate() {
-
-    step1.classList.remove(
-      "hidden"
-    );
-
-    step2.classList.add(
-      "hidden"
-    );
-
-    stepUnlocked.classList.add(
-      "hidden"
+      }
     );
 
 
-    dot1.className =
-      "dot active";
+    /* =========================
+       BACK BUTTON
+    ========================== */
 
-    dot2.className =
-      "dot";
+    backButton.addEventListener(
+      "click",
+      function() {
 
+        downloadScreen.classList.remove(
+          "active"
+        );
 
-    continue1.disabled =
-      false;
+        listScreen.classList.add(
+          "active"
+        );
 
-    continue1.textContent =
-      "Continue";
+        currentFile = null;
 
+        window.scrollTo(0, 0);
 
-    continue2.disabled =
-      false;
-
-    continue2.textContent =
-      "Continue";
-
-
-    downloadLink.dataset.downloading =
-      "false";
-
-  }
-
-
-  /* =====================================================
-     STEP 1
-  ===================================================== */
-
-  function adOneDone() {
-
-    if (
-      step1.classList.contains("hidden")
-    ) {
-
-      return;
-
-    }
-
-
-    dot1.classList.remove(
-      "active"
-    );
-
-    dot1.classList.add(
-      "done"
+      }
     );
 
 
-    dot2.classList.add(
-      "active"
-    );
+    /* =========================
+       START
+    ========================== */
 
+    loadFiles();
 
-    step1.classList.add(
-      "hidden"
-    );
-
-    step2.classList.remove(
-      "hidden"
-    );
-
-  }
-
-
-  /* =====================================================
-     STEP 2
-  ===================================================== */
-
-  function adTwoDone() {
-
-    if (
-      step2.classList.contains("hidden")
-    ) {
-
-      return;
-
-    }
-
-
-    dot2.classList.remove(
-      "active"
-    );
-
-    dot2.classList.add(
-      "done"
-    );
-
-
-    step2.classList.add(
-      "hidden"
-    );
-
-    stepUnlocked.classList.remove(
-      "hidden"
-    );
-
-  }
-
-
-  /* =====================================================
-     CONTINUE BUTTONS
-     
-     These control the website's two-step flow.
-     They do NOT claim that an advertisement was
-     completed or clicked.
-  ===================================================== */
-
-  continue1.addEventListener(
-    "click",
-    function() {
-
-      continue1.disabled =
-        true;
-
-      continue1.textContent =
-        "Please wait…";
-
-
-      /*
-        Small delay for the page transition.
-        The advertising scripts are independent
-        and manage their own behavior.
-      */
-
-      setTimeout(
-        function() {
-
-          adOneDone();
-
-        },
-        1200
-      );
-
-    }
-  );
-
-
-  continue2.addEventListener(
-    "click",
-    function() {
-
-      continue2.disabled =
-        true;
-
-      continue2.textContent =
-        "Please wait…";
-
-
-      setTimeout(
-        function() {
-
-          adTwoDone();
-
-        },
-        1200
-      );
-
-    }
-  );
-
-
-  /* =====================================================
-     SHOW LIST
-  ===================================================== */
-
-  function showList() {
-
-    downloadView.classList.remove(
-      "active"
-    );
-
-    listView.classList.add(
-      "active"
-    );
-
-
-    history.replaceState(
-      null,
-      "",
-      window.location.pathname
-    );
-
-
-    loadFileList();
-
-  }
-
-
-  /* =====================================================
-     LOGO BUTTON
-  ===================================================== */
-
-  logoButton.addEventListener(
-    "click",
-    showList
-  );
-
-
-  /* =====================================================
-     INITIALIZATION
-  ===================================================== */
-
-  async function init() {
-
-    const params =
-      new URLSearchParams(
-        window.location.search
-      );
-
-
-    const initialFile =
-      params.get("file");
-
-
-    if (initialFile) {
-
-      await showDownload(
-        initialFile
-      );
-
-    } else {
-
-      await loadFileList();
-
-    }
-
-  }
-
-
-  /* =====================================================
-     START
-  ===================================================== */
-
-  init();
-
-</script>
+  </script>
 
 </body>
 </html>
