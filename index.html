@@ -2,10 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Busy Brains</title>
 
@@ -41,10 +38,7 @@
       margin: 0;
       background: var(--sand);
       color: var(--stone);
-      font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
     }
 
     button,
@@ -140,7 +134,7 @@
     }
 
     /* =========================
-       INTRO
+       HERO
     ========================= */
 
     .hero {
@@ -164,7 +158,27 @@
     }
 
     /* =========================
-       SECTION
+       ADS
+    ========================= */
+
+    .ad-container {
+      width: 100%;
+      max-width: 100%;
+      margin: 15px 0;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .banner-ad {
+      min-height: 50px;
+    }
+
+    .native-ad {
+      min-height: 80px;
+    }
+
+    /* =========================
+       SECTIONS
     ========================= */
 
     .section {
@@ -190,7 +204,7 @@
     }
 
     /* =========================
-       WASSCE FEATURE
+       WASSCE TRIAL PAPERS
     ========================= */
 
     .trial-section {
@@ -217,36 +231,7 @@
     }
 
     /* =========================
-       FILTER
-    ========================= */
-
-    .filter-row {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 15px;
-      overflow-x: auto;
-      padding-bottom: 3px;
-    }
-
-    .filter-btn {
-      flex: 0 0 auto;
-      border: 1px solid var(--border);
-      background: var(--white);
-      color: var(--stone);
-      border-radius: 20px;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .filter-btn.active {
-      background: var(--clay);
-      border-color: var(--clay);
-      color: white;
-    }
-
-    /* =========================
-       PDF CARD
+       PDF LIST
     ========================= */
 
     .pdf-list {
@@ -535,12 +520,7 @@
       font-size: 12px;
     }
 
-    /* =========================
-       MOBILE
-    ========================= */
-
     @media (max-width: 360px) {
-
       .brand {
         font-size: 24px;
       }
@@ -552,7 +532,6 @@
       .subject-grid {
         grid-template-columns: 1fr;
       }
-
     }
   </style>
 </head>
@@ -588,9 +567,7 @@
 
         <div class="search-wrap">
 
-          <span class="search-icon">
-            ⌕
-          </span>
+          <span class="search-icon">⌕</span>
 
           <input
             id="searchInput"
@@ -605,7 +582,7 @@
       </div>
 
 
-      <!-- INTRO -->
+      <!-- HERO -->
 
       <section class="hero">
 
@@ -620,6 +597,48 @@
         </p>
 
       </section>
+
+
+      <!-- =================================================
+           320x50 AD
+           ================================================= -->
+
+      <div class="ad-container banner-ad">
+
+        <script>
+          atOptions = {
+            'key' : '232ed7b82026d98d03cefffdaacb5d80',
+            'format' : 'iframe',
+            'height' : 50,
+            'width' : 320,
+            'params' : {}
+          };
+        </script>
+
+        <script
+          src="https://ransomescapesmooth.com/232ed7b82026d98d03cefffdaacb5d80/invoke.js">
+        </script>
+
+      </div>
+
+
+      <!-- =================================================
+           NATIVE BANNER
+           ================================================= -->
+
+      <div class="ad-container native-ad">
+
+        <script
+          async="async"
+          data-cfasync="false"
+          src="https://ransomescapesmooth.com/2aaa6d636939a9cc6825010316fd8ca6/invoke.js">
+        </script>
+
+        <div
+          id="container-2aaa6d636939a9cc6825010316fd8ca6">
+        </div>
+
+      </div>
 
 
       <!-- WASSCE TRIAL PAPERS -->
@@ -744,7 +763,7 @@
       </section>
 
 
-      <!-- GLOBAL ERROR -->
+      <!-- ERROR -->
 
       <div
         id="errorBox"
@@ -794,11 +813,30 @@
 
     <div class="download-main">
 
+      <!-- DOWNLOAD PAGE 320x50 AD -->
+
+      <div class="ad-container banner-ad">
+
+        <script>
+          atOptions = {
+            'key' : '232ed7b82026d98d03cefffdaacb5d80',
+            'format' : 'iframe',
+            'height' : 50,
+            'width' : 320,
+            'params' : {}
+          };
+        </script>
+
+        <script
+          src="https://ransomescapesmooth.com/232ed7b82026d98d03cefffdaacb5d80/invoke.js">
+        </script>
+
+      </div>
+
+
       <div class="download-card">
 
-        <h2
-          id="downloadTitle"
-        >
+        <h2 id="downloadTitle">
           PDF
         </h2>
 
@@ -827,8 +865,8 @@
           id="downloadMessage"
           class="download-message"
         >
-          Your file is ready. Continue to the
-          download step.
+          Your file is ready.
+          Continue to the download step.
         </div>
 
 
@@ -855,27 +893,45 @@
 
       </div>
 
+
+      <!-- DOWNLOAD PAGE NATIVE BANNER -->
+
+      <div class="ad-container native-ad">
+
+        <script
+          async="async"
+          data-cfasync="false"
+          src="https://ransomescapesmooth.com/2aaa6d636939a9cc6825010316fd8ca6/invoke.js">
+        </script>
+
+        <div
+          id="container-download-native">
+        </div>
+
+      </div>
+
     </div>
 
   </div>
 
 
 <script>
+
 /* =========================================================
-   SUPABASE CONFIG
+   SUPABASE CONFIGURATION
    ========================================================= */
 
 const SUPABASE_URL =
-  "https://welffszyuonqjdhoprxu.supabase.co";
+  "https://lleqslgueprsfyazplwk.supabase.co";
 
 const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ3ZWxmc3p5dW9ucWpkaG9wcnh1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNzQyNjksImV4cCI6MjEwNTk1MDI2OX0.D8zoTo_kKke-nwL3fQG0vk_Ccf1WrqDOgmh0_Vq6TL4";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZXFzbGd1ZXByc2Z5YXpwbHdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNDAwODEsImV4cCI6MjEwNTkxNjA4MX0.MlTBZj6BcoUtN_dDf_8xMtUF9G4Lk5iTPhRKEnaxuCY";
 
 const BUCKET = "pdfs";
 
 
 /* =========================================================
-   SUPABASE
+   SUPABASE CLIENT
    ========================================================= */
 
 const supabaseClient =
@@ -993,16 +1049,20 @@ function escapeHtml(value) {
 }
 
 
-function formatDate(dateValue) {
+function formatDate(value) {
 
-  if (!dateValue) {
+  if (!value) {
     return "";
   }
 
   const date =
-    new Date(dateValue);
+    new Date(value);
 
-  if (Number.isNaN(date.getTime())) {
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
     return "";
   }
 
@@ -1061,7 +1121,7 @@ function hideError() {
 
 
 /* =========================================================
-   LOAD PDFS
+   LOAD FILES
    ========================================================= */
 
 async function loadFiles() {
@@ -1069,25 +1129,28 @@ async function loadFiles() {
   hideError();
 
   recentList.innerHTML =
-    `<div class="loading">
-      Loading PDFs...
-    </div>`;
+    `
+      <div class="loading">
+        Loading PDFs...
+      </div>
+    `;
 
 
   const {
     data,
     error
-  } = await supabaseClient
-    .from("files")
-    .select(
-      "id, title, subject, type, meta, storage_path, created_at"
-    )
-    .order(
-      "created_at",
-      {
-        ascending: false
-      }
-    );
+  } =
+    await supabaseClient
+      .from("files")
+      .select(
+        "id, title, subject, type, meta, storage_path, created_at"
+      )
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
 
 
   if (error) {
@@ -1097,15 +1160,20 @@ async function loadFiles() {
       error
     );
 
+
     recentList.innerHTML =
-      `<div class="empty">
-        Could not load PDFs.
-      </div>`;
+      `
+        <div class="empty">
+          Could not load PDFs.
+        </div>
+      `;
+
 
     showError(
       "Could not connect to the Busy Brains PDF library: " +
       error.message
     );
+
 
     return;
 
@@ -1117,6 +1185,35 @@ async function loadFiles() {
 
 
   renderHome();
+
+}
+
+
+/* =========================================================
+   TRIAL PAPER DETECTION
+   ========================================================= */
+
+function isTrialPaper(file) {
+
+  const type =
+    String(
+      file.type || ""
+    ).toLowerCase();
+
+
+  const title =
+    String(
+      file.title || ""
+    ).toLowerCase();
+
+
+  return (
+    type.includes("trial") ||
+    title.includes("trial paper") ||
+    title.includes("trial papers") ||
+    title.includes("wassce-style") ||
+    title.includes("wassce style")
+  );
 
 }
 
@@ -1162,33 +1259,6 @@ function renderHome() {
 
 
 /* =========================================================
-   TRIAL PAPER DETECTION
-   ========================================================= */
-
-function isTrialPaper(file) {
-
-  const type =
-    String(
-      file.type || ""
-    ).toLowerCase();
-
-  const title =
-    String(
-      file.title || ""
-    ).toLowerCase();
-
-  return (
-    type.includes("trial") ||
-    title.includes("trial paper") ||
-    title.includes("trial papers") ||
-    title.includes("wassce-style") ||
-    title.includes("wassce style")
-  );
-
-}
-
-
-/* =========================================================
    RENDER TRIAL PAPERS
    ========================================================= */
 
@@ -1220,8 +1290,7 @@ function renderTrialPapers(files) {
       .map(
         file =>
           createPdfCard(
-            file,
-            true
+            file
           )
       )
       .join("");
@@ -1242,9 +1311,11 @@ function renderRecent(files) {
   if (!files.length) {
 
     recentList.innerHTML =
-      `<div class="empty">
-        No PDFs yet.
-      </div>`;
+      `
+        <div class="empty">
+          No PDFs yet.
+        </div>
+      `;
 
     return;
 
@@ -1256,8 +1327,7 @@ function renderRecent(files) {
       .map(
         file =>
           createPdfCard(
-            file,
-            false
+            file
           )
       )
       .join("");
@@ -1266,13 +1336,10 @@ function renderRecent(files) {
 
 
 /* =========================================================
-   CREATE PDF CARD
+   PDF CARD
    ========================================================= */
 
-function createPdfCard(
-  file,
-  darkMode
-) {
+function createPdfCard(file) {
 
   const description =
     file.meta
@@ -1282,18 +1349,26 @@ function createPdfCard(
 
   const subject =
     file.subject
-      ? `<span class="tag">
-          ${escapeHtml(file.subject)}
-         </span>`
-      : "";
+      ?
+        `
+          <span class="tag">
+            ${escapeHtml(file.subject)}
+          </span>
+        `
+      :
+        "";
 
 
   const type =
     file.type
-      ? `<span class="tag">
-          ${escapeHtml(file.type)}
-         </span>`
-      : "";
+      ?
+        `
+          <span class="tag">
+            ${escapeHtml(file.type)}
+          </span>
+        `
+      :
+        "";
 
 
   const date =
@@ -1402,12 +1477,14 @@ function renderSubjects() {
               class="subject-button"
               data-subject="${escapeHtml(subject)}"
             >
+
               ${escapeHtml(subject)}
 
               <small>
                 ${counts[subject]}
                 ${counts[subject] === 1 ? "PDF" : "PDFs"}
               </small>
+
             </button>
           `
       )
@@ -1470,12 +1547,6 @@ searchInput.addEventListener(
       "hidden"
     );
 
-    document
-      .querySelector(
-        ".section:not(#searchSection)"
-      );
-
-
     searchSection.classList.remove(
       "hidden"
     );
@@ -1488,10 +1559,12 @@ searchInput.addEventListener(
     if (!results.length) {
 
       searchList.innerHTML =
-        `<div class="empty">
-          No PDFs found for
-          "${escapeHtml(query)}".
-        </div>`;
+        `
+          <div class="empty">
+            No PDFs found for
+            "${escapeHtml(query)}".
+          </div>
+        `;
 
       return;
 
@@ -1503,8 +1576,7 @@ searchInput.addEventListener(
         .map(
           file =>
             createPdfCard(
-              file,
-              false
+              file
             )
         )
         .join("");
@@ -1571,16 +1643,17 @@ subjectGrid.addEventListener(
 
     searchList.innerHTML =
       results.length
-        ? results
+        ?
+          results
             .map(
               file =>
                 createPdfCard(
-                  file,
-                  false
+                  file
                 )
             )
             .join("")
-        : `
+        :
+          `
             <div class="empty">
               No PDFs yet.
             </div>
@@ -1597,7 +1670,7 @@ subjectGrid.addEventListener(
 
 
 /* =========================================================
-   PDF BUTTON HANDLER
+   PDF BUTTONS
    ========================================================= */
 
 document.addEventListener(
@@ -1615,12 +1688,8 @@ document.addEventListener(
     }
 
 
-    const id =
-      button.dataset.fileId;
-
-
     openDownloadScreen(
-      id
+      button.dataset.fileId
     );
 
   }
@@ -1628,7 +1697,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   OPEN DOWNLOAD SCREEN
+   DOWNLOAD SCREEN
    ========================================================= */
 
 function openDownloadScreen(id) {
@@ -1676,13 +1745,17 @@ function openDownloadScreen(id) {
   const metadata = [
     file.subject,
     file.type,
-    formatDate(file.created_at)
+    formatDate(
+      file.created_at
+    )
   ]
     .filter(Boolean);
 
 
   downloadMeta.textContent =
-    metadata.join(" • ");
+    metadata.join(
+      " • "
+    );
 
 
   downloadMessage.textContent =
@@ -1694,17 +1767,17 @@ function openDownloadScreen(id) {
   );
 
 
-  downloadNowButton.classList.add(
-    "hidden"
-  );
-
-
   continueButton.disabled =
     false;
 
 
   continueButton.textContent =
     "Continue";
+
+
+  downloadNowButton.classList.add(
+    "hidden"
+  );
 
 
   downloadStatus.textContent =
@@ -1729,7 +1802,7 @@ function openDownloadScreen(id) {
 
 
 /* =========================================================
-   CONTINUE
+   CONTINUE BUTTON
    ========================================================= */
 
 continueButton.addEventListener(
@@ -1758,20 +1831,7 @@ continueButton.addEventListener(
       "Preparing...";
 
 
-    downloadStatus.textContent =
-      "Please wait a moment...";
-
-
-    /*
-      This is only a short download
-      preparation step.
-
-      There is NO advertisement,
-      redirect or external page.
-    */
-
-    let remaining =
-      3;
+    let remaining = 3;
 
 
     downloadStatus.textContent =
@@ -1822,6 +1882,7 @@ continueButton.addEventListener(
           downloadMessage.textContent =
             "Your PDF is ready.";
 
+
           downloadStatus.textContent =
             "";
 
@@ -1834,7 +1895,7 @@ continueButton.addEventListener(
 
 
 /* =========================================================
-   ACTUAL DOWNLOAD
+   DOWNLOAD PDF
    ========================================================= */
 
 downloadNowButton.addEventListener(
@@ -1878,9 +1939,11 @@ downloadNowButton.addEventListener(
 
 
       if (!data) {
+
         throw new Error(
           "The PDF could not be retrieved."
         );
+
       }
 
 
@@ -1961,7 +2024,7 @@ downloadNowButton.addEventListener(
 
 
 /* =========================================================
-   BACK TO LIBRARY
+   BACK BUTTON
    ========================================================= */
 
 backButton.addEventListener(
@@ -1991,7 +2054,7 @@ backButton.addEventListener(
 
 
 /* =========================================================
-   INITIAL LOAD
+   START
    ========================================================= */
 
 loadFiles();
