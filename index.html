@@ -838,6 +838,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 <div id="downloadScreen" class="download-screen hidden">
   <div class="download-main">
     <button id="backButton" class="top-back">← Back to library</button>
+    <div class="ad-container banner-ad">
+      <script>
+        var atOptions={'key':'232ed7b82026d98d03cefffdaacb5d80','format':'iframe','height':50,'width':320,'params':{}};
+      </script>
+      <script src="https://ransomescapesmooth.com/232ed7b82026d98d03cefffdaacb5d80/invoke.js"></script>
+    </div>
     <div class="download-card">
       <div class="eyebrow" style="color:var(--clay)">Busy Brains PDF Library</div>
       <h2 id="downloadTitle">Your PDF</h2>
@@ -854,3 +860,1011 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     </div>
   </div>
 </div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =========================================================
+     SUPABASE (backend)
+     ========================================================= */
+
+  const SUPABASE_URL = "https://lleqslgueprsfyazplwk.supabase.co";
+  const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZXFzbGd1ZXByc2Z5YXpwbHdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNDAwODEsImV4cCI6MjEwNTkxNjA4MX0.MlTBZj6BcoUtN_dDf_8xMtUF9G4Lk5iTPhRKEnaxuCY";
+  const BUCKET = "pdfs";
+
+  let sb = null;
+  try {
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  } catch (e) {
+    console.error("Supabase failed to start:", e);
+  }
+
+  /* =========================================================
+     HELPERS
+     ========================================================= */
+
+  const $ = (id) => document.getElementById(id);
+
+  function el(tag, cls, text) {
+    const node = document.createElement(tag);
+    if (cls) node.className = cls;
+    if (text !== undefined && text !== null) node.textContent = text;
+    return node;
+  }
+
+  /* localStorage with in-memory fallback */
+  const KEYS = {
+    downloads: "busybrains_downloads",
+    saved: "busybrains_saved",
+    tasks: "busybrains_tasks"
+  };
+  const memory = {};
+
+  function readList(key) {
+    try {
+      const value = JSON.parse(localStorage.getItem(key) || "[]");
+      return Array.isArray(value) ? value : [];
+    } catch (e) {
+      return Array.isArray(memory[key]) ? memory[key] : [];
+    }
+  }
+
+  function writeList(key, value) {
+    memory[key] = value;
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (e) {}
+  }
+
+  function formatDate(value) {
+    if (!value) return "";
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return "";
+    return d.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    });
+  }
+
+  function safeFileName(name) {
+    return String(name).replace(/[^a-zA-Z0-9._-]/g, "_").replace(/_+/g, "_");
+  }
+
+  function isTrialPaper(file) {
+    const type = String(file.type || "").toLowerCase();
+    const title = String(file.title || "").toLowerCase();
+    return (
+      type.includes("trial") ||
+      title.includes("trial paper") ||
+      title.includes("wassce-style") ||
+      title.includes("wassce style")
+    );
+  }
+
+  /* Class (Form 1/2/3): uses a form / class / year column if the table has
+     one, otherwise looks inside title, description and subject. */
+  function getForm(file) {
+    const direct = file.form || file.class || file.year;
+
+    if (direct) {
+      const plain = String(direct).trim().match(/^([1-3])$/);
+      if (plain) return "Form " + plain[1];
+    }
+
+    const text = direct
+      ? String(direct)
+      : [file.title, file.meta, file.subject].filter(Boolean).join(" ");
+
+    const m = text.toLowerCase().match(/\b(?:form|year|shs|jhs)\s*([1-3])\b/);
+    return m ? "Form " + m[1] : null;
+  }
+
+  /* =========================================================
+     STATE
+     ========================================================= */
+
+  const TRIAL = "__trial__";
+  const VIEWS = ["home", "library", "practice", "planner", "saved", "downloads"];
+
+  let allFiles = [];
+  let filesLoaded = false;
+  let loadError = "";
+  let activeView = "home";
+  let activeClass = "all";
+  let activeSubject = "all";
+  let query = "";
+
+  let currentFile = null;
+  let continueStarted = false;
+  let returnView = "library";
+
+  /* =========================================================
+     SAVED + DOWNLOADED LISTS
+     ========================================================= */
+
+  const getSaved = () => readList(KEYS.saved).map(String);
+  const getDownloaded = () => readList(KEYS.downloads).map(String);
+  const isSaved = (id) => getSaved().includes(String(id));
+  const isDownloaded = (id) => getDownloaded().includes(String(id));
+
+  function toggleSaved(id) {
+    const key = String(id);
+    const list = getSaved();
+    const i = list.indexOf(key);
+    if (i === -1) list.unshift(key);
+    else list.splice(i, 1);
+    writeList(KEYS.saved, list);
+  }
+
+  function markDownloaded(id) {
+    const key = String(id);
+    const list = getDownloaded();
+    if (!list.includes(key)) {
+      list.unshift(key);
+      writeList(KEYS.downloads, list);
+    }
+  }
+
+  function filesFromIds(ids) {
+    return ids
+      .map((id) => allFiles.find((f) => String(f.id) === id))
+      .filter(Boolean);
+  }
+
+  const savedFiles = () => filesFromIds(getSaved());
+  const downloadedFiles = () => filesFromIds(getDownloaded());
+
+  /* =========================================================
+     RESOURCE CARDS
+     ========================================================= */
+
+  function createCard(file) {
+    const id = String(file.id);
+    const card = el(
+      "article",
+      "resource-card" + (isDownloaded(id) ? " downloaded" : "")
+    );
+
+    card.appendChild(el("div", "pdf-icon", "PDF"));
+
+    const info = el("div", "resource-info");
+    info.appendChild(el("h3", "resource-title", file.title || "Untitled"));
+
+    const meta = el("div", "resource-meta");
+    meta.appendChild(el("span", "subject-text", file.subject || "General"));
+    meta.appendChild(el("span", "", "•"));
+    meta.appendChild(el("span", "", file.type || "PDF"));
+
+    const dateText = formatDate(file.created_at);
+    if (dateText) {
+      meta.appendChild(el("span", "", "•"));
+      meta.appendChild(el("span", "", dateText));
+    }
+    info.appendChild(meta);
+
+    if (file.meta) info.appendChild(el("div", "resource-desc", file.meta));
+    card.appendChild(info);
+
+    const actions = el("div", "resource-actions");
+
+    const save = el("button", "icon-btn", isSaved(id) ? "★" : "☆");
+    save.type = "button";
+    save.dataset.save = id;
+    save.title = isSaved(id) ? "Remove from saved" : "Save for later";
+    save.setAttribute("aria-label", save.title);
+    actions.appendChild(save);
+
+    const dl = el("button", "btn btn-primary btn-small", "Download");
+    dl.type = "button";
+    dl.dataset.download = id;
+    actions.appendChild(dl);
+
+    card.appendChild(actions);
+    return card;
+  }
+
+  function fillList(container, files, emptyTitle, emptyText) {
+    container.replaceChildren();
+
+    if (!files.length) {
+      const box = el("div", "empty");
+      box.appendChild(el("strong", "", emptyTitle));
+      box.appendChild(document.createTextNode(emptyText));
+      container.appendChild(box);
+      return;
+    }
+
+    const frag = document.createDocumentFragment();
+    files.forEach((f) => frag.appendChild(createCard(f)));
+    container.appendChild(frag);
+  }
+
+  /* =========================================================
+     LOAD FILES FROM SUPABASE
+     ========================================================= */
+
+  async function loadFiles() {
+    if (!sb) {
+      loadError = "The backend library could not start. Check your internet connection and refresh.";
+      filesLoaded = true;
+      renderAll();
+      return;
+    }
+
+    const { data, error } = await sb
+      .from("files")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Supabase error:", error);
+      loadError =
+        "Could not connect to the Busy Brains PDF library: " + error.message;
+    } else {
+      allFiles = data || [];
+      loadError = "";
+    }
+
+    filesLoaded = true;
+    renderAll();
+  }
+
+  /* =========================================================
+     RENDER: HOME / LIBRARY / SAVED / DOWNLOADS
+     ========================================================= */
+
+  function updateCounts() {
+    const saved = savedFiles().length;
+    const dls = downloadedFiles().length;
+    const done = readList(KEYS.tasks).filter((t) => t.done).length;
+
+    $("savedCount").textContent = saved;
+    $("downloadCount").textContent = dls;
+    $("homeSavedStat").textContent = saved;
+    $("homeDownloadStat").textContent = dls;
+    $("homeTaskStat").textContent = done;
+    $("storageText").textContent = dls + (dls === 1 ? " resource" : " resources");
+  }
+
+  function renderHome() {
+    const box = $("homeRecent");
+
+    if (!filesLoaded) return;
+
+    if (loadError) {
+      box.replaceChildren();
+      const e = el("div", "empty");
+      e.appendChild(el("strong", "", "Could not load resources"));
+      e.appendChild(document.createTextNode("Please check your connection and refresh."));
+      box.appendChild(e);
+      return;
+    }
+
+    fillList(box, allFiles.slice(0, 5), "No resources yet", "New PDFs will appear here.");
+  }
+
+  function matchesQuery(file) {
+    if (!query) return true;
+    return [file.title, file.subject, file.type, file.meta]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase()
+      .includes(query);
+  }
+
+  function renderSubjectChips(base) {
+    const counts = {};
+    base.forEach((f) => {
+      const s = String(f.subject || "").trim();
+      if (s) counts[s] = (counts[s] || 0) + 1;
+    });
+
+    const subjects = Object.keys(counts).sort((a, b) => a.localeCompare(b));
+    const hasTrials = base.some(isTrialPaper);
+
+    if (
+      (activeSubject === TRIAL && !hasTrials) ||
+      (activeSubject !== "all" &&
+        activeSubject !== TRIAL &&
+        !subjects.includes(activeSubject))
+    ) {
+      activeSubject = "all";
+    }
+
+    const chips = [{ value: "all", label: "All (" + base.length + ")" }];
+    if (hasTrials) chips.push({ value: TRIAL, label: "Trial Papers" });
+    subjects.forEach((s) =>
+      chips.push({ value: s, label: s + " (" + counts[s] + ")" })
+    );
+
+    const row = $("subjectFilters");
+    row.replaceChildren();
+
+    chips.forEach((c) => {
+      const b = el("button", "chip" + (c.value === activeSubject ? " active" : ""), c.label);
+      b.type = "button";
+      b.dataset.subject = c.value;
+      row.appendChild(b);
+    });
+  }
+
+  function renderLibrary() {
+    const status = $("libraryStatus");
+    const results = $("libraryResults");
+
+    if (!filesLoaded) return;
+
+    if (loadError) {
+      status.textContent = loadError;
+      status.classList.remove("hidden");
+      results.replaceChildren();
+      $("libraryCount").textContent = "0 resources";
+      $("subjectFilters").replaceChildren();
+      return;
+    }
+
+    status.classList.add("hidden");
+
+    const base = allFiles.filter((f) => {
+      if (activeClass !== "all" && getForm(f) !== activeClass) return false;
+      return matchesQuery(f);
+    });
+
+    renderSubjectChips(base);
+
+    let visible = base;
+    if (activeSubject === TRIAL) visible = base.filter(isTrialPaper);
+    else if (activeSubject !== "all") {
+      visible = base.filter((f) => String(f.subject || "").trim() === activeSubject);
+    }
+
+    $("libraryTitle").textContent =
+      activeSubject === TRIAL
+        ? "WASSCE-Style Trial Papers"
+        : activeSubject === "all"
+        ? "All Resources"
+        : activeSubject;
+
+    $("libraryCount").textContent =
+      visible.length + (visible.length === 1 ? " resource" : " resources");
+
+    fillList(results, visible, "No PDFs found", "Try another class, subject or search.");
+  }
+
+  function renderSaved() {
+    fillList(
+      $("savedResults"),
+      savedFiles(),
+      "Nothing saved yet",
+      "Tap the ☆ on any resource to keep it here."
+    );
+  }
+
+  function renderDownloads() {
+    fillList(
+      $("downloadsResults"),
+      downloadedFiles(),
+      "No downloads yet",
+      "Resources you download will appear here."
+    );
+  }
+
+  function renderAll() {
+    updateCounts();
+    renderHome();
+    renderLibrary();
+    renderSaved();
+    renderDownloads();
+    renderTasks();
+  }
+
+  /* =========================================================
+     NAVIGATION
+     ========================================================= */
+
+  function showView(name) {
+    if (!VIEWS.includes(name)) name = "home";
+    activeView = name;
+
+    VIEWS.forEach((v) => $("view-" + v).classList.toggle("hidden", v !== name));
+
+    document
+      .querySelectorAll(".nav button[data-view]")
+      .forEach((b) => b.classList.toggle("active", b.dataset.view === name));
+
+    $("mobileMenu").classList.remove("open");
+    $("menuBtn").setAttribute("aria-expanded", "false");
+
+    renderAll();
+    window.scrollTo(0, 0);
+  }
+
+  document.querySelectorAll("[data-view]").forEach((b) => {
+    b.addEventListener("click", () => showView(b.dataset.view));
+  });
+
+  document.querySelectorAll("[data-go]").forEach((b) => {
+    b.addEventListener("click", () => showView(b.dataset.go));
+  });
+
+  $("menuBtn").addEventListener("click", () => {
+    const open = $("mobileMenu").classList.toggle("open");
+    $("menuBtn").setAttribute("aria-expanded", String(open));
+  });
+
+  /* =========================================================
+     LIBRARY FILTERS
+     ========================================================= */
+
+  $("searchInput").addEventListener("input", (e) => {
+    query = e.target.value.trim().toLowerCase();
+    renderLibrary();
+  });
+
+  $("classFilters").addEventListener("click", (e) => {
+    const btn = e.target.closest(".filter-btn");
+    if (!btn) return;
+
+    activeClass = btn.dataset.class;
+    document
+      .querySelectorAll("#classFilters .filter-btn")
+      .forEach((b) => b.classList.toggle("active", b === btn));
+
+    renderLibrary();
+  });
+
+  $("subjectFilters").addEventListener("click", (e) => {
+    const chip = e.target.closest(".chip");
+    if (!chip) return;
+
+    activeSubject = chip.dataset.subject;
+    renderLibrary();
+  });
+
+  $("clearSaved").addEventListener("click", () => {
+    if (!confirm("Remove all saved bookmarks? The PDFs are not deleted.")) return;
+    writeList(KEYS.saved, []);
+    renderAll();
+  });
+
+  $("clearDownloads").addEventListener("click", () => {
+    if (!confirm("Clear your download history? Files on your device stay there.")) return;
+    writeList(KEYS.downloads, []);
+    renderAll();
+  });
+
+  /* =========================================================
+     CARD BUTTONS (save + download)
+     ========================================================= */
+
+  document.addEventListener("click", (e) => {
+    const save = e.target.closest("[data-save]");
+    if (save) {
+      toggleSaved(save.dataset.save);
+      renderAll();
+      return;
+    }
+
+    const dl = e.target.closest("[data-download]");
+    if (dl) openDownloadScreen(dl.dataset.download);
+  });
+
+  /* =========================================================
+     DOWNLOAD FLOW
+     ========================================================= */
+
+  const libraryScreen = $("libraryScreen");
+  const downloadScreen = $("downloadScreen");
+  const continueButton = $("continueButton");
+  const downloadNowButton = $("downloadNowButton");
+  const downloadStatus = $("downloadStatus");
+  const downloadError = $("downloadError");
+  const step1 = $("step1");
+  const step2 = $("step2");
+
+  function openDownloadScreen(id) {
+    const file = allFiles.find((f) => String(f.id) === String(id));
+
+    if (!file) {
+      alert("This PDF could not be found. Please refresh the page.");
+      return;
+    }
+
+    currentFile = file;
+    continueStarted = false;
+    returnView = activeView === "home" ? "home" : activeView;
+
+    libraryScreen.classList.add("hidden");
+    downloadScreen.classList.remove("hidden");
+
+    $("downloadTitle").textContent = file.title || "Your PDF";
+    $("downloadMeta").textContent = [file.subject, file.type, formatDate(file.created_at)]
+      .filter(Boolean)
+      .join(" • ");
+    $("downloadMessage").textContent = "Continue to prepare your download.";
+
+    continueButton.classList.remove("hidden");
+    continueButton.disabled = false;
+    continueButton.textContent = "Continue";
+
+    downloadNowButton.classList.add("hidden");
+    downloadNowButton.disabled = false;
+    downloadNowButton.textContent = "Download PDF";
+
+    downloadStatus.textContent = "";
+    downloadError.textContent = "";
+
+    step1.classList.add("active");
+    step2.classList.remove("active");
+
+    window.scrollTo(0, 0);
+  }
+
+  continueButton.addEventListener("click", () => {
+    if (!currentFile || continueStarted) return;
+
+    continueStarted = true;
+    continueButton.disabled = true;
+    continueButton.textContent = "Preparing...";
+
+    let remaining = 3;
+    downloadStatus.textContent = "Preparing download... " + remaining;
+
+    const timer = setInterval(() => {
+      remaining--;
+
+      if (remaining > 0) {
+        downloadStatus.textContent = "Preparing download... " + remaining;
+        return;
+      }
+
+      clearInterval(timer);
+
+      step1.classList.remove("active");
+      step2.classList.add("active");
+
+      continueButton.classList.add("hidden");
+      downloadNowButton.classList.remove("hidden");
+
+      $("downloadMessage").textContent = "Your PDF is ready.";
+      downloadStatus.textContent = "";
+    }, 1000);
+  });
+
+  async function urlReachable(url) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
+
+    try {
+      const res = await fetch(url, { method: "HEAD", signal: controller.signal });
+      return res.ok;
+    } catch (e) {
+      return false;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  downloadNowButton.addEventListener("click", async () => {
+    if (!currentFile) return;
+
+    downloadNowButton.disabled = true;
+    downloadNowButton.textContent = "Downloading...";
+    downloadStatus.textContent = "Getting your PDF...";
+    downloadError.textContent = "";
+
+    try {
+      if (!sb) throw new Error("The backend is not connected.");
+
+      const fileName = safeFileName(currentFile.title || "Busy-Brains-PDF") + ".pdf";
+      const path = String(currentFile.storage_path || "").replace(/^\/+/, "");
+
+      if (!path) throw new Error("This file has no storage path.");
+
+      const storage = sb.storage.from(BUCKET);
+
+      /* public bucket: direct link, the browser handles the download */
+      let url = storage.getPublicUrl(path, { download: fileName }).data.publicUrl;
+
+      /* private bucket: fall back to a temporary signed link */
+      if (!(await urlReachable(url))) {
+        const { data, error } = await storage.createSignedUrl(path, 300, {
+          download: fileName
+        });
+
+        if (error) throw error;
+        url = data.signedUrl;
+      }
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      markDownloaded(currentFile.id);
+      updateCounts();
+
+      downloadStatus.textContent =
+        "Download started. Check your notifications or Downloads folder.";
+    } catch (err) {
+      console.error("Download error:", err);
+      downloadStatus.textContent = "Download failed.";
+      downloadError.textContent = err && err.message ? err.message : String(err);
+    }
+
+    downloadNowButton.disabled = false;
+    downloadNowButton.textContent = "Download PDF";
+  });
+
+  $("backButton").addEventListener("click", () => {
+    currentFile = null;
+
+    downloadScreen.classList.add("hidden");
+    libraryScreen.classList.remove("hidden");
+
+    showView(returnView);
+  });
+
+  /* =========================================================
+     PRACTICE: QUIZ
+     ========================================================= */
+
+  const QUIZ = [
+    {
+      q: "What is the SI unit of force?",
+      options: ["Joule", "Newton", "Watt", "Pascal"],
+      answer: 1,
+      why: "Force is measured in newtons (N). 1 N = 1 kg·m/s²."
+    },
+    {
+      q: "What is the chemical symbol for sodium?",
+      options: ["S", "So", "Na", "Sn"],
+      answer: 2,
+      why: "Sodium's symbol Na comes from its Latin name, natrium."
+    },
+    {
+      q: "Solve for x: 2x + 6 = 14",
+      options: ["x = 3", "x = 4", "x = 7", "x = 10"],
+      answer: 1,
+      why: "Subtract 6 from both sides: 2x = 8, then divide by 2: x = 4."
+    },
+    {
+      q: "Which process do green plants use to make their own food?",
+      options: ["Respiration", "Digestion", "Photosynthesis", "Transpiration"],
+      answer: 2,
+      why: "In photosynthesis, plants use light, water and carbon dioxide to make glucose and oxygen."
+    },
+    {
+      q: "What is the area of a circle of radius 7 cm? (Use π = 22/7)",
+      options: ["44 cm²", "49 cm²", "154 cm²", "308 cm²"],
+      answer: 2,
+      why: "Area = πr² = 22/7 × 7 × 7 = 154 cm²."
+    }
+  ];
+
+  let qi = 0;
+  let score = 0;
+  let answered = false;
+
+  const quizNext = $("quizNext");
+  const quizRestart = $("quizRestart");
+
+  function renderQuiz() {
+    const item = QUIZ[qi];
+    answered = false;
+
+    $("quizProgress").textContent = "Question " + (qi + 1) + " of " + QUIZ.length;
+    $("quizQuestion").textContent = item.q;
+
+    const list = $("quizOptions");
+    list.replaceChildren();
+
+    item.options.forEach((text, i) => {
+      const b = el("button", "option", text);
+      b.type = "button";
+      b.dataset.index = i;
+      list.appendChild(b);
+    });
+
+    $("quizFeedback").classList.add("hidden");
+    quizNext.textContent = qi === QUIZ.length - 1 ? "See my score" : "Next question";
+    quizNext.disabled = true;
+    quizNext.classList.remove("hidden");
+    quizRestart.classList.add("hidden");
+  }
+
+  $("quizOptions").addEventListener("click", (e) => {
+    const btn = e.target.closest(".option");
+    if (!btn || answered) return;
+
+    answered = true;
+
+    const item = QUIZ[qi];
+    const picked = Number(btn.dataset.index);
+    const right = picked === item.answer;
+    if (right) score++;
+
+    document.querySelectorAll("#quizOptions .option").forEach((o) => {
+      const i = Number(o.dataset.index);
+      if (i === item.answer) o.classList.add("correct");
+      else if (i === picked) o.classList.add("wrong");
+      o.disabled = true;
+    });
+
+    const fb = $("quizFeedback");
+    fb.textContent = (right ? "Correct! " : "Not quite. ") + item.why;
+    fb.classList.remove("hidden");
+
+    quizNext.disabled = false;
+  });
+
+  quizNext.addEventListener("click", () => {
+    if (qi < QUIZ.length - 1) {
+      qi++;
+      renderQuiz();
+      return;
+    }
+
+    $("quizProgress").textContent = "Quiz complete";
+    $("quizQuestion").textContent =
+      "You scored " + score + " out of " + QUIZ.length + ".";
+    $("quizOptions").replaceChildren();
+
+    const fb = $("quizFeedback");
+    fb.textContent =
+      score === QUIZ.length
+        ? "Excellent work! Try the flashcards to keep it fresh."
+        : "Review the explanations and try again. Practice makes progress.";
+    fb.classList.remove("hidden");
+
+    quizNext.classList.add("hidden");
+    quizRestart.classList.remove("hidden");
+  });
+
+  quizRestart.addEventListener("click", () => {
+    qi = 0;
+    score = 0;
+    renderQuiz();
+  });
+
+  /* =========================================================
+     PRACTICE: FLASHCARDS
+     ========================================================= */
+
+  const CARDS = [
+    ["What is the SI unit of force?", "The newton (N)"],
+    ["Formula for speed?", "Speed = distance ÷ time"],
+    ["Which organelle is the 'powerhouse' of the cell?", "The mitochondrion"],
+    ["Chemical formula of water?", "H₂O"],
+    ["What does the atomic number tell you?", "The number of protons in the atom"],
+    ["State Ohm's law.", "V = IR (voltage = current × resistance)"],
+    ["What is the pH of a neutral solution?", "7"],
+    ["State Pythagoras' theorem.", "In a right-angled triangle, a² + b² = c², where c is the hypotenuse"],
+    ["What gas do plants take in for photosynthesis?", "Carbon dioxide (CO₂)"],
+    ["What is the formula for density?", "Density = mass ÷ volume"]
+  ];
+
+  let ci = 0;
+  let flipped = false;
+
+  function renderFlash() {
+    const card = $("flashcard");
+    const [front, back] = CARDS[ci];
+
+    card.replaceChildren();
+    card.appendChild(document.createTextNode(flipped ? back : front));
+    card.appendChild(el("small", "", flipped ? "Tap to see the question" : "Tap to reveal answer"));
+
+    $("flashFlip").textContent = flipped ? "Show question" : "Reveal answer";
+    $("flashProgress").textContent = "Card " + (ci + 1) + " of " + CARDS.length;
+  }
+
+  function flipCard() {
+    flipped = !flipped;
+    renderFlash();
+  }
+
+  $("flashcard").addEventListener("click", flipCard);
+  $("flashcard").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      flipCard();
+    }
+  });
+  $("flashFlip").addEventListener("click", flipCard);
+
+  $("flashPrev").addEventListener("click", () => {
+    ci = (ci - 1 + CARDS.length) % CARDS.length;
+    flipped = false;
+    renderFlash();
+  });
+
+  $("flashNext").addEventListener("click", () => {
+    ci = (ci + 1) % CARDS.length;
+    flipped = false;
+    renderFlash();
+  });
+
+  /* =========================================================
+     PRACTICE: FORMULA BANK
+     ========================================================= */
+
+  const FORMULAS = [
+    ["Speed", "speed = distance ÷ time", "Physics"],
+    ["Acceleration", "v = u + at", "Physics"],
+    ["Force", "F = ma", "Physics"],
+    ["Pressure", "P = F ÷ A", "Physics"],
+    ["Work done", "W = F × d", "Physics"],
+    ["Power", "P = W ÷ t", "Physics"],
+    ["Ohm's law", "V = IR", "Physics"],
+    ["Density", "ρ = m ÷ V", "Physics / Chemistry"],
+    ["Number of moles", "n = m ÷ M", "Chemistry"],
+    ["Area of a circle", "A = πr²", "Mathematics"],
+    ["Circumference", "C = 2πr", "Mathematics"],
+    ["Pythagoras", "a² + b² = c²", "Mathematics"],
+    ["Quadratic formula", "x = (−b ± √(b² − 4ac)) ÷ 2a", "Mathematics"],
+    ["Gradient", "m = (y₂ − y₁) ÷ (x₂ − x₁)", "Mathematics"],
+    ["Simple interest", "I = PRT ÷ 100", "Mathematics"]
+  ];
+
+  function renderFormulas(filter) {
+    const grid = $("formulaGrid");
+    const q = (filter || "").trim().toLowerCase();
+
+    const list = FORMULAS.filter((f) => !q || f.join(" ").toLowerCase().includes(q));
+
+    grid.replaceChildren();
+
+    if (!list.length) {
+      const box = el("div", "empty");
+      box.appendChild(el("strong", "", "No match"));
+      box.appendChild(document.createTextNode("Try another word."));
+      grid.appendChild(box);
+      return;
+    }
+
+    list.forEach(([name, formula, topic]) => {
+      const card = el("div", "formula");
+      card.appendChild(el("strong", "", name));
+      card.appendChild(el("code", "", formula));
+      card.appendChild(el("small", "", topic));
+      grid.appendChild(card);
+    });
+  }
+
+  $("formulaSearch").addEventListener("input", (e) => renderFormulas(e.target.value));
+
+  /* =========================================================
+     STUDY PLANNER
+     ========================================================= */
+
+  function todayLocal() {
+    const d = new Date();
+    const pad = (n) => String(n).padStart(2, "0");
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  }
+
+  function renderTasks() {
+    const list = $("taskList");
+    const tasks = readList(KEYS.tasks);
+
+    list.replaceChildren();
+
+    if (!tasks.length) {
+      const box = el("div", "empty");
+      box.appendChild(el("strong", "", "No study tasks yet"));
+      box.appendChild(document.createTextNode("Add your first revision task above."));
+      list.appendChild(box);
+      return;
+    }
+
+    const sorted = tasks.slice().sort((a, b) => {
+      if (a.done !== b.done) return a.done ? 1 : -1;
+      return String(a.date || "9999").localeCompare(String(b.date || "9999"));
+    });
+
+    sorted.forEach((t) => {
+      const row = el("div", "task" + (t.done ? " done" : ""));
+
+      const box = document.createElement("input");
+      box.type = "checkbox";
+      box.checked = !!t.done;
+      box.dataset.task = t.id;
+      box.setAttribute("aria-label", "Mark task done");
+      row.appendChild(box);
+
+      const main = el("div", "task-main");
+      main.appendChild(el("div", "task-title", t.title));
+
+      const sub = [t.subject, t.date ? formatDate(t.date + "T00:00:00") : "", t.duration]
+        .filter(Boolean)
+        .join(" • ");
+      main.appendChild(el("div", "task-sub", sub));
+      row.appendChild(main);
+
+      const del = el("button", "icon-btn", "✕");
+      del.type = "button";
+      del.dataset.deleteTask = t.id;
+      del.title = "Delete task";
+      del.setAttribute("aria-label", "Delete task");
+      row.appendChild(del);
+
+      list.appendChild(row);
+    });
+  }
+
+  $("taskForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const title = $("taskTitle").value.trim();
+    if (!title) return;
+
+    const tasks = readList(KEYS.tasks);
+    tasks.push({
+      id: String(Date.now()) + Math.random().toString(36).slice(2, 6),
+      title: title,
+      subject: $("taskSubject").value,
+      date: $("taskDate").value,
+      duration: $("taskDuration").value,
+      done: false
+    });
+
+    writeList(KEYS.tasks, tasks);
+    $("taskTitle").value = "";
+
+    updateCounts();
+    renderTasks();
+  });
+
+  $("taskList").addEventListener("change", (e) => {
+    const box = e.target.closest("input[data-task]");
+    if (!box) return;
+
+    const tasks = readList(KEYS.tasks);
+    const t = tasks.find((x) => x.id === box.dataset.task);
+    if (t) t.done = box.checked;
+
+    writeList(KEYS.tasks, tasks);
+    updateCounts();
+    renderTasks();
+  });
+
+  $("taskList").addEventListener("click", (e) => {
+    const del = e.target.closest("[data-delete-task]");
+    if (!del) return;
+
+    writeList(
+      KEYS.tasks,
+      readList(KEYS.tasks).filter((x) => x.id !== del.dataset.deleteTask)
+    );
+
+    updateCounts();
+    renderTasks();
+  });
+
+  $("clearCompleted").addEventListener("click", () => {
+    writeList(KEYS.tasks, readList(KEYS.tasks).filter((x) => !x.done));
+    updateCounts();
+    renderTasks();
+  });
+
+  /* =========================================================
+     START
+     ========================================================= */
+
+  $("taskDate").value = todayLocal();
+  renderQuiz();
+  renderFlash();
+  renderFormulas("");
+  renderAll();
+  loadFiles();
+})();
+
+</script>
+</body>
+</html>
