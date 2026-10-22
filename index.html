@@ -572,6 +572,45 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   .storage-bar{align-items:stretch;flex-direction:column}
   .storage-bar .btn{width:100%}
 }
+
+/* LEARN */
+.learn-form{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px}
+.learn-form .search-box{flex:1;margin:0;max-width:none}
+.learn-submit{height:48px;padding:0 22px}
+.video-stage{margin-bottom:14px}
+.video-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
+.video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.video-caption{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:10px 2px;font-size:14px}
+.video-caption a{color:var(--clay);font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap}
+.video-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.video-card{display:block;text-align:left;padding:0;background:white;border:1px solid var(--border);border-radius:9px;overflow:hidden;color:var(--ink)}
+.video-card:hover{border-color:#c4a28c}
+.video-card.active{border-color:var(--clay);box-shadow:0 0 0 2px var(--clay-soft)}
+.video-card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--sand)}
+.video-card .vc-title{display:block;padding:8px 9px 2px;font-size:12px;font-weight:700;line-height:1.35;overflow-wrap:anywhere;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.video-card .vc-channel{display:block;padding:0 9px 9px;font-size:11px;color:var(--muted)}
+.picture-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.picture-card{padding:0;border:1px solid var(--border);border-radius:9px;overflow:hidden;background:white}
+.picture-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--sand)}
+.lightbox{position:fixed;inset:0;z-index:50;background:rgba(28,26,23,.86);display:flex;align-items:center;justify-content:center;padding:16px}
+.lightbox-box{background:white;border-radius:12px;padding:14px;max-width:760px;width:100%;max-height:94vh;overflow:auto;text-align:center}
+.lightbox-box img{max-width:100%;max-height:62vh;object-fit:contain;margin:10px 0}
+.lightbox-close{float:right}
+.lightbox-box a{color:var(--clay)}
+@media(max-width:800px){
+  .video-grid,.picture-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:520px){
+  .learn-form{flex-direction:column}
+  .learn-form .search-box{width:100%}
+  .learn-submit{width:100%;height:44px}
+  .video-caption{flex-direction:column;gap:4px}
+}
+
+.ges-check{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);margin:2px 0 14px}
+.ges-check input{width:16px;height:16px}
+.note a{color:var(--clay)}
 </style>
 </head>
 
@@ -585,6 +624,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     <nav class="nav" aria-label="Main navigation">
       <button class="active" data-view="home">Home</button>
       <button data-view="library">PDF Library</button>
+      <button data-view="learn">Learn</button>
+      <button data-view="ges">GES Resources</button>
       <button data-view="practice">Practice</button>
       <button data-view="planner">Study Planner</button>
       <button data-view="saved">Saved <span id="savedCount" class="count-pill">0</span></button>
@@ -597,6 +638,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 <div id="mobileMenu" class="mobile-menu">
   <button data-view="home">Home</button>
   <button data-view="library">PDF Library</button>
+  <button data-view="learn">Learn a Topic (Videos &amp; Pictures)</button>
+  <button data-view="ges">Ghana GES Resources</button>
   <button data-view="practice">Practice Quizzes & Flashcards</button>
   <button data-view="planner">Study Planner</button>
   <button data-view="saved">Saved Resources</button>
@@ -612,6 +655,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
       <p>Find SHS notes, revise with practice questions, save useful resources and organise your study time — all in one place.</p>
       <div class="hero-actions">
         <button class="btn btn-primary" data-go="library">Explore PDF Library →</button>
+        <button class="btn btn-light" data-go="learn">🎬 Learn a topic</button>
         <button class="btn btn-light" data-go="practice">Start Practising</button>
       </div>
     </div>
@@ -698,6 +742,86 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
         <div class="empty"><strong>Loading resources…</strong>Please wait.</div>
       </div>
     </div>
+  </section>
+
+  <!-- LEARN -->
+  <section id="view-learn" class="page-view hidden">
+    <div class="section-head">
+      <div><h2>Learn a Topic</h2><p>Search any topic to get videos, pictures and a quick explanation — all in this one page.</p></div>
+    </div>
+
+    <form id="learnForm" class="learn-form" role="search">
+      <div class="search-box">
+        <span>🔍</span>
+        <input id="learnInput" type="search" placeholder="e.g. photosynthesis, quadratic equations, Ohm's law…" autocomplete="off" maxlength="80" required>
+      </div>
+      <button class="btn btn-primary learn-submit" type="submit">Search</button>
+    </form>
+
+    <div id="learnSuggest" class="subject-row" aria-label="Suggested topics"></div>
+
+    <div id="learnIntro" class="empty">
+      <strong>What do you want to learn today?</strong>
+      Type a topic above or tap a suggestion. You will get videos to watch, pictures and diagrams, and a short written explanation.
+    </div>
+
+    <div id="learnResults" class="hidden">
+      <div class="section">
+        <div class="section-head"><h2>🎬 Videos</h2></div>
+        <div id="videoStage" class="video-stage hidden">
+          <div class="video-frame">
+            <iframe id="videoFrame" title="Video player" allow="accelerometer; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
+          <div class="video-caption">
+            <strong id="videoTitle"></strong>
+            <a id="videoLink" href="#" target="_blank" rel="noopener">Watch on YouTube ↗</a>
+          </div>
+        </div>
+        <div id="videoStatus" class="status hidden"></div>
+        <div id="videoGrid" class="video-grid"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><h2>📖 Quick explanation</h2></div>
+        <div id="learnSummary" class="panel"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-head"><h2>🖼️ Pictures &amp; diagrams</h2></div>
+        <div id="pictureStatus" class="status hidden"></div>
+        <div id="pictureGrid" class="picture-grid"></div>
+        <p class="note">Pictures come from Wikimedia Commons. Tap a picture to see its credit and licence.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- GES RESOURCES -->
+  <section id="view-ges" class="page-view hidden">
+    <div class="section-head">
+      <div><h2>Ghana GES Resources</h2><p>Official Ministry of Education curriculum materials. Search a subject, press Download, and the file comes straight from the Ministry's website.</p></div>
+    </div>
+
+    <form id="gesForm" class="learn-form" role="search">
+      <div class="search-box">
+        <span>🔍</span>
+        <input id="gesInput" type="search" placeholder="Search e.g. mathematics, biology, ICT…" autocomplete="off" maxlength="80">
+      </div>
+      <button class="btn btn-primary learn-submit" type="submit">Search</button>
+    </form>
+
+    <div id="gesSubjects" class="subject-row" aria-label="Subjects"></div>
+
+    <label class="ges-check"><input type="checkbox" id="gesHideTeacher" checked> Hide teacher manuals</label>
+
+    <div id="gesStatus" class="status hidden"></div>
+    <div id="gesResults" class="resource-list"></div>
+    <div class="flash-controls"><button id="gesMore" class="btn btn-outline hidden" type="button">Load more</button></div>
+
+    <p class="note">These files belong to the Ghana Ministry of Education and are downloaded directly from
+      <a href="https://curriculumresources.edu.gh/" target="_blank" rel="noopener">curriculumresources.edu.gh</a>.
+      Can't find something? Browse the official site:
+      <a href="https://curriculumresources.edu.gh/" target="_blank" rel="noopener">SHS / SHTS / STEM</a> ·
+      <a href="https://curriculumresources.edu.gh/jhs/" target="_blank" rel="noopener">JHS</a>.</p>
   </section>
 
   <!-- PRACTICE -->
@@ -826,6 +950,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   </section>
 </main>
 
+<div id="lightbox" class="lightbox hidden" role="dialog" aria-modal="true" aria-label="Picture viewer">
+  <div class="lightbox-box">
+    <button id="lightboxClose" class="btn btn-outline btn-small lightbox-close" type="button">✕ Close</button>
+    <img id="lightboxImg" alt="">
+    <p id="lightboxCaption" class="note"></p>
+    <a id="lightboxLink" href="#" target="_blank" rel="noopener" class="note">View original and licence ↗</a>
+  </div>
+</div>
+
 <footer class="footer">
   <strong>🧠 Busy Brains</strong>
   <p>Study smarter. Practise consistently. Keep learning.</p>
@@ -873,6 +1006,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   const SUPABASE_ANON_KEY =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZXFzbGd1ZXByc2Z5YXpwbHdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNDAwODEsImV4cCI6MjEwNTkxNjA4MX0.MlTBZj6BcoUtN_dDf_8xMtUF9G4Lk5iTPhRKEnaxuCY";
   const BUCKET = "pdfs";
+
+  /* YouTube Data API v3 key for the Learn tab.
+     Paste your key between the quotes. Restrict it to your website
+     (HTTP referrers) and to "YouTube Data API v3" in Google Cloud. */
+  const YOUTUBE_API_KEY = "AIzaSyBEEFgIZ_-WG_lsBE7-kJTLZB0M2YxdfW4";
 
   let sb = null;
   try {
@@ -967,7 +1105,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
      ========================================================= */
 
   const TRIAL = "__trial__";
-  const VIEWS = ["home", "library", "practice", "planner", "saved", "downloads"];
+  const VIEWS = ["home", "library", "learn", "ges", "practice", "planner", "saved", "downloads"];
 
   let allFiles = [];
   let filesLoaded = false;
@@ -1268,6 +1406,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   function showView(name) {
     if (!VIEWS.includes(name)) name = "home";
     activeView = name;
+    if (name !== "learn") stopVideo();
 
     VIEWS.forEach((v) => $("view-" + v).classList.toggle("hidden", v !== name));
 
@@ -1279,6 +1418,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     $("menuBtn").setAttribute("aria-expanded", "false");
 
     renderAll();
+    if (name === "ges" && !gesStarted) {
+      gesStarted = true;
+      runGes("Mathematics");
+    }
     window.scrollTo(0, 0);
   }
 
@@ -1373,10 +1516,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
       return;
     }
 
+    openDownloadFile(file);
+  }
+
+  function openDownloadFile(file) {
     currentFile = file;
     continueStarted = false;
     returnView = activeView === "home" ? "home" : activeView;
 
+    stopVideo();
     libraryScreen.classList.add("hidden");
     downloadScreen.classList.remove("hidden");
 
@@ -1457,6 +1605,23 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     downloadError.textContent = "";
 
     try {
+      if (currentFile.external_url) {
+        const ext = document.createElement("a");
+        ext.href = currentFile.external_url;
+        ext.target = "_blank";
+        ext.rel = "noopener";
+        ext.download = safeFileName(currentFile.title || "GES-resource") + ".pdf";
+        document.body.appendChild(ext);
+        ext.click();
+        ext.remove();
+
+        downloadStatus.textContent =
+          "Opening from the Ministry of Education website. If it opens in a viewer, use its download or save button.";
+        downloadNowButton.disabled = false;
+        downloadNowButton.textContent = "Download PDF";
+        return;
+      }
+
       if (!sb) throw new Error("The backend is not connected.");
 
       const fileName = safeFileName(currentFile.title || "Busy-Brains-PDF") + ".pdf";
@@ -1851,6 +2016,613 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     writeList(KEYS.tasks, readList(KEYS.tasks).filter((x) => !x.done));
     updateCounts();
     renderTasks();
+  });
+
+  /* =========================================================
+     LEARN: VIDEOS + EXPLANATION + PICTURES
+     ========================================================= */
+
+  const LEARN_TOPICS = [
+    "Photosynthesis",
+    "Quadratic equations",
+    "Ohm's law",
+    "Acids and bases",
+    "Cell division",
+    "Newton's laws of motion",
+    "Fractions",
+    "Chemical bonding"
+  ];
+  const LEARN_CACHE = "busybrains_learn_cache";
+  const CACHE_MS = 24 * 60 * 60 * 1000;
+
+  let learnToken = 0;
+  let pictures = [];
+
+  function cacheGet(topic) {
+    try {
+      const all = JSON.parse(localStorage.getItem(LEARN_CACHE) || "{}");
+      const hit = all[topic.toLowerCase()];
+      if (hit && Date.now() - hit.t < CACHE_MS) return hit.v;
+    } catch (e) {}
+    return null;
+  }
+
+  function cacheSet(topic, value) {
+    try {
+      const all = JSON.parse(localStorage.getItem(LEARN_CACHE) || "{}");
+      all[topic.toLowerCase()] = { t: Date.now(), v: value };
+      const keys = Object.keys(all);
+      if (keys.length > 30) {
+        keys
+          .sort((a, b) => all[a].t - all[b].t)
+          .slice(0, keys.length - 30)
+          .forEach((k) => delete all[k]);
+      }
+      localStorage.setItem(LEARN_CACHE, JSON.stringify(all));
+    } catch (e) {}
+  }
+
+  function decodeText(html) {
+    const t = document.createElement("textarea");
+    t.innerHTML = html;
+    return t.value;
+  }
+
+  function stripHtml(html) {
+    try {
+      return new DOMParser().parseFromString(html || "", "text/html").body.textContent.trim();
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function stopVideo() {
+    const frame = $("videoFrame");
+    if (frame && frame.getAttribute("src")) frame.removeAttribute("src");
+  }
+
+  /* ---- fetchers ---- */
+
+  async function fetchVideos(topic) {
+    const cached = cacheGet(topic);
+    if (cached) return cached;
+
+    if (!YOUTUBE_API_KEY) throw new Error("no-key");
+
+    const params = new URLSearchParams({
+      part: "snippet",
+      type: "video",
+      maxResults: "8",
+      q: topic + " lesson",
+      safeSearch: "strict",
+      videoEmbeddable: "true",
+      relevanceLanguage: "en",
+      key: YOUTUBE_API_KEY
+    });
+
+    const res = await fetch("https://www.googleapis.com/youtube/v3/search?" + params);
+    const json = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      const reason =
+        json && json.error && json.error.errors && json.error.errors[0]
+          ? json.error.errors[0].reason
+          : "error";
+      throw new Error(reason);
+    }
+
+    const videos = (json.items || [])
+      .filter((i) => i.id && /^[\w-]{11}$/.test(i.id.videoId || ""))
+      .map((i) => ({
+        id: i.id.videoId,
+        title: decodeText(i.snippet.title || "Video"),
+        channel: decodeText(i.snippet.channelTitle || ""),
+        thumb:
+          (i.snippet.thumbnails &&
+            (i.snippet.thumbnails.medium || i.snippet.thumbnails.default || {}).url) ||
+          ""
+      }));
+
+    cacheSet(topic, videos);
+    return videos;
+  }
+
+  async function fetchSummary(topic) {
+    const params = new URLSearchParams({
+      action: "query",
+      generator: "search",
+      gsrsearch: topic,
+      gsrlimit: "1",
+      prop: "extracts|info",
+      exintro: "1",
+      explaintext: "1",
+      exsentences: "5",
+      inprop: "url",
+      redirects: "1",
+      format: "json",
+      origin: "*"
+    });
+
+    const res = await fetch("https://en.wikipedia.org/w/api.php?" + params);
+    if (!res.ok) throw new Error("wiki");
+
+    const json = await res.json();
+    const pages = json.query && json.query.pages ? Object.values(json.query.pages) : [];
+    if (!pages.length) return null;
+
+    pages.sort((a, b) => (a.index || 0) - (b.index || 0));
+    const page = pages[0];
+    if (!page.extract) return null;
+
+    return { title: page.title, text: page.extract.trim(), url: page.fullurl };
+  }
+
+  async function fetchPictures(topic) {
+    const params = new URLSearchParams({
+      action: "query",
+      generator: "search",
+      gsrnamespace: "6",
+      gsrsearch: topic,
+      gsrlimit: "16",
+      prop: "imageinfo",
+      iiprop: "url|mime|extmetadata",
+      iiurlwidth: "480",
+      format: "json",
+      origin: "*"
+    });
+
+    const res = await fetch("https://commons.wikimedia.org/w/api.php?" + params);
+    if (!res.ok) throw new Error("commons");
+
+    const json = await res.json();
+    const pages = json.query && json.query.pages ? Object.values(json.query.pages) : [];
+    pages.sort((a, b) => (a.index || 0) - (b.index || 0));
+
+    const okMime = ["image/jpeg", "image/png", "image/svg+xml", "image/webp", "image/gif"];
+
+    return pages
+      .map((pg) => {
+        const info = pg.imageinfo && pg.imageinfo[0];
+        if (!info || !okMime.includes(info.mime) || !info.thumburl) return null;
+
+        const meta = info.extmetadata || {};
+        return {
+          thumb: info.thumburl,
+          caption: String(pg.title || "").replace(/^File:/, "").replace(/\.[a-z0-9]+$/i, "").replace(/_/g, " "),
+          page: info.descriptionurl || "",
+          artist: stripHtml(meta.Artist && meta.Artist.value) || "Unknown author",
+          licence: stripHtml(meta.LicenseShortName && meta.LicenseShortName.value) || ""
+        };
+      })
+      .filter(Boolean)
+      .slice(0, 12);
+  }
+
+  /* ---- renderers ---- */
+
+  function showStatus(box, text) {
+    box.textContent = text;
+    box.classList.remove("hidden");
+  }
+
+  function playVideo(video, scroll) {
+    $("videoStage").classList.remove("hidden");
+    $("videoFrame").src =
+      "https://www.youtube-nocookie.com/embed/" + video.id + "?rel=0&modestbranding=1";
+    $("videoTitle").textContent = video.title;
+    $("videoLink").href = "https://www.youtube.com/watch?v=" + video.id;
+
+    document.querySelectorAll("#videoGrid .video-card").forEach((c) => {
+      c.classList.toggle("active", c.dataset.video === video.id);
+    });
+
+    if (scroll) $("videoStage").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  let currentVideos = [];
+
+  function renderVideos(videos) {
+    const grid = $("videoGrid");
+    grid.replaceChildren();
+    currentVideos = videos;
+
+    if (!videos.length) {
+      showStatus($("videoStatus"), "No videos found for this topic. Try different words.");
+      return;
+    }
+
+    videos.forEach((v) => {
+      const card = el("button", "video-card");
+      card.type = "button";
+      card.dataset.video = v.id;
+
+      if (/^https:\/\/i\.ytimg\.com\//.test(v.thumb)) {
+        const img = document.createElement("img");
+        img.src = v.thumb;
+        img.alt = "";
+        img.loading = "lazy";
+        card.appendChild(img);
+      }
+
+      card.appendChild(el("span", "vc-title", v.title));
+      card.appendChild(el("span", "vc-channel", v.channel));
+      grid.appendChild(card);
+    });
+
+    playVideo(videos[0], false);
+  }
+
+  function videoErrorText(err) {
+    const msg = err && err.message ? err.message : "";
+    if (msg === "no-key") return "Video search is being set up. Please check back soon. The explanation and pictures below still work.";
+    if (msg === "quotaExceeded" || msg === "dailyLimitExceeded" || msg === "rateLimitExceeded")
+      return "Video search has reached its limit for today. Please try again tomorrow. The explanation and pictures below still work.";
+    return "Videos could not be loaded right now. The explanation and pictures below still work.";
+  }
+
+  function renderSummary(data) {
+    const box = $("learnSummary");
+    box.replaceChildren();
+
+    if (!data) {
+      box.appendChild(el("p", "note", "No quick explanation found for this topic. Try different words."));
+      return;
+    }
+
+    const h = el("h3", "", data.title);
+    h.style.margin = "0 0 8px";
+    box.appendChild(h);
+
+    const p = el("p", "", data.text);
+    p.style.margin = "0 0 10px";
+    box.appendChild(p);
+
+    if (data.url) {
+      const a = el("a", "note", "Read more on Wikipedia ↗");
+      a.href = data.url;
+      a.target = "_blank";
+      a.rel = "noopener";
+      box.appendChild(a);
+    }
+  }
+
+  function renderPictures(list) {
+    const grid = $("pictureGrid");
+    grid.replaceChildren();
+    pictures = list;
+
+    if (!list.length) {
+      showStatus($("pictureStatus"), "No pictures found for this topic. Try different words.");
+      return;
+    }
+
+    list.forEach((pic, i) => {
+      const b = el("button", "picture-card");
+      b.type = "button";
+      b.dataset.pic = i;
+      b.setAttribute("aria-label", "View picture: " + pic.caption);
+
+      const img = document.createElement("img");
+      img.src = pic.thumb;
+      img.alt = pic.caption;
+      img.loading = "lazy";
+      b.appendChild(img);
+
+      grid.appendChild(b);
+    });
+  }
+
+  /* ---- main search ---- */
+
+  async function runLearn(raw) {
+    const topic = String(raw || "").trim().slice(0, 80);
+    if (!topic) return;
+
+    const token = ++learnToken;
+    $("learnInput").value = topic;
+
+    $("learnIntro").classList.add("hidden");
+    $("learnResults").classList.remove("hidden");
+
+    stopVideo();
+    $("videoStage").classList.add("hidden");
+    $("videoStatus").classList.add("hidden");
+    $("pictureStatus").classList.add("hidden");
+    $("videoGrid").replaceChildren(el("div", "empty", "Loading videos…"));
+    $("pictureGrid").replaceChildren(el("div", "empty", "Loading pictures…"));
+    $("learnSummary").replaceChildren(el("p", "note", "Loading explanation…"));
+
+    const [v, s, p] = await Promise.allSettled([
+      fetchVideos(topic),
+      fetchSummary(topic),
+      fetchPictures(topic)
+    ]);
+
+    if (token !== learnToken) return;
+
+    $("videoGrid").replaceChildren();
+    $("pictureGrid").replaceChildren();
+
+    if (v.status === "fulfilled") renderVideos(v.value);
+    else {
+      if (!v.reason || v.reason.message !== "no-key") console.error("Video search failed:", v.reason);
+      showStatus($("videoStatus"), videoErrorText(v.reason));
+    }
+
+    if (s.status === "fulfilled") renderSummary(s.value);
+    else {
+      console.error("Explanation failed:", s.reason);
+      renderSummary(null);
+    }
+
+    if (p.status === "fulfilled") renderPictures(p.value);
+    else {
+      console.error("Pictures failed:", p.reason);
+      showStatus($("pictureStatus"), "Pictures could not be loaded right now.");
+    }
+  }
+
+  $("learnForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    runLearn($("learnInput").value);
+  });
+
+  (function buildSuggestions() {
+    const row = $("learnSuggest");
+    LEARN_TOPICS.forEach((t) => {
+      const b = el("button", "chip", t);
+      b.type = "button";
+      b.dataset.topic = t;
+      row.appendChild(b);
+    });
+    row.addEventListener("click", (e) => {
+      const chip = e.target.closest(".chip");
+      if (chip) runLearn(chip.dataset.topic);
+    });
+  })();
+
+  $("videoGrid").addEventListener("click", (e) => {
+    const card = e.target.closest(".video-card");
+    if (!card) return;
+    const v = currentVideos.find((x) => x.id === card.dataset.video);
+    if (v) playVideo(v, true);
+  });
+
+  /* ---- picture viewer ---- */
+
+  const lightbox = $("lightbox");
+
+  function closeLightbox() {
+    lightbox.classList.add("hidden");
+    $("lightboxImg").removeAttribute("src");
+  }
+
+  $("pictureGrid").addEventListener("click", (e) => {
+    const card = e.target.closest(".picture-card");
+    if (!card) return;
+
+    const pic = pictures[Number(card.dataset.pic)];
+    if (!pic) return;
+
+    $("lightboxImg").src = pic.thumb;
+    $("lightboxImg").alt = pic.caption;
+    $("lightboxCaption").textContent =
+      pic.caption + " — " + pic.artist + (pic.licence ? " (" + pic.licence + ")" : "");
+
+    const link = $("lightboxLink");
+    if (pic.page) {
+      link.href = pic.page;
+      link.classList.remove("hidden");
+    } else {
+      link.classList.add("hidden");
+    }
+
+    lightbox.classList.remove("hidden");
+  });
+
+  $("lightboxClose").addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !lightbox.classList.contains("hidden")) closeLightbox();
+  });
+
+  /* =========================================================
+     GHANA GES RESOURCES (curriculumresources.edu.gh)
+     ========================================================= */
+
+  const GES_SITE = "https://curriculumresources.edu.gh";
+  const GES_PER_PAGE = 30;
+  const GES_SUBJECTS = [
+    "Mathematics",
+    "English",
+    "Integrated Science",
+    "Social Studies",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "ICT",
+    "Economics",
+    "Geography",
+    "History"
+  ];
+
+  let gesStarted = false;
+  let gesTerm = "";
+  let gesPage = 1;
+  let gesItems = [];
+  let gesMore = false;
+  let gesBusy = false;
+  let gesToken = 0;
+
+  function gesCleanTitle(raw) {
+    return stripHtml(raw).replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim() || "GES resource";
+  }
+
+  async function fetchGes(term, page) {
+    const params = new URLSearchParams({
+      mime_type: "application/pdf",
+      per_page: String(GES_PER_PAGE),
+      page: String(page),
+      _fields: "id,title,source_url,date"
+    });
+    if (term) params.set("search", term);
+
+    const res = await fetch(GES_SITE + "/wp-json/wp/v2/media?" + params);
+
+    /* WordPress answers 400 when the page number is past the last page */
+    if (res.status === 400 && page > 1) return [];
+    if (!res.ok) throw new Error("ges " + res.status);
+
+    const json = await res.json();
+    if (!Array.isArray(json)) throw new Error("ges format");
+
+    return json
+      .map((i) => ({
+        id: i.id,
+        title: gesCleanTitle(i.title && i.title.rendered),
+        url: String(i.source_url || ""),
+        date: i.date || ""
+      }))
+      .filter((i) => i.url.indexOf(GES_SITE + "/") === 0 && /\.pdf$/i.test(i.url));
+  }
+
+  function gesVisible() {
+    const hide = $("gesHideTeacher").checked;
+    return gesItems.filter((i) => !hide || !/teacher|\btm\b/i.test(i.title));
+  }
+
+  function renderGes() {
+    const box = $("gesResults");
+    const list = gesVisible();
+
+    box.replaceChildren();
+
+    if (!list.length) {
+      const e = el("div", "empty");
+      e.appendChild(el("strong", "", gesBusy ? "Searching…" : "No resources found"));
+      e.appendChild(
+        document.createTextNode(
+          gesBusy ? "Contacting the Ministry of Education website." : "Try another subject or untick “Hide teacher manuals”."
+        )
+      );
+      box.appendChild(e);
+    }
+
+    list.forEach((item) => {
+      const card = el("article", "resource-card");
+      card.appendChild(el("div", "pdf-icon", "PDF"));
+
+      const info = el("div", "resource-info");
+      info.appendChild(el("h3", "resource-title", item.title));
+
+      const meta = el("div", "resource-meta");
+      meta.appendChild(el("span", "subject-text", "Ghana GES"));
+      const d = formatDate(item.date);
+      if (d) {
+        meta.appendChild(el("span", "", "•"));
+        meta.appendChild(el("span", "", d));
+      }
+      info.appendChild(meta);
+      card.appendChild(info);
+
+      const actions = el("div", "resource-actions");
+      const dl = el("button", "btn btn-primary btn-small", "Download");
+      dl.type = "button";
+      dl.dataset.ges = String(item.id);
+      actions.appendChild(dl);
+      card.appendChild(actions);
+
+      box.appendChild(card);
+    });
+
+    $("gesMore").classList.toggle("hidden", !gesMore || gesBusy);
+  }
+
+  async function runGes(term, append) {
+    const token = ++gesToken;
+    const status = $("gesStatus");
+
+    if (!append) {
+      gesTerm = String(term || "").trim().slice(0, 80);
+      gesPage = 1;
+      gesItems = [];
+      gesMore = false;
+      $("gesInput").value = gesTerm;
+      document.querySelectorAll("#gesSubjects .chip").forEach((c) => {
+        c.classList.toggle("active", c.dataset.subject.toLowerCase() === gesTerm.toLowerCase());
+      });
+    }
+
+    status.classList.add("hidden");
+    gesBusy = true;
+    renderGes();
+
+    try {
+      const found = await fetchGes(gesTerm, gesPage);
+      if (token !== gesToken) return;
+
+      const seen = new Set(gesItems.map((i) => i.id));
+      found.forEach((i) => {
+        if (!seen.has(i.id)) gesItems.push(i);
+      });
+      gesMore = found.length > 0;
+    } catch (err) {
+      if (token !== gesToken) return;
+      console.error("GES search failed:", err);
+      showStatus(
+        status,
+        "Could not reach the Ministry of Education website right now. Use the links below to browse it directly, or try again later."
+      );
+    }
+
+    gesBusy = false;
+    renderGes();
+  }
+
+  (function buildGesChips() {
+    const row = $("gesSubjects");
+    GES_SUBJECTS.forEach((t) => {
+      const b = el("button", "chip", t);
+      b.type = "button";
+      b.dataset.subject = t;
+      row.appendChild(b);
+    });
+    row.addEventListener("click", (e) => {
+      const chip = e.target.closest(".chip");
+      if (chip) runGes(chip.dataset.subject);
+    });
+  })();
+
+  $("gesForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    runGes($("gesInput").value);
+  });
+
+  $("gesHideTeacher").addEventListener("change", renderGes);
+
+  $("gesMore").addEventListener("click", () => {
+    gesPage++;
+    runGes(gesTerm, true);
+  });
+
+  $("gesResults").addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-ges]");
+    if (!btn) return;
+
+    const item = gesItems.find((i) => String(i.id) === btn.dataset.ges);
+    if (!item) return;
+
+    returnView = "ges";
+    openDownloadFile({
+      id: "ges-" + item.id,
+      title: item.title,
+      subject: "Ghana GES",
+      type: "Ministry of Education",
+      created_at: item.date,
+      external_url: item.url
+    });
   });
 
   /* =========================================================
