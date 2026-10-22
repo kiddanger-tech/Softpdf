@@ -1,1741 +1,856 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#1c1a17">
-
-    <title>Busy Brains</title>
-
-    <meta
-        name="description"
-        content="Busy Brains — study smarter with PDFs, revision materials and WASSCE-style trial papers."
-    >
-
-    <style>
-/* =========================================================
-   Busy Brains
-   EduLibrary-style layout
-   ========================================================= */
-
-:root {
-    --stone: #1c1a17;
-    --muted: #716b62;
-    --sand: #ece6da;
-    --card: #f7f3eb;
-    --clay: #a8623f;
-    --clay-dark: #8f5133;
-    --clay-soft: #f1e2d8;
-    --green: #2f6b4f;
-    --red: #9b3d32;
-    --border: #d8d0c2;
-    --white: #ffffff;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: var(--sand);
-    color: var(--stone);
-}
-
-button,
-input {
-    font: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-.hidden {
-    display: none !important;
-}
-
-
-/* ---------------------------------------------------------
-   HEADER
-   --------------------------------------------------------- */
-
-.topbar {
-    height: 64px;
-    background: var(--stone);
-    border-bottom: 1px solid #000;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.topbar-inner {
-    max-width: 1100px;
-    height: 100%;
-    margin: auto;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    text-decoration: none;
-    color: #ffffff;
-    font-size: 20px;
-    font-weight: 700;
-}
-
-.logo-icon {
-    font-size: 23px;
-}
-
-.desktop-nav {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.nav-link {
-    border: none;
-    background: transparent;
-    padding: 10px 14px;
-    font-size: 14px;
-    color: #c9c2b8;
-}
-
-.nav-link:hover {
-    color: #ffffff;
-}
-
-.nav-link.active {
-    color: #ffffff;
-    font-weight: 600;
-}
-
-.nav-count {
-    display: inline-flex;
-    min-width: 20px;
-    height: 20px;
-    align-items: center;
-    justify-content: center;
-    margin-left: 4px;
-    border-radius: 10px;
-    background: var(--clay);
-    color: #ffffff;
-    font-size: 11px;
-}
-
-.menu-button {
-    display: none;
-    border: none;
-    background: transparent;
-    font-size: 23px;
-    color: #ffffff;
-}
-
-
-/* ---------------------------------------------------------
-   MOBILE MENU
-   --------------------------------------------------------- */
-
-.mobile-menu {
-    display: none;
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    padding: 8px 20px;
-}
-
-.mobile-nav {
-    display: block;
-    width: 100%;
-    text-align: left;
-    border: none;
-    background: none;
-    padding: 12px 0;
-    font-size: 15px;
-    color: #555;
-}
-
-.mobile-nav.active {
-    color: var(--clay);
-    font-weight: 600;
-}
-
-
-/* ---------------------------------------------------------
-   MAIN CONTAINER
-   --------------------------------------------------------- */
-
-.container {
-    width: 100%;
-    max-width: 1100px;
-    margin: auto;
-    padding: 36px 20px 70px;
-}
-
-
-/* ---------------------------------------------------------
-   INTRO
-   --------------------------------------------------------- */
-
-.intro {
-    margin-bottom: 24px;
-}
-
-.intro h1 {
-    margin: 0 0 8px;
-    font-size: 28px;
-    font-weight: 600;
-}
-
-.intro p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 15px;
-    line-height: 1.5;
-}
-
-
-/* ---------------------------------------------------------
-   SEARCH
-   --------------------------------------------------------- */
-
-.search-container {
-    position: relative;
-    max-width: 700px;
-    margin-bottom: 20px;
-}
-
-.search-container input {
-    width: 100%;
-    height: 46px;
-    padding: 0 15px 0 43px;
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    background: var(--white);
-    color: var(--stone);
-    font-size: 14px;
-    outline: none;
-}
-
-.search-container input:focus {
-    border-color: var(--clay);
-    box-shadow: 0 0 0 2px rgba(168, 98, 63, 0.12);
-}
-
-.search-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: #777;
-    pointer-events: none;
-}
-
-
-/* ---------------------------------------------------------
-   ADS
-   --------------------------------------------------------- */
-
-.ad-container {
-    width: 100%;
-    max-width: 100%;
-    margin: 0 0 20px;
-    text-align: center;
-    overflow: hidden;
-}
-
-.banner-ad {
-    min-height: 50px;
-}
-
-.native-ad {
-    min-height: 80px;
-}
-
-
-/* ---------------------------------------------------------
-   SECTIONS
-   --------------------------------------------------------- */
-
-.year-section,
-.library-section {
-    margin-bottom: 30px;
-}
-
-.section-heading {
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.section-heading h2 {
-    margin: 0;
-    font-size: 17px;
-    font-weight: 600;
-}
-
-.resource-count {
-    margin-left: 8px;
-    color: #777;
-    font-size: 13px;
-}
-
-
-/* ---------------------------------------------------------
-   CLASS BUTTONS
-   --------------------------------------------------------- */
-
-.year-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-.year-button {
-    padding: 9px 17px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: var(--white);
-    color: #50555a;
-    font-size: 14px;
-}
-
-.year-button:hover {
-    border-color: var(--clay);
-    color: var(--clay);
-}
-
-.year-button.active {
-    background: var(--clay);
-    border-color: var(--clay);
-    color: #ffffff;
-}
-
-
-/* ---------------------------------------------------------
-   SUBJECT FILTERS
-   --------------------------------------------------------- */
-
-.subject-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    margin-bottom: 18px;
-}
-
-.chip {
-    padding: 7px 12px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: var(--white);
-    color: #555;
-    font-size: 12.5px;
-}
-
-.chip:hover {
-    border-color: var(--clay);
-    color: var(--clay);
-}
-
-.chip.active {
-    background: var(--clay-soft);
-    border-color: #dcbfae;
-    color: var(--clay);
-    font-weight: 600;
-}
-
-.trial-note {
-    margin-bottom: 14px;
-    padding: 11px 13px;
-    border-left: 3px solid var(--clay);
-    background: var(--card);
-    color: var(--muted);
-    font-size: 12.5px;
-    line-height: 1.5;
-}
-
-
-/* ---------------------------------------------------------
-   RESOURCE LIST
-   --------------------------------------------------------- */
-
-.results {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.resource-card {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
-    min-height: 76px;
-    padding: 13px 15px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    transition: border-color 0.15s ease, background 0.15s ease;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1c1a17">
+<meta name="description" content="Busy Brains — study smarter with SHS resources, quizzes, flashcards, formulas and WASSCE-style practice.">
+<title>Busy Brains | Study Smarter</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+:root{
+  --ink:#1c1a17;
+  --muted:#716b62;
+  --sand:#f3efe7;
+  --paper:#fff;
+  --card:#faf7f1;
+  --clay:#a8623f;
+  --clay-dark:#8f5133;
+  --clay-soft:#f1e2d8;
+  --green:#2f6b4f;
+  --border:#ded7cb;
+  --blue:#315f75;
+  --shadow:0 8px 24px rgba(28,26,23,.06);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--sand);
+  color:var(--ink);
+  font-family:Arial,Helvetica,sans-serif;
+  line-height:1.5;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
+  outline:3px solid #d49c7e;
+  outline-offset:2px;
+}
+.hidden{display:none!important}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:var(--ink);
+  color:white;
+  border-bottom:1px solid #000;
+}
+.topbar-inner{
+  max-width:1150px;
+  margin:auto;
+  min-height:66px;
+  padding:0 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+.logo{
+  display:flex;
+  gap:9px;
+  align-items:center;
+  color:white;
+  text-decoration:none;
+  font-size:20px;
+  font-weight:700;
+}
+.logo-icon{font-size:25px}
+.nav{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  flex-wrap:wrap;
+}
+.nav button,.menu-btn{
+  border:0;
+  background:transparent;
+  color:#d7d0c7;
+  padding:10px 12px;
+  border-radius:7px;
+  font-size:13px;
+}
+.nav button:hover,.nav button.active{
+  color:white;
+  background:#37322c;
+}
+.count-pill{
+  display:inline-flex;
+  min-width:20px;
+  height:20px;
+  align-items:center;
+  justify-content:center;
+  background:var(--clay);
+  border-radius:20px;
+  color:white;
+  font-size:11px;
+  margin-left:4px;
+}
+.menu-btn{display:none;font-size:22px}
+.mobile-menu{
+  display:none;
+  background:white;
+  padding:8px 18px;
+  border-bottom:1px solid var(--border);
+}
+.mobile-menu.open{display:grid}
+.mobile-menu button{
+  padding:12px 0;
+  text-align:left;
+  border:0;
+  background:none;
+  color:var(--ink);
+}
+.wrap{
+  max-width:1150px;
+  margin:auto;
+  padding:30px 20px 60px;
+}
+.hero{
+  position:relative;
+  overflow:hidden;
+  padding:34px;
+  border-radius:16px;
+  background:var(--ink);
+  color:white;
+  box-shadow:var(--shadow);
+  margin-bottom:22px;
+}
+.hero:after{
+  content:"🧠";
+  position:absolute;
+  right:35px;
+  top:18px;
+  font-size:95px;
+  opacity:.12;
+  pointer-events:none;
+}
+.eyebrow{
+  font-size:11px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:#e2b89f;
+  font-weight:700;
+}
+.hero h1{
+  font-size:clamp(28px,4vw,43px);
+  line-height:1.1;
+  margin:10px 0 12px;
+  max-width:620px;
+}
+.hero p{
+  color:#d6cfc5;
+  max-width:620px;
+  margin:0 0 20px;
+}
+.hero-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.btn{
+  border:1px solid transparent;
+  border-radius:7px;
+  padding:11px 15px;
+  font-weight:700;
+  font-size:13px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+}
+.btn-primary{background:var(--clay);color:white}
+.btn-primary:hover{background:var(--clay-dark)}
+.btn-light{background:white;color:var(--ink)}
+.btn-outline{
+  background:transparent;
+  border-color:var(--border);
+  color:var(--ink);
+}
+.btn-small{padding:7px 10px;font-size:12px}
+
+.quick-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin:0 0 30px;
+}
+.quick-card{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  text-align:left;
+  padding:16px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:11px;
+  color:var(--ink);
+  text-decoration:none;
+  transition:transform .15s,border-color .15s;
+}
+.quick-card:hover{
+  transform:translateY(-2px);
+  border-color:#c4a28c;
+}
+.quick-icon{font-size:24px}
+.quick-card strong{display:block;font-size:14px}
+.quick-card small{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  margin-top:3px;
+}
+
+.section{margin:30px 0}
+.section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+.section-head h2{font-size:19px;margin:0}
+.section-head p{
+  margin:3px 0 0;
+  color:var(--muted);
+  font-size:12px;
+}
+.search-box{
+  position:relative;
+  margin:0 0 18px;
+  max-width:760px;
+}
+.search-box input{
+  width:100%;
+  height:48px;
+  padding:0 15px 0 44px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:white;
+}
+.search-box span{position:absolute;left:15px;top:12px}
+
+.filters{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:10px 0 15px;
+}
+.filter-btn,.chip{
+  padding:8px 13px;
+  border:1px solid var(--border);
+  border-radius:7px;
+  background:white;
+  color:#555;
+  font-size:12px;
+  white-space:nowrap;
+}
+.filter-btn.active,.chip.active{
+  background:var(--clay);
+  border-color:var(--clay);
+  color:white;
+}
+.subject-row{
+  display:flex;
+  gap:7px;
+  overflow:auto;
+  padding:2px 0 8px;
+  margin-bottom:14px;
+}
+.subject-row .chip{flex-shrink:0}
+
+.resource-list{display:grid;grid-template-columns:1fr;gap:9px}
+.resource-card{
+  display:flex;
+  gap:13px;
+  align-items:center;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:13px 15px;
+  min-width:0;
+}
+.resource-card.downloaded{border-left:4px solid var(--green)}
+.pdf-icon{
+  width:40px;
+  height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  background:#fff4f1;
+  border:1px solid #efd3ca;
+  border-radius:5px;
+  color:#b64031;
+  font-size:10px;
+  font-weight:800;
+}
+.resource-info{flex:1;min-width:0}
+.resource-title{
+  font-size:14px;
+  line-height:1.4;
+  margin:0 0 5px;
+  overflow-wrap:anywhere;
+}
+.resource-meta{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  color:var(--muted);
+  font-size:11px;
+}
+.subject-text{color:var(--clay);font-weight:700}
+.resource-desc{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:5px;
+  overflow-wrap:anywhere;
+}
+.resource-actions{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  flex-shrink:0;
+}
+.icon-btn{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:8px 9px;
+  color:var(--clay);
+  font-size:15px;
+}
+.empty{
+  padding:30px 16px;
+  text-align:center;
+  color:var(--muted);
+  background:#fffdf9;
+  border:1px dashed var(--border);
+  border-radius:9px;
+}
+.empty strong{
+  display:block;
+  color:var(--ink);
+  margin-bottom:4px;
+}
+.ad-container{
+  text-align:center;
+  overflow:hidden;
+  margin:18px auto;
+  max-width:100%;
+}
+.banner-ad{min-height:50px}
+.native-ad{min-height:70px}
+
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+.stat-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:16px;
+}
+.stat-card span{font-size:12px;color:var(--muted)}
+.stat-card strong{
+  display:block;
+  font-size:25px;
+  margin-top:4px;
+}
+.panel{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:grid;gap:6px;margin-bottom:12px}
+.field label{font-size:12px;font-weight:700;color:#5e574f}
+.field input,.field select,.field textarea{
+  width:100%;
+  padding:10px 11px;
+  border:1px solid var(--border);
+  border-radius:7px;
+  background:white;
+  color:var(--ink);
+}
+.task-list{display:grid;gap:8px;margin-top:14px}
+.task{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  padding:10px;
+  border:1px solid var(--border);
+  border-radius:7px;
+}
+.task input{margin-top:5px}
+.task.done .task-title{
+  text-decoration:line-through;
+  color:var(--muted);
+}
+.task-main{flex:1}
+.task-title{font-size:13px;font-weight:700}
+.task-sub{font-size:11px;color:var(--muted)}
+
+.flashcard{
+  min-height:180px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:25px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--card);
+  font-size:21px;
+  font-weight:700;
+  cursor:pointer;
+}
+.flashcard small{
+  display:block;
+  font-size:11px;
+  font-weight:400;
+  color:var(--muted);
+  margin-top:10px;
+}
+.flash-controls{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.quiz-question{font-size:17px;font-weight:700;margin:0 0 14px}
+.option-list{display:grid;gap:8px}
+.option{
+  padding:11px 12px;
+  border:1px solid var(--border);
+  border-radius:7px;
+  background:white;
+  text-align:left;
+}
+.option.selected{border-color:var(--clay);background:var(--clay-soft)}
+.option.correct{border-color:var(--green);background:#e7f3eb}
+.option.wrong{border-color:#b64031;background:#fbe9e6}
+.feedback{
+  margin-top:12px;
+  padding:12px;
+  border-radius:7px;
+  background:var(--sand);
+  font-size:13px;
+}
+.formula-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.formula{
+  padding:13px;
+  border:1px solid var(--border);
+  background:white;
+  border-radius:8px;
+}
+.formula strong{display:block;font-size:13px}
+.formula code{
+  display:block;
+  margin:7px 0;
+  color:var(--clay);
+  font-size:14px;
+  white-space:normal;
+}
+.formula small{color:var(--muted);font-size:11px}
+.note{font-size:12px;color:var(--muted);line-height:1.6}
+.status{
+  margin:10px 0;
+  padding:11px 12px;
+  background:#f8e5e2;
+  border:1px solid #e8c5c0;
+  color:#9b3d32;
+  border-radius:7px;
+  font-size:12px;
+}
+.storage-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 15px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:9px;
+  margin-top:14px;
+}
+.footer{
+  padding:28px 20px;
+  background:white;
+  border-top:1px solid var(--border);
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+}
+.footer strong{
+  display:block;
+  color:var(--clay);
+  font-size:15px;
+  margin-bottom:5px;
+}
+.download-screen{min-height:100vh}
+.download-main{max-width:540px;margin:auto;padding:25px 16px 50px}
+.download-card{
+  padding:22px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+.download-card h2{font-size:20px;line-height:1.4;overflow-wrap:anywhere}
+.steps{display:flex;gap:7px;margin:18px 0}
+.step-dot{height:5px;flex:1;background:var(--border);border-radius:10px}
+.step-dot.active{background:var(--clay)}
+.download-message{
+  padding:13px;
+  background:var(--sand);
+  border-radius:7px;
+  color:var(--muted);
+  font-size:13px;
+  margin-bottom:14px;
+}
+.download-status{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+.download-main .top-back{
+  border:0;
+  background:transparent;
+  padding:0;
+  margin-bottom:15px;
+  color:var(--ink);
+  font-weight:700;
+}
+.error{font-size:12px;color:#b64031;margin-top:10px;overflow-wrap:anywhere}
+
+@media(max-width:800px){
+  .nav{display:none}
+  .menu-btn{display:block}
+  .quick-grid{grid-template-columns:repeat(2,1fr)}
+  .formula-grid{grid-template-columns:repeat(2,1fr)}
+  .hero{padding:28px}
+  .hero:after{right:14px;font-size:70px}
+  .two-col{grid-template-columns:1fr}
+}
+@media(max-width:520px){
+  .wrap{padding:20px 13px 45px}
+  .topbar-inner{padding:0 13px;min-height:58px}
+  .logo{font-size:18px}
+  .hero{padding:24px 20px}
+  .hero h1{font-size:29px;max-width:90%}
+  .hero p{font-size:13px}
+  .hero:after{right:7px;top:12px;font-size:58px}
+  .quick-grid{gap:8px}
+  .quick-card{padding:12px;gap:8px}
+  .quick-icon{font-size:20px}
+  .quick-card strong{font-size:12px}
+  .quick-card small{font-size:10px}
+  .section-head h2{font-size:17px}
+  .resource-card{align-items:flex-start;padding:11px;gap:9px}
+  .pdf-icon{width:34px;height:38px}
+  .resource-title{font-size:13px}
+  .resource-actions{flex-direction:column}
+  .resource-actions .btn{padding:7px 8px;font-size:11px}
+  .icon-btn{padding:6px 8px}
+  .stats-grid{gap:7px}
+  .stat-card{padding:12px}
+  .stat-card strong{font-size:20px}
+  .formula-grid{grid-template-columns:1fr}
+  .storage-bar{align-items:stretch;flex-direction:column}
+  .storage-bar .btn{width:100%}
 }
-
-.resource-card:hover {
-    border-color: #c5bba9;
-    background: #fdfcfa;
-}
-
-.resource-card.downloaded {
-    border-left: 3px solid var(--green);
-}
-
-.resource-icon {
-    flex-shrink: 0;
-    width: 40px;
-    height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid #d8d8d8;
-    background: #fafafa;
-    color: #d32f2f;
-    font-size: 10px;
-    font-weight: 700;
-}
-
-.resource-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.resource-title {
-    margin: 0 0 5px;
-    color: #292d32;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.4;
-    word-break: break-word;
-}
-
-.resource-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 7px;
-    color: #777;
-    font-size: 11.5px;
-}
-
-.resource-subject {
-    color: var(--clay);
-}
-
-.resource-desc {
-    margin-top: 5px;
-    color: var(--muted);
-    font-size: 12px;
-    line-height: 1.45;
-}
-
-.resource-desc:empty {
-    display: none;
-}
-
-
-/* ---------------------------------------------------------
-   DOWNLOAD BUTTON
-   --------------------------------------------------------- */
-
-.download-button {
-    flex-shrink: 0;
-    min-width: 86px;
-    padding: 8px 12px;
-    border: 1px solid var(--clay);
-    border-radius: 4px;
-    background: var(--clay);
-    color: #ffffff;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.download-button:hover {
-    background: var(--clay-dark);
-}
-
-
-/* ---------------------------------------------------------
-   EMPTY / ERROR
-   --------------------------------------------------------- */
-
-.empty {
-    padding: 45px 20px;
-    text-align: center;
-    color: #777;
-}
-
-.empty .big {
-    margin-bottom: 7px;
-    color: #333;
-    font-size: 17px;
-    font-weight: 600;
-}
-
-.error-box {
-    margin-top: 12px;
-    background: #f8e5e2;
-    color: var(--red);
-    border: 1px solid #e8c5c0;
-    border-radius: 5px;
-    padding: 14px;
-    font-size: 13px;
-    line-height: 1.5;
-}
-
-
-/* ---------------------------------------------------------
-   STORAGE BAR
-   --------------------------------------------------------- */
-
-.storage-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    padding: 14px 16px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    color: #555;
-    font-size: 13px;
-}
-
-.storage-bar strong {
-    display: block;
-    margin-bottom: 3px;
-    color: #333;
-}
-
-#storageText {
-    color: #777;
-    font-size: 12px;
-}
-
-.clear-button {
-    padding: 7px 11px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: white;
-    color: #555;
-    font-size: 12px;
-}
-
-.clear-button:hover {
-    border-color: #c62828;
-    color: #c62828;
-}
-
-
-/* ---------------------------------------------------------
-   DOWNLOAD SCREEN
-   --------------------------------------------------------- */
-
-#downloadScreen {
-    min-height: 100vh;
-    background: var(--sand);
-}
-
-.back-button {
-    border: 0;
-    background: transparent;
-    color: #ffffff;
-    padding: 0;
-    font-size: 14px;
-    font-weight: 700;
-}
-
-.download-main {
-    width: 100%;
-    max-width: 520px;
-    margin: auto;
-    padding: 24px 15px 40px;
-}
-
-.download-card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    padding: 20px;
-}
-
-.download-card h2 {
-    margin: 0 0 8px;
-    font-size: 20px;
-    line-height: 1.35;
-    word-break: break-word;
-}
-
-.download-meta {
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.5;
-    margin-bottom: 20px;
-}
-
-.steps {
-    display: flex;
-    gap: 7px;
-    margin-bottom: 20px;
-}
-
-.step-dot {
-    height: 6px;
-    flex: 1;
-    border-radius: 10px;
-    background: var(--border);
-}
-
-.step-dot.active {
-    background: var(--clay);
-}
-
-.download-message {
-    background: var(--sand);
-    border-radius: 5px;
-    padding: 15px;
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.5;
-    margin-bottom: 15px;
-}
-
-.continue-button,
-.download-now-button {
-    width: 100%;
-    border: 0;
-    border-radius: 5px;
-    padding: 14px;
-    color: #ffffff;
-    background: var(--clay);
-    font-weight: 700;
-}
-
-.continue-button:disabled,
-.download-now-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.download-now-button {
-    background: var(--green);
-}
-
-.download-status {
-    text-align: center;
-    margin-top: 12px;
-    color: var(--muted);
-    font-size: 12px;
-}
-
-
-/* ---------------------------------------------------------
-   FOOTER
-   --------------------------------------------------------- */
-
-footer {
-    padding: 30px 20px;
-    background: var(--white);
-    border-top: 1px solid var(--border);
-    text-align: center;
-    color: #777;
-    font-size: 12px;
-}
-
-.footer-inner {
-    max-width: 700px;
-    margin: auto;
-}
-
-.footer-logo {
-    margin-bottom: 7px;
-    color: var(--clay);
-    font-size: 15px;
-    font-weight: 600;
-}
-
-footer p {
-    margin: 5px 0;
-}
-
-footer .source {
-    margin-top: 12px;
-    color: #999;
-    line-height: 1.5;
-}
-
-
-/* ---------------------------------------------------------
-   RESPONSIVE
-   --------------------------------------------------------- */
-
-@media (max-width: 700px) {
-
-    .topbar {
-        height: 58px;
-    }
-
-    .topbar-inner {
-        padding: 0 15px;
-    }
-
-    .logo {
-        font-size: 18px;
-    }
-
-    .desktop-nav {
-        display: none;
-    }
-
-    .menu-button {
-        display: block;
-    }
-
-    .mobile-menu.open {
-        display: block;
-    }
-
-    .container {
-        padding: 27px 15px 55px;
-    }
-
-    .intro h1 {
-        font-size: 24px;
-    }
-
-    .intro p {
-        font-size: 14px;
-    }
-
-    .year-buttons {
-        gap: 6px;
-    }
-
-    .year-button {
-        padding: 8px 13px;
-    }
-
-    .subject-filters {
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        padding-bottom: 4px;
-    }
-
-    .chip {
-        flex-shrink: 0;
-    }
-
-    .resource-card {
-        align-items: flex-start;
-        padding: 12px;
-        gap: 10px;
-    }
-
-    .resource-icon {
-        width: 36px;
-        height: 40px;
-    }
-
-    .resource-title {
-        font-size: 13px;
-    }
-
-    .resource-details {
-        font-size: 10.5px;
-    }
-
-    .download-button {
-        min-width: 72px;
-        padding: 7px 9px;
-        font-size: 11px;
-    }
-
-    .storage-bar {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .clear-button {
-        width: 100%;
-    }
-}
-
-@media (max-width: 420px) {
-
-    .download-button {
-        min-width: 64px;
-        align-self: center;
-    }
-
-    .resource-details .sep,
-    .resource-details .resource-date {
-        display: none;
-    }
-}
-
 </style>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
-
-    <!-- =====================================================
-         LIBRARY SCREEN
-         ===================================================== -->
-
-    <div id="libraryScreen">
-
-        <!-- HEADER -->
-
-        <header class="topbar">
-
-            <div class="topbar-inner">
-
-                <a href="#" class="logo">
-                    <span class="logo-icon">🧠</span>
-                    <span>Busy Brains</span>
-                </a>
-
-                <nav class="desktop-nav">
-
-                    <button class="nav-link active" data-tab="browse">
-                        Library
-                    </button>
-
-                    <button class="nav-link" data-tab="downloads">
-                        My Downloads
-                        <span id="navDownloadCount" class="nav-count">0</span>
-                    </button>
-
-                </nav>
-
-                <button class="menu-button" id="menuButton" aria-label="Open menu">
-                    ☰
-                </button>
-
-            </div>
-
-        </header>
-
-
-        <!-- MOBILE MENU -->
-
-        <div class="mobile-menu" id="mobileMenu">
-
-            <button class="mobile-nav active" data-tab="browse">
-                Library
-            </button>
-
-            <button class="mobile-nav" data-tab="downloads">
-                My Downloads
-            </button>
-
-        </div>
-
-
-        <!-- MAIN -->
-
-        <main class="container">
-
-            <!-- INTRO -->
-
-            <section class="intro">
-
-                <h1>Study Resources</h1>
-
-                <p>
-                    Revision materials, study notes, past questions and
-                    WASSCE-style trial papers in one place.
-                </p>
-
-            </section>
-
-
-            <!-- =================================================
-                 BROWSE VIEW
-                 ================================================= -->
-
-            <div id="browseView">
-
-                <!-- SEARCH -->
-
-                <div class="search-container">
-
-                    <span class="search-icon">🔍</span>
-
-                    <input
-                        type="search"
-                        id="searchInput"
-                        placeholder="Search PDFs, subjects or topics..."
-                        autocomplete="off"
-                    >
-
-                </div>
-
-
-                <!-- 320x50 AD -->
-
-                <div class="ad-container banner-ad">
-
-                    <script>
-                        atOptions = {
-                            'key' : '232ed7b82026d98d03cefffdaacb5d80',
-                            'format' : 'iframe',
-                            'height' : 50,
-                            'width' : 320,
-                            'params' : {}
-                        };
-                    </script>
-
-                    <script src="https://ransomescapesmooth.com/232ed7b82026d98d03cefffdaacb5d80/invoke.js"></script>
-
-                </div>
-
-
-                <!-- NATIVE BANNER -->
-
-                <div class="ad-container native-ad">
-
-                    <script
-                        async="async"
-                        data-cfasync="false"
-                        src="https://ransomescapesmooth.com/2aaa6d636939a9cc6825010316fd8ca6/invoke.js">
-                    </script>
-
-                    <div id="container-2aaa6d636939a9cc6825010316fd8ca6"></div>
-
-                </div>
-
-
-                <!-- CLASS SELECTOR -->
-
-                <section class="year-section">
-
-                    <div class="section-heading">
-                        <h2>Class</h2>
-                    </div>
-
-                    <div class="year-buttons">
-
-                        <button class="year-button active" data-year="all">All</button>
-                        <button class="year-button" data-year="Form 1">Form 1</button>
-                        <button class="year-button" data-year="Form 2">Form 2</button>
-                        <button class="year-button" data-year="Form 3">Form 3</button>
-
-                    </div>
-
-                </section>
-
-
-                <!-- LIBRARY -->
-
-                <section class="library-section">
-
-                    <div class="section-heading">
-
-                        <h2 id="sectionTitle">All Resources</h2>
-
-                        <span id="browseCount" class="resource-count">0</span>
-
-                    </div>
-
-                    <!-- SUBJECT FILTER -->
-
-                    <div id="filterChips" class="subject-filters"></div>
-
-                    <div id="trialNote" class="trial-note hidden">
-                        Busy Brains practice papers designed in a WASSCE-style
-                        format. These are not official WAEC examination papers.
-                    </div>
-
-                    <!-- RESULTS -->
-
-                    <div id="results" class="results"></div>
-
-                    <div id="errorBox" class="error-box hidden"></div>
-
-                </section>
-
-            </div>
-
-
-            <!-- =================================================
-                 DOWNLOADS VIEW
-                 ================================================= -->
-
-            <div id="downloadsView" class="hidden">
-
-                <section class="library-section">
-
-                    <div class="section-heading">
-
-                        <h2>My Downloads</h2>
-
-                        <span id="downloadsCount" class="resource-count">0</span>
-
-                    </div>
-
-                    <div id="downloadsResults" class="results"></div>
-
-                </section>
-
-
-                <section id="storageBar" class="storage-bar" style="display:none;">
-
-                    <div>
-                        <strong>My Downloads</strong>
-                        <span id="storageText">0 files</span>
-                    </div>
-
-                    <button id="clearBtn" class="clear-button">
-                        Clear Downloads
-                    </button>
-
-                </section>
-
-            </div>
-
-        </main>
-
-
-        <!-- FOOTER -->
-
-        <footer>
-
-            <div class="footer-inner">
-
-                <div class="footer-logo">🧠 Busy Brains</div>
-
-                <p>Study smarter.</p>
-
-                <p class="source">
-                    WASSCE-style trial papers are Busy Brains practice papers
-                    and are not official WAEC examination papers.
-                </p>
-
-            </div>
-
-        </footer>
-
+<div id="libraryScreen">
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="#" class="logo" aria-label="Busy Brains home">
+      <span class="logo-icon">🧠</span><span>Busy Brains</span>
+    </a>
+    <nav class="nav" aria-label="Main navigation">
+      <button class="active" data-view="home">Home</button>
+      <button data-view="library">PDF Library</button>
+      <button data-view="practice">Practice</button>
+      <button data-view="planner">Study Planner</button>
+      <button data-view="saved">Saved <span id="savedCount" class="count-pill">0</span></button>
+      <button data-view="downloads">My Downloads <span id="downloadCount" class="count-pill">0</span></button>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Open navigation">☰</button>
+  </div>
+</header>
+
+<div id="mobileMenu" class="mobile-menu">
+  <button data-view="home">Home</button>
+  <button data-view="library">PDF Library</button>
+  <button data-view="practice">Practice Quizzes & Flashcards</button>
+  <button data-view="planner">Study Planner</button>
+  <button data-view="saved">Saved Resources</button>
+  <button data-view="downloads">My Downloads</button>
+</div>
+
+<main class="wrap">
+  <!-- HOME -->
+  <section id="view-home" class="page-view">
+    <div class="hero">
+      <div class="eyebrow">Your learning companion</div>
+      <h1>Study smarter with Busy Brains.</h1>
+      <p>Find SHS notes, revise with practice questions, save useful resources and organise your study time — all in one place.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" data-go="library">Explore PDF Library →</button>
+        <button class="btn btn-light" data-go="practice">Start Practising</button>
+      </div>
     </div>
 
-
-    <!-- =====================================================
-         DOWNLOAD SCREEN
-         ===================================================== -->
-
-    <div id="downloadScreen" class="hidden">
-
-        <header class="topbar">
-
-            <div class="topbar-inner">
-
-                <button id="backButton" class="back-button">
-                    ← Back to library
-                </button>
-
-            </div>
-
-        </header>
-
-        <div class="download-main">
-
-            <!-- 320x50 AD -->
-
-            <div class="ad-container banner-ad">
-
-                <script>
-                    atOptions = {
-                        'key' : '232ed7b82026d98d03cefffdaacb5d80',
-                        'format' : 'iframe',
-                        'height' : 50,
-                        'width' : 320,
-                        'params' : {}
-                    };
-                </script>
-
-                <script src="https://ransomescapesmooth.com/232ed7b82026d98d03cefffdaacb5d80/invoke.js"></script>
-
-            </div>
-
-            <div class="download-card">
-
-                <h2 id="downloadTitle">PDF</h2>
-
-                <div id="downloadMeta" class="download-meta"></div>
-
-                <div class="steps">
-                    <div id="step1" class="step-dot active"></div>
-                    <div id="step2" class="step-dot"></div>
-                </div>
-
-                <div id="downloadMessage" class="download-message">
-                    Continue to prepare your download.
-                </div>
-
-                <button id="continueButton" class="continue-button">
-                    Continue
-                </button>
-
-                <button id="downloadNowButton" class="download-now-button hidden">
-                    Download PDF
-                </button>
-
-                <div id="downloadStatus" class="download-status"></div>
-
-            </div>
-
-        </div>
-
+    <div class="quick-grid">
+      <button class="quick-card" data-go="library"><span class="quick-icon">📚</span><span><strong>PDF Library</strong><small>Notes, past questions and papers</small></span></button>
+      <button class="quick-card" data-go="practice"><span class="quick-icon">✍️</span><span><strong>Practice Zone</strong><small>Quizzes and flashcards</small></span></button>
+      <button class="quick-card" data-go="planner"><span class="quick-icon">📅</span><span><strong>Study Planner</strong><small>Organise your revision</small></span></button>
+      <button class="quick-card" data-go="saved"><span class="quick-icon">⭐</span><span><strong>Saved Resources</strong><small>Keep important material handy</small></span></button>
     </div>
 
-
-    <!-- RESOURCE CARD TEMPLATE -->
-
-    <template id="resourceTemplate">
-
-        <article class="resource-card">
-
-            <div class="resource-icon">PDF</div>
-
-            <div class="resource-info">
-
-                <h3 class="resource-title">Resource title</h3>
-
-                <div class="resource-details">
-                    <span class="resource-subject">Subject</span>
-                    <span class="sep">•</span>
-                    <span class="resource-type">PDF</span>
-                    <span class="sep">•</span>
-                    <span class="resource-date">2026</span>
-                </div>
-
-                <div class="resource-desc"></div>
-
-            </div>
-
-            <button class="download-button">Download</button>
-
-        </article>
-
-    </template>
-
-
-    <script>
-/* =========================================================
-   Busy Brains
-   ========================================================= */
-
-
-/* ---------------------------------------------------------
-   SUPABASE
-   --------------------------------------------------------- */
-
-const SUPABASE_URL =
-  "https://lleqslgueprsfyazplwk.supabase.co";
-
-const SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxsZXFzbGd1ZXByc2Z5YXpwbHdrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNDAwODEsImV4cCI6MjEwNTkxNjA4MX0.MlTBZj6BcoUtN_dDf_8xMtUF9G4Lk5iTPhRKEnaxuCY";
-
-const BUCKET = "pdfs";
-
-const supabaseClient =
-  window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-
-/* ---------------------------------------------------------
-   ELEMENTS
-   --------------------------------------------------------- */
-
-const $ = id => document.getElementById(id);
-
-const libraryScreen = $("libraryScreen");
-const downloadScreen = $("downloadScreen");
-
-const browseView = $("browseView");
-const downloadsView = $("downloadsView");
-
-const searchInput = $("searchInput");
-const filterChips = $("filterChips");
-const results = $("results");
-const sectionTitle = $("sectionTitle");
-const browseCount = $("browseCount");
-const trialNote = $("trialNote");
-const errorBox = $("errorBox");
-
-const downloadsResults = $("downloadsResults");
-const downloadsCount = $("downloadsCount");
-const navDownloadCount = $("navDownloadCount");
-const storageBar = $("storageBar");
-const storageText = $("storageText");
-const clearBtn = $("clearBtn");
-
-const menuButton = $("menuButton");
-const mobileMenu = $("mobileMenu");
-
-const downloadTitle = $("downloadTitle");
-const downloadMeta = $("downloadMeta");
-const downloadMessage = $("downloadMessage");
-const continueButton = $("continueButton");
-const downloadNowButton = $("downloadNowButton");
-const downloadStatus = $("downloadStatus");
-const backButton = $("backButton");
-const step1 = $("step1");
-const step2 = $("step2");
-
-const template = $("resourceTemplate");
-
-
-/* ---------------------------------------------------------
-   STATE
-   --------------------------------------------------------- */
-
-const DL_KEY = "busybrains_downloads";
-const TRIAL = "__trial__";
-
-let allFiles = [];
-let activeTab = "browse";
-let activeYear = "all";
-let activeSubject = "all";
-let query = "";
-
-let currentFile = null;
-let continueStarted = false;
-
-
-/* ---------------------------------------------------------
-   HELPERS
-   --------------------------------------------------------- */
-
-function formatDate(value) {
-  if (!value) return "";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric"
-  });
-}
-
-function safeFileName(name) {
-  return String(name)
-    .replace(/[^a-zA-Z0-9._-]/g, "_")
-    .replace(/_+/g, "_");
-}
-
-function isTrialPaper(file) {
-  const type = String(file.type || "").toLowerCase();
-  const title = String(file.title || "").toLowerCase();
-  return (
-    type.includes("trial") ||
-    title.includes("trial paper") ||
-    title.includes("trial papers") ||
-    title.includes("wassce-style") ||
-    title.includes("wassce style")
-  );
-}
-
-/* Class (Form 1/2/3): uses a form / class / year column if the
-   files table has one, otherwise looks in title, meta and subject. */
-function getForm(file) {
-  const direct = file.form || file.class || file.year;
-
-  if (direct) {
-    const plain = String(direct).trim().match(/^([1-3])$/);
-    if (plain) return "Form " + plain[1];
-  }
-
-  const text = direct
-    ? String(direct)
-    : [file.title, file.meta, file.subject].filter(Boolean).join(" ");
-
-  const match = text.toLowerCase().match(/\b(?:form|year|shs|jhs)\s*([1-3])\b/);
-  return match ? "Form " + match[1] : null;
-}
-
-function showError(message) {
-  errorBox.textContent = message;
-  errorBox.classList.remove("hidden");
-}
-
-function hideError() {
-  errorBox.textContent = "";
-  errorBox.classList.add("hidden");
-}
-
-
-/* ---------------------------------------------------------
-   MY DOWNLOADS STORAGE
-   --------------------------------------------------------- */
-
-function getSaved() {
-  try {
-    const list = JSON.parse(localStorage.getItem(DL_KEY) || "[]");
-    return Array.isArray(list) ? list.map(String) : [];
-  } catch (e) {
-    return [];
-  }
-}
-
-function setSaved(list) {
-  try {
-    localStorage.setItem(DL_KEY, JSON.stringify(list));
-  } catch (e) {}
-}
-
-function markDownloaded(id) {
-  const list = getSaved();
-  const key = String(id);
-  if (!list.includes(key)) {
-    list.unshift(key);
-    setSaved(list);
-  }
-  updateDownloadCounts();
-}
-
-function savedFiles() {
-  const ids = getSaved();
-  return ids
-    .map(id => allFiles.find(f => String(f.id) === id))
-    .filter(Boolean);
-}
-
-function updateDownloadCounts() {
-  const count = savedFiles().length;
-  navDownloadCount.textContent = count;
-  downloadsCount.textContent = count;
-  storageText.textContent = count + (count === 1 ? " file" : " files");
-  storageBar.style.display = count ? "flex" : "none";
-}
-
-
-/* ---------------------------------------------------------
-   LOAD FILES
-   --------------------------------------------------------- */
-
-async function loadFiles() {
-  hideError();
-
-  results.innerHTML = `<div class="empty">Loading PDFs...</div>`;
-
-  const { data, error } = await supabaseClient
-    .from("files")
-    .select("*")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error("Supabase error:", error);
-    results.innerHTML = `<div class="empty">Could not load PDFs.</div>`;
-    showError(
-      "Could not connect to the Busy Brains PDF library: " + error.message
-    );
-    return;
-  }
-
-  allFiles = data || [];
-
-  updateDownloadCounts();
-  render();
-}
-
-
-/* ---------------------------------------------------------
-   CARDS
-   --------------------------------------------------------- */
-
-function createCard(file) {
-  const node = template.content.firstElementChild.cloneNode(true);
-
-  node.querySelector(".resource-title").textContent = file.title || "Untitled";
-
-  const subject = node.querySelector(".resource-subject");
-  const type = node.querySelector(".resource-type");
-  const date = node.querySelector(".resource-date");
-  const seps = node.querySelectorAll(".sep");
-
-  subject.textContent = file.subject || "General";
-  type.textContent = file.type || "PDF";
-
-  const dateText = formatDate(file.created_at);
-  if (dateText) {
-    date.textContent = dateText;
-  } else {
-    date.remove();
-    seps[1].remove();
-  }
-
-  node.querySelector(".resource-desc").textContent = file.meta || "";
-
-  if (getSaved().includes(String(file.id))) {
-    node.classList.add("downloaded");
-  }
-
-  node.querySelector(".download-button").dataset.id = file.id;
-
-  return node;
-}
-
-function fillList(container, files, emptyTitle, emptyText) {
-  container.innerHTML = "";
-
-  if (!files.length) {
-    container.innerHTML =
-      `<div class="empty"><div class="big"></div><div></div></div>`;
-    container.querySelector(".big").textContent = emptyTitle;
-    container.lastElementChild.lastElementChild.textContent = emptyText;
-    return;
-  }
-
-  const fragment = document.createDocumentFragment();
-  files.forEach(file => fragment.appendChild(createCard(file)));
-  container.appendChild(fragment);
-}
-
-
-/* ---------------------------------------------------------
-   RENDER
-   --------------------------------------------------------- */
-
-function matchesQuery(file) {
-  if (!query) return true;
-  return [file.title, file.subject, file.type, file.meta]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase()
-    .includes(query);
-}
-
-function render() {
-  /* files for the chosen class + search (chips are built from these) */
-  const base = allFiles.filter(file => {
-    if (activeYear !== "all" && getForm(file) !== activeYear) return false;
-    return matchesQuery(file);
-  });
-
-  renderChips(base);
-
-  let visible = base;
-
-  if (activeSubject === TRIAL) {
-    visible = base.filter(isTrialPaper);
-  } else if (activeSubject !== "all") {
-    visible = base.filter(
-      file => String(file.subject || "").trim() === activeSubject
-    );
-  }
-
-  if (activeSubject === TRIAL) {
-    sectionTitle.textContent = "WASSCE-Style Trial Papers";
-  } else if (activeSubject === "all") {
-    sectionTitle.textContent = "All Resources";
-  } else {
-    sectionTitle.textContent = activeSubject;
-  }
-
-  trialNote.classList.toggle("hidden", activeSubject !== TRIAL);
-  browseCount.textContent = visible.length;
-
-  fillList(
-    results,
-    visible,
-    "No PDFs found",
-    "Try another class, subject or search."
-  );
-}
-
-function renderChips(base) {
-  const counts = {};
-
-  base.forEach(file => {
-    const subject = String(file.subject || "").trim();
-    if (subject) counts[subject] = (counts[subject] || 0) + 1;
-  });
-
-  const subjects = Object.keys(counts).sort((a, b) => a.localeCompare(b));
-  const hasTrials = base.some(isTrialPaper);
-
-  /* drop a selection that no longer exists in this class/search */
-  if (
-    (activeSubject === TRIAL && !hasTrials) ||
-    (activeSubject !== "all" &&
-      activeSubject !== TRIAL &&
-      !subjects.includes(activeSubject))
-  ) {
-    activeSubject = "all";
-  }
-
-  const chips = [{ value: "all", label: `All (${base.length})` }];
-
-  if (hasTrials) {
-    chips.push({ value: TRIAL, label: "Trial Papers" });
-  }
-
-  subjects.forEach(subject =>
-    chips.push({ value: subject, label: `${subject} (${counts[subject]})` })
-  );
-
-  filterChips.innerHTML = "";
-
-  chips.forEach(chip => {
-    const button = document.createElement("button");
-    button.className = "chip" + (chip.value === activeSubject ? " active" : "");
-    button.dataset.subject = chip.value;
-    button.textContent = chip.label;
-    filterChips.appendChild(button);
-  });
-}
-
-function renderDownloads() {
-  const files = savedFiles();
-
-  updateDownloadCounts();
-
-  fillList(
-    downloadsResults,
-    files,
-    "No downloads yet",
-    "Files you download will appear here."
-  );
-}
-
-
-/* ---------------------------------------------------------
-   TABS / MENU
-   --------------------------------------------------------- */
-
-function showTab(tab) {
-  activeTab = tab;
-
-  document
-    .querySelectorAll(".nav-link, .mobile-nav")
-    .forEach(button =>
-      button.classList.toggle("active", button.dataset.tab === tab)
-    );
-
-  browseView.classList.toggle("hidden", tab !== "browse");
-  downloadsView.classList.toggle("hidden", tab !== "downloads");
-
-  mobileMenu.classList.remove("open");
-
-  if (tab === "downloads") {
-    renderDownloads();
-  } else {
-    render();
-  }
-
-  window.scrollTo(0, 0);
-}
-
-document.querySelectorAll(".nav-link, .mobile-nav").forEach(button => {
-  button.addEventListener("click", () => showTab(button.dataset.tab));
-});
-
-menuButton.addEventListener("click", () => {
-  mobileMenu.classList.toggle("open");
-});
-
-
-/* ---------------------------------------------------------
-   FILTER EVENTS
-   --------------------------------------------------------- */
-
-searchInput.addEventListener("input", () => {
-  query = searchInput.value.trim().toLowerCase();
-  render();
-});
-
-document.querySelectorAll(".year-button").forEach(button => {
-  button.addEventListener("click", () => {
-    activeYear = button.dataset.year;
-
-    document
-      .querySelectorAll(".year-button")
-      .forEach(b => b.classList.toggle("active", b === button));
-
-    render();
-  });
-});
-
-filterChips.addEventListener("click", event => {
-  const chip = event.target.closest(".chip");
-  if (!chip) return;
-
-  activeSubject = chip.dataset.subject;
-  render();
-});
-
-clearBtn.addEventListener("click", () => {
-  if (!confirm("Clear your downloads list? Your files stay on your device.")) {
-    return;
-  }
-
-  setSaved([]);
-  renderDownloads();
-});
-
-
-/* ---------------------------------------------------------
-   DOWNLOAD SCREEN
-   --------------------------------------------------------- */
-
-document.addEventListener("click", event => {
-  const button = event.target.closest(".download-button");
-  if (!button) return;
-
-  openDownloadScreen(button.dataset.id);
-});
-
-function openDownloadScreen(id) {
-  const file = allFiles.find(item => String(item.id) === String(id));
-
-  if (!file) {
-    alert("PDF could not be found.");
-    return;
-  }
-
-  currentFile = file;
-  continueStarted = false;
-
-  libraryScreen.classList.add("hidden");
-  downloadScreen.classList.remove("hidden");
-
-  downloadTitle.textContent = file.title || "PDF";
-
-  downloadMeta.textContent = [
-    file.subject,
-    file.type,
-    formatDate(file.created_at)
-  ]
-    .filter(Boolean)
-    .join(" • ");
-
-  downloadMessage.textContent = "Continue to prepare your download.";
-
-  continueButton.classList.remove("hidden");
-  continueButton.disabled = false;
-  continueButton.textContent = "Continue";
-
-  downloadNowButton.classList.add("hidden");
-  downloadNowButton.disabled = false;
-  downloadNowButton.textContent = "Download PDF";
-
-  downloadStatus.textContent = "";
-
-  step1.classList.add("active");
-  step2.classList.remove("active");
-
-  window.scrollTo(0, 0);
-}
-
-continueButton.addEventListener("click", () => {
-  if (!currentFile || continueStarted) return;
-
-  continueStarted = true;
-  continueButton.disabled = true;
-  continueButton.textContent = "Preparing...";
-
-  let remaining = 3;
-  downloadStatus.textContent = `Preparing download... ${remaining}`;
-
-  const timer = setInterval(() => {
-    remaining--;
-
-    if (remaining > 0) {
-      downloadStatus.textContent = `Preparing download... ${remaining}`;
-      return;
-    }
-
-    clearInterval(timer);
-
-    step1.classList.remove("active");
-    step2.classList.add("active");
-
-    continueButton.classList.add("hidden");
-    downloadNowButton.classList.remove("hidden");
-
-    downloadMessage.textContent = "Your PDF is ready.";
-    downloadStatus.textContent = "";
-  }, 1000);
-});
-
-downloadNowButton.addEventListener("click", async () => {
-  if (!currentFile) return;
-
-  downloadNowButton.disabled = true;
-  downloadNowButton.textContent = "Downloading...";
-  downloadStatus.textContent = "Getting your PDF...";
-
-  try {
-    const { data, error } = await supabaseClient
-      .storage
-      .from(BUCKET)
-      .download(currentFile.storage_path);
-
-    if (error) throw error;
-
-    if (!data) throw new Error("The PDF could not be retrieved.");
-
-    const url = URL.createObjectURL(data);
-
-    const link = document.createElement("a");
-    link.href = url;
-    link.download =
-      safeFileName(currentFile.title || "Busy-Brains-PDF") + ".pdf";
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    setTimeout(() => URL.revokeObjectURL(url), 10000);
-
-    markDownloaded(currentFile.id);
-
-    downloadStatus.textContent = "Download started.";
-
-  } catch (error) {
-    console.error("Download error:", error);
-    downloadStatus.textContent = "Download failed: " + error.message;
-  }
-
-  downloadNowButton.disabled = false;
-  downloadNowButton.textContent = "Download PDF";
-});
-
-backButton.addEventListener("click", () => {
-  currentFile = null;
-
-  downloadScreen.classList.add("hidden");
-  libraryScreen.classList.remove("hidden");
-
-  showTab(activeTab);
-});
-
-
-/* ---------------------------------------------------------
-   START
-   --------------------------------------------------------- */
-
-loadFiles();
-
-</script>
-
-</body>
-</html>
+    <div class="section">
+      <div class="section-head">
+        <div><h2>Your study snapshot</h2><p>Saved on this browser and device.</p></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><span>Saved resources</span><strong id="homeSavedStat">0</strong></div>
+        <div class="stat-card"><span>Downloaded resources</span><strong id="homeDownloadStat">0</strong></div>
+        <div class="stat-card"><span>Study tasks completed</span><strong id="homeTaskStat">0</strong></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div><h2>Recently added</h2><p>Latest resources from the Busy Brains library.</p></div>
+        <button class="btn btn-outline btn-small" data-go="library">View library →</button>
+      </div>
+      <div id="homeRecent" class="resource-list">
+        <div class="empty"><strong>Loading resources…</strong>Connecting to the PDF library.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div><h2>WASSCE preparation</h2><p>Practise topics, test yourself and review your notes.</p></div>
+      </div>
+      <div class="panel">
+        <p style="margin-top:0">Build a steady revision habit: choose one topic, practise questions, then revisit the areas you find difficult.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" data-go="practice">Practise now</button>
+          <button class="btn btn-outline" data-go="planner">Plan revision</button>
+        </div>
+        <p class="note">Busy Brains practice quizzes are for learning and revision. WASSCE-style trial papers are practice materials and are not official WAEC examination papers.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIBRARY -->
+  <section id="view-library" class="page-view hidden">
+    <div class="section-head">
+      <div><h2>PDF Library</h2><p>Search and filter study resources by class, subject or resource type.</p></div>
+    </div>
+    <div class="search-box"><span>🔍</span><input id="searchInput" type="search" placeholder="Search PDFs, subjects or topics…" autocomplete="off"></div>
+
+    <div class="ad-container banner-ad">
+      <script>
+        var atOptions={'key':'232ed7b82026d98d03cefffdaacb5d80','format':'iframe','height':50,'width':320,'params':{}};
+      </script>
+      <script src="https://ransomescapesmooth.com/232ed7b82026d98d03cefffdaacb5d80/invoke.js"></script>
+    </div>
+    <div class="ad-container native-ad">
+      <script async="async" data-cfasync="false" src="https://ransomescapesmooth.com/2aaa6d636939a9cc6825010316fd8ca6/invoke.js"></script>
+      <div id="container-2aaa6d636939a9cc6825010316fd8ca6"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2>Class</h2></div>
+      <div class="filters" id="classFilters">
+        <button class="filter-btn active" data-class="all">All classes</button>
+        <button class="filter-btn" data-class="Form 1">Form 1</button>
+        <button class="filter-btn" data-class="Form 2">Form 2</button>
+        <button class="filter-btn" data-class="Form 3">Form 3</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2 id="libraryTitle">All Resources</h2>
+        <span id="libraryCount" class="note">0 resources</span>
+      </div>
+      <div id="subjectFilters" class="subject-row"></div>
+      <div id="libraryStatus" class="status hidden"></div>
+      <div id="libraryResults" class="resource-list">
+        <div class="empty"><strong>Loading resources…</strong>Please wait.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRACTICE -->
+  <section id="view-practice" class="page-view hidden">
+    <div class="section-head">
+      <div><h2>Practice Zone</h2><p>Short sample quizzes and flashcards to help you revise. More question sets can be added later.</p></div>
+    </div>
+    <div class="two-col">
+      <div class="panel">
+        <div class="eyebrow" style="color:var(--clay)">Quick quiz</div>
+        <h3 style="margin:6px 0 14px">Science & Maths Basics</h3>
+        <div id="quizArea">
+          <p id="quizProgress" class="note">Question 1 of 5</p>
+          <p id="quizQuestion" class="quiz-question"></p>
+          <div id="quizOptions" class="option-list"></div>
+          <div id="quizFeedback" class="feedback hidden"></div>
+          <div class="flash-controls">
+            <button id="quizNext" class="btn btn-primary" disabled>Next question</button>
+            <button id="quizRestart" class="btn btn-outline hidden">Try again</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="eyebrow" style="color:var(--clay)">Flashcards</div>
+        <h3 style="margin:6px 0 14px">Quick revision cards</h3>
+        <div id="flashcard" class="flashcard" role="button" tabindex="0" aria-label="Tap to flip flashcard">What is the SI unit of force?<small>Tap to reveal answer</small></div>
+        <div class="flash-controls">
+          <button id="flashPrev" class="btn btn-outline">← Previous</button>
+          <button id="flashFlip" class="btn btn-primary">Reveal answer</button>
+          <button id="flashNext" class="btn btn-outline">Next →</button>
+        </div>
+        <p id="flashProgress" class="note" style="text-align:center;margin-top:10px"></p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div><h2>Formula & reference bank</h2><p>A few quick reminders. Check your class notes for the full topic and conditions.</p></div>
+      </div>
+      <div class="search-box"><span>🔍</span><input id="formulaSearch" type="search" placeholder="Find a formula or quantity…"></div>
+      <div id="formulaGrid" class="formula-grid"></div>
+    </div>
+  </section>
+
+  <!-- PLANNER -->
+  <section id="view-planner" class="page-view hidden">
+    <div class="section-head">
+      <div><h2>Study Planner</h2><p>Create a simple revision checklist. Your tasks stay in this browser.</p></div>
+    </div>
+    <div class="panel">
+      <form id="taskForm">
+        <div class="two-col">
+          <div class="field">
+            <label for="taskTitle">Study task</label>
+            <input id="taskTitle" required maxlength="120" placeholder="e.g. Revise quadratic equations">
+          </div>
+          <div class="field">
+            <label for="taskSubject">Subject</label>
+            <select id="taskSubject">
+              <option>Core Mathematics</option>
+              <option>English Language</option>
+              <option>Integrated Science</option>
+              <option>Social Studies</option>
+              <option>Physics</option>
+              <option>Chemistry</option>
+              <option>Biology</option>
+              <option>Elective Mathematics</option>
+              <option>ICT</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="field">
+            <label for="taskDate">Study date</label>
+            <input id="taskDate" type="date">
+          </div>
+          <div class="field">
+            <label for="taskDuration">Planned duration</label>
+            <select id="taskDuration">
+              <option>20 minutes</option>
+              <option selected>30 minutes</option>
+              <option>45 minutes</option>
+              <option>1 hour</option>
+              <option>1 hour 30 minutes</option>
+              <option>2 hours</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primary" type="submit">＋ Add study task</button>
+      </form>
+    </div>
+    <div class="section">
+      <div class="section-head">
+        <h2>My revision checklist</h2>
+        <button id="clearCompleted" class="btn btn-outline btn-small">Remove completed</button>
+      </div>
+      <div id="taskList" class="task-list"></div>
+    </div>
+  </section>
+
+  <!-- SAVED -->
+  <section id="view-saved" class="page-view hidden">
+    <div class="section-head">
+      <div><h2>Saved Resources</h2><p>Bookmarks are stored on this browser, separately from downloads.</p></div>
+    </div>
+    <div id="savedResults" class="resource-list"></div>
+    <div class="storage-bar">
+      <div><strong>Saved resources</strong><div class="note">Removing a bookmark does not delete the PDF.</div></div>
+      <button id="clearSaved" class="btn btn-outline btn-small">Clear bookmarks</button>
+    </div>
+  </section>
+
+  <!-- DOWNLOADS -->
+  <section id="view-downloads" class="page-view hidden">
+    <div class="section-head">
+      <div><h2>My Downloads</h2><p>Resources you successfully started downloading on this browser.</p></div>
+    </div>
+    <div id="downloadsResults" class="resource-list"></div>
+    <div class="storage-bar">
+      <div><strong>Download history</strong><div id="storageText" class="note">0 resources</div></div>
+      <button id="clearDownloads" class="btn btn-outline btn-small">Clear history</button>
+    </div>
+    <p class="note">This is a local history, not cloud storage. Clearing it will not delete files already downloaded to your device.</p>
+  </section>
+</main>
+
+<footer class="footer">
+  <strong>🧠 Busy Brains</strong>
+  <p>Study smarter. Practise consistently. Keep learning.</p>
+  <p>WASSCE-style trial papers are Busy Brains practice materials and are not official WAEC examination papers.</p>
+  <p>Download availability depends on the resource and storage permissions.</p>
+</footer>
+</div>
+
+<!-- DOWNLOAD FLOW -->
+<div id="downloadScreen" class="download-screen hidden">
+  <div class="download-main">
+    <button id="backButton" class="top-back">← Back to library</button>
+    <div class="download-card">
+      <div class="eyebrow" style="color:var(--clay)">Busy Brains PDF Library</div>
+      <h2 id="downloadTitle">Your PDF</h2>
+      <p id="downloadMeta" class="note"></p>
+      <div class="steps">
+        <div id="step1" class="step-dot active"></div>
+        <div id="step2" class="step-dot"></div>
+      </div>
+      <div id="downloadMessage" class="download-message">Continue to prepare your download.</div>
+      <button id="continueButton" class="btn btn-primary" style="width:100%">Continue</button>
+      <button id="downloadNowButton" class="btn btn-primary hidden" style="width:100%">Download PDF</button>
+      <p id="downloadStatus" class="download-status"></p>
+      <p id="downloadError" class="error"></p>
+    </div>
+  </div>
+</div>
