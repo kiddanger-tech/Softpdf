@@ -611,6 +611,41 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 .ges-check{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--muted);margin:2px 0 14px}
 .ges-check input{width:16px;height:16px}
 .note a{color:var(--clay)}
+
+/* CURRENT-PHASE ADDITIONS: global search, exams, teacher hub, theme */
+.global-search-results{display:grid;gap:10px}
+.global-result{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--paper);border:1px solid var(--border);border-radius:9px}
+.global-result .result-main{flex:1;min-width:0}
+.global-result h3{font-size:14px;margin:0 0 4px;overflow-wrap:anywhere}
+.global-result p{font-size:12px;color:var(--muted);margin:0}
+.result-type{font-size:10px;font-weight:700;background:var(--clay-soft);color:var(--clay-dark);padding:4px 7px;border-radius:5px;white-space:nowrap}
+.theme-btn{border:1px solid #5b554d;background:#2c2823;color:#fff;border-radius:7px;padding:8px 10px;font-size:12px}
+.exam-layout{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:14px;align-items:start}
+.exam-option{display:block;width:100%;text-align:left;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--paper);color:var(--ink);margin:8px 0}
+.exam-option.selected{border-color:var(--clay);background:var(--clay-soft)}
+.exam-nav-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:12px 0}
+.exam-nav-btn{padding:8px 3px;border:1px solid var(--border);border-radius:6px;background:var(--paper);color:var(--ink);font-size:12px}
+.exam-nav-btn.current{outline:2px solid var(--clay)}
+.exam-nav-btn.answered{background:#e7f3eb;border-color:#a7ceb4}
+.exam-nav-btn.review{box-shadow:inset 0 -3px #d49c7e}
+.exam-timer{font-size:24px;font-weight:800;color:var(--clay)}
+.teacher-frame{width:100%;height:min(78vh,850px);border:1px solid var(--border);border-radius:10px;background:white}
+.exam-result{padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--card);margin-top:14px}
+.theme-dark{
+ --ink:#f2eee7;--muted:#b8b0a5;--sand:#171614;--paper:#24221f;--card:#2b2824;
+ --clay:#d18b66;--clay-dark:#e0a17d;--clay-soft:#49362c;--green:#79bc91;--border:#48423a;--blue:#83b5cb;
+}
+.theme-dark .topbar{background:#0d0c0b;border-color:#39342d}
+.theme-dark .mobile-menu{background:#24221f;border-color:var(--border)}
+.theme-dark .mobile-menu button{color:var(--ink)}
+.theme-dark .quick-card,.theme-dark .resource-card,.theme-dark .panel,.theme-dark .stat-card,
+.theme-dark .formula,.theme-dark .global-result,.theme-dark .exam-option,.theme-dark .exam-nav-btn,
+.theme-dark .storage-bar,.theme-dark .download-card,.theme-dark .lightbox-box{background:var(--paper);color:var(--ink)}
+.theme-dark input,.theme-dark select,.theme-dark textarea{background:#1b1a18;color:var(--ink);border-color:var(--border)}
+.theme-dark .option{background:var(--paper);color:var(--ink)}
+.theme-dark .footer{background:#201e1b}
+@media(max-width:800px){.exam-layout{grid-template-columns:1fr}.teacher-frame{height:70vh}}
+
 </style>
 </head>
 
@@ -623,6 +658,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     </a>
     <nav class="nav" aria-label="Main navigation">
       <button class="active" data-view="home">Home</button>
+      <button data-view="search">Search</button>
       <button data-view="library">PDF Library</button>
       <button data-view="learn">Learn</button>
       <button data-view="ges">GES Resources</button>
@@ -630,6 +666,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
       <button data-view="planner">Study Planner</button>
       <button data-view="saved">Saved <span id="savedCount" class="count-pill">0</span></button>
       <button data-view="downloads">My Downloads <span id="downloadCount" class="count-pill">0</span></button>
+      <button data-view="exam">Examination Centre</button>
+      <button data-view="teacher">Teacher Hub</button>
+      <button id="themeToggle" class="theme-btn" type="button" aria-pressed="false">🌙 Dark mode</button>
     </nav>
     <button class="menu-btn" id="menuBtn" aria-label="Open navigation">☰</button>
   </div>
@@ -637,6 +676,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 
 <div id="mobileMenu" class="mobile-menu">
   <button data-view="home">Home</button>
+  <button data-view="search">Search all resources</button>
   <button data-view="library">PDF Library</button>
   <button data-view="learn">Learn a Topic (Videos &amp; Pictures)</button>
   <button data-view="ges">Ghana GES Resources</button>
@@ -644,6 +684,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   <button data-view="planner">Study Planner</button>
   <button data-view="saved">Saved Resources</button>
   <button data-view="downloads">My Downloads</button>
+  <button data-view="exam">Examination Centre</button>
+  <button data-view="teacher">Teacher Hub</button>
+  <button id="themeToggleMobile" type="button">🌙 Dark mode</button>
 </div>
 
 <main class="wrap">
@@ -675,6 +718,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
         <div class="stat-card"><span>Saved resources</span><strong id="homeSavedStat">0</strong></div>
         <div class="stat-card"><span>Downloaded resources</span><strong id="homeDownloadStat">0</strong></div>
         <div class="stat-card"><span>Study tasks completed</span><strong id="homeTaskStat">0</strong></div>
+      </div>
+    </div>
+
+
+    <div class="section" id="continueLearningSection">
+      <div class="section-head"><div><h2>Continue learning</h2><p>Your most recently searched learning topic on this browser.</p></div></div>
+      <div class="panel">
+        <strong id="lastLearnTopic">No topic searched yet</strong>
+        <p id="lastLearnNote" class="note">Use Learn a Topic to search videos, pictures and explanations. Your last topic will appear here.</p>
+        <button id="continueLearningBtn" class="btn btn-primary" type="button" disabled>Continue topic →</button>
       </div>
     </div>
 
@@ -824,6 +877,69 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
       <a href="https://curriculumresources.edu.gh/jhs/" target="_blank" rel="noopener">JHS</a>.</p>
   </section>
 
+
+  <!-- GLOBAL SEARCH -->
+  <section id="view-search" class="page-view hidden">
+    <div class="section-head"><div><h2>Search Busy Brains</h2><p>Search the PDF library and formula bank, or send a topic to the Learn section.</p></div></div>
+    <div class="search-box"><span>🔍</span><input id="globalSearchInput" type="search" placeholder="Search subjects, PDFs, topics, formulas…" autocomplete="off"></div>
+    <div class="section"><div class="section-head"><h2>Matching resources</h2><span id="globalSearchCount" class="note">Enter a search term</span></div><div id="globalSearchResults" class="global-search-results"><div class="empty"><strong>Search across your learning resources</strong>Results will appear here as you type.</div></div></div>
+    <div class="panel"><h3 style="margin-top:0">Learn a topic</h3><p class="note">Search for educational videos, pictures and a quick explanation.</p><form id="globalLearnForm" class="learn-form"><div class="search-box"><span>📘</span><input id="globalLearnInput" type="search" placeholder="e.g. cell division or algebra" maxlength="80" required></div><button class="btn btn-primary learn-submit" type="submit">Learn topic</button></form></div>
+  </section>
+
+  <!-- EXAMINATION CENTRE -->
+  <section id="view-exam" class="page-view hidden">
+    <div class="section-head"><div><h2>Examination Centre</h2><p>Try the sample timed practice examination. Your answers are saved on this browser during the attempt.</p></div></div>
+    <div class="panel">
+      <div class="eyebrow" style="color:var(--clay)">Practice examination</div>
+      <h3 style="margin:6px 0">Science & Mathematics Starter Exam</h3>
+      <p class="note">10 objective questions · 10-minute timer · automatic marking. This is a local practice exam, not an official or teacher-published examination.</p>
+      <button id="examStart" class="btn btn-primary" type="button">Start examination</button>
+      <button id="examResume" class="btn btn-outline hidden" type="button">Resume saved attempt</button>
+      <button id="examClear" class="btn btn-outline hidden" type="button">Discard saved attempt</button>
+    </div>
+    <div id="examWorkspace" class="section hidden">
+      <div class="stats-grid">
+        <div class="stat-card"><span>Time remaining</span><strong id="examTimer" class="exam-timer">10:00</strong></div>
+        <div class="stat-card"><span>Answered</span><strong id="examAnswered">0/10</strong></div>
+        <div class="stat-card"><span>Marked for review</span><strong id="examReviewCount">0</strong></div>
+      </div>
+      <p id="examWarning" class="status hidden" role="status"></p>
+      <div class="exam-layout" style="margin-top:14px">
+        <div class="panel">
+          <p id="examProgress" class="note">Question 1 of 10</p>
+          <h3 id="examQuestion" class="quiz-question"></h3>
+          <div id="examOptions" class="option-list"></div>
+          <div class="flash-controls" style="justify-content:space-between">
+            <button id="examPrev" class="btn btn-outline" type="button">← Previous</button>
+            <button id="examReview" class="btn btn-outline" type="button">Mark for review</button>
+            <button id="examNext" class="btn btn-primary" type="button">Next →</button>
+          </div>
+        </div>
+        <aside class="panel">
+          <strong>Question navigator</strong>
+          <div id="examNavGrid" class="exam-nav-grid"></div>
+          <p class="note">Green = answered. Underline = marked for review. Leaving the tab may be recorded as a warning, but this page cannot prevent switching tabs or guarantee exam security.</p>
+          <button id="examSubmit" class="btn btn-primary" type="button" style="width:100%">Submit examination</button>
+        </aside>
+      </div>
+    </div>
+    <div id="examResult" class="exam-result hidden" aria-live="polite"></div>
+  </section>
+
+  <!-- TEACHER HUB -->
+  <section id="view-teacher" class="page-view hidden">
+    <div class="section-head"><div><h2>Teacher Hub</h2><p>Access the Subject Specific App for SHS Teachers within Busy Brains when the external site allows embedding.</p></div></div>
+    <div class="panel">
+      <p class="note">This is an external service. Busy Brains does not control its content, sign-in, or availability. If the panel below is blank or displays an error, the provider may block iframe embedding; use the official website link to check access. The link opens in this page's current tab.</p>
+      <div class="flash-controls" style="justify-content:flex-start">
+        <button id="teacherReload" class="btn btn-outline" type="button">Reload embedded app</button>
+        <button id="teacherOpen" class="btn btn-primary" type="button">Open official site here</button>
+      </div>
+    </div>
+    <div class="section"><iframe id="teacherFrame" class="teacher-frame" title="Subject Specific App for SHS Teachers" src="https://subjectspecificapp.com/" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="clipboard-read; clipboard-write"></iframe></div>
+    <p class="note">If the external app does not permit embedding, this limitation cannot be fixed from this HTML file. No attempt is made to bypass its security settings.</p>
+  </section>
+
   <!-- PRACTICE -->
   <section id="view-practice" class="page-view hidden">
     <div class="section-head">
@@ -964,6 +1080,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   <p>Study smarter. Practise consistently. Keep learning.</p>
   <p>WASSCE-style trial papers are available for trial.</p>
   <p>You can click download button to download resources.</p>
+  <p>Bookmarks, study tasks, theme preference and practice exam progress are stored locally in this browser.</p>
 </footer>
 </div>
 
@@ -1105,7 +1222,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
      ========================================================= */
 
   const TRIAL = "__trial__";
-  const VIEWS = ["home", "library", "learn", "ges", "practice", "planner", "saved", "downloads"];
+  const VIEWS = ["home", "search", "library", "learn", "ges", "practice", "planner", "saved", "downloads", "exam", "teacher"];
 
   let allFiles = [];
   let filesLoaded = false;
@@ -1268,6 +1385,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   }
 
   function renderHome() {
+    const lastTopic = (() => { try { return localStorage.getItem("busybrains_last_learn_topic") || ""; } catch (e) { return ""; } })();
+    if ($("lastLearnTopic")) {
+      $("lastLearnTopic").textContent = lastTopic || "No topic searched yet";
+      $("lastLearnNote").textContent = lastTopic ? "Continue exploring videos, pictures and a quick explanation for this topic." : "Use Learn a Topic to search videos, pictures and explanations. Your last topic will appear here.";
+      $("continueLearningBtn").disabled = !lastTopic;
+    }
     const box = $("homeRecent");
 
     if (!filesLoaded) return;
@@ -1397,6 +1520,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     renderSaved();
     renderDownloads();
     renderTasks();
+    if ($("globalSearchInput") && $("globalSearchInput").value) renderGlobalSearch($("globalSearchInput").value);
   }
 
   /* =========================================================
@@ -1438,6 +1562,27 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     $("menuBtn").setAttribute("aria-expanded", String(open));
   });
 
+
+  /* Theme preference is stored locally on this browser. */
+  const THEME_KEY = "busybrains_theme";
+  function applyTheme(dark) {
+    document.body.classList.toggle("theme-dark", dark);
+    ["themeToggle", "themeToggleMobile"].forEach((id) => {
+      const b = $(id);
+      if (!b) return;
+      b.textContent = dark ? "☀️ Light mode" : "🌙 Dark mode";
+      b.setAttribute("aria-pressed", String(dark));
+    });
+    try { localStorage.setItem(THEME_KEY, dark ? "dark" : "light"); } catch (e) {}
+  }
+  let darkTheme = false;
+  try { darkTheme = localStorage.getItem(THEME_KEY) === "dark"; } catch (e) {}
+  applyTheme(darkTheme);
+  ["themeToggle", "themeToggleMobile"].forEach((id) => {
+    const b = $(id);
+    if (b) b.addEventListener("click", () => applyTheme(!document.body.classList.contains("theme-dark")));
+  });
+
   /* =========================================================
      LIBRARY FILTERS
      ========================================================= */
@@ -1465,6 +1610,86 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 
     activeSubject = chip.dataset.subject;
     renderLibrary();
+  });
+
+
+  /* =========================================================
+     GLOBAL SEARCH ACROSS EXISTING LOCAL RESOURCE SOURCES
+     ========================================================= */
+  function renderGlobalSearch(raw) {
+    const q = String(raw || "").trim().toLowerCase();
+    const box = $("globalSearchResults");
+    box.replaceChildren();
+    if (!q) {
+      $("globalSearchCount").textContent = "Enter a search term";
+      box.appendChild(el("div", "empty", "Search the PDF library and formula bank."));
+      return;
+    }
+    const matches = [];
+    allFiles.forEach((f) => {
+      if ([f.title, f.subject, f.type, f.meta, f.form, f.class].filter(Boolean).join(" ").toLowerCase().includes(q)) {
+        matches.push({type:"PDF resource", title:f.title || "Untitled", meta:[f.subject, f.type].filter(Boolean).join(" • "), action:"library", fileId:String(f.id)});
+      }
+    });
+    FORMULAS.forEach((f) => {
+      if (f.join(" ").toLowerCase().includes(q)) matches.push({type:"Formula bank", title:f[0], meta:f[1] + " • " + f[2], action:"practice"});
+    });
+    const learnTopics = LEARN_TOPICS.filter((t) => t.toLowerCase().includes(q));
+    learnTopics.forEach((t) => matches.push({type:"Learn topic", title:t, meta:"Videos, pictures and quick explanation", action:"learn", topic:t}));
+    if (q.length >= 2 && !learnTopics.some((t) => t.toLowerCase() === q)) matches.push({type:"Learn topic", title:"Learn: " + raw, meta:"Search videos, pictures and a quick explanation for this topic", action:"learn", topic:String(raw).trim()});
+    $("globalSearchCount").textContent = matches.length + (matches.length === 1 ? " result" : " results");
+    if (!matches.length) {
+      box.appendChild(el("div", "empty", "No matching resource found in the current PDF library, formula bank or suggested topics. Try different words."));
+      return;
+    }
+    matches.slice(0, 60).forEach((m) => {
+      const row = el("article", "global-result");
+      const main = el("div", "result-main");
+      main.appendChild(el("h3", "", m.title));
+      main.appendChild(el("p", "", m.meta || ""));
+      row.appendChild(main);
+      row.appendChild(el("span", "result-type", m.type));
+      const action = el("button", "btn btn-outline btn-small", m.type === "Learn topic" ? "Learn" : m.type === "Formula bank" ? "View formulas" : "View PDFs");
+      action.type = "button";
+      action.addEventListener("click", () => {
+        if (m.topic) {
+          showView("learn");
+          $("learnInput").value = m.topic;
+          runLearn(m.topic);
+        } else {
+          showView(m.action);
+          if (m.fileId) {
+            $("searchInput").value = m.title;
+            query = m.title.toLowerCase();
+            renderLibrary();
+          }
+          if (m.type === "Formula bank") {
+            $("formulaSearch").value = q;
+            renderFormulas(q);
+          }
+        }
+      });
+      row.appendChild(action);
+      box.appendChild(row);
+    });
+  }
+  $("globalSearchInput").addEventListener("input", (e) => renderGlobalSearch(e.target.value));
+  $("globalLearnForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const topic = $("globalLearnInput").value.trim();
+    if (!topic) return;
+    showView("learn");
+    $("learnInput").value = topic;
+    runLearn(topic);
+  });
+
+  $("continueLearningBtn").addEventListener("click", () => {
+    let topic = "";
+    try { topic = localStorage.getItem("busybrains_last_learn_topic") || ""; } catch (e) {}
+    if (!topic) return;
+    showView("learn");
+    $("learnInput").value = topic;
+    runLearn(topic);
   });
 
   $("clearSaved").addEventListener("click", () => {
@@ -1904,6 +2129,172 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 
   $("formulaSearch").addEventListener("input", (e) => renderFormulas(e.target.value));
 
+
+  /* =========================================================
+     LOCAL TIMED PRACTICE EXAMINATION
+     ========================================================= */
+  const EXAM_KEY = "busybrains_exam_attempt_v1";
+  const EXAM_DURATION = 10 * 60;
+  const EXAM_QUESTIONS = [
+    {q:"What is the SI unit of electric current?", options:["Volt","Ampere","Ohm","Watt"], answer:1, why:"Electric current is measured in amperes (A)."},
+    {q:"Which organelle is the main site of aerobic respiration?", options:["Ribosome","Chloroplast","Mitochondrion","Golgi apparatus"], answer:2, why:"Mitochondria are the main site of aerobic respiration in eukaryotic cells."},
+    {q:"Solve: 3x − 5 = 16.", options:["5","6","7","8"], answer:2, why:"Add 5 to both sides to get 3x = 21, then divide by 3."},
+    {q:"What is the chemical formula of calcium carbonate?", options:["CaCO₃","CaCl₂","CaO","Ca(OH)₂"], answer:0, why:"Calcium carbonate contains calcium, carbonate and has the formula CaCO₃."},
+    {q:"Which gas is used by green plants during photosynthesis?", options:["Oxygen","Nitrogen","Carbon dioxide","Hydrogen"], answer:2, why:"Plants use carbon dioxide and water to make sugars during photosynthesis."},
+    {q:"A force of 12 N acts on a mass of 3 kg. What is the acceleration?", options:["2 m/s²","4 m/s²","9 m/s²","36 m/s²"], answer:1, why:"Using F = ma, a = F/m = 12/3 = 4 m/s²."},
+    {q:"Which blood vessels generally carry blood away from the heart?", options:["Veins","Arteries","Capillaries","Venules"], answer:1, why:"Arteries carry blood away from the heart; veins carry blood toward it."},
+    {q:"What is the value of 2³ × 2²?", options:["16","24","32","64"], answer:2, why:"For the same base, add exponents: 2³ × 2² = 2⁵ = 32."},
+    {q:"A solution with pH 3 is best described as:", options:["Acidic","Neutral","Alkaline","Pure water"], answer:0, why:"A pH below 7 indicates an acidic solution."},
+    {q:"Which of these is an input device?", options:["Monitor","Speaker","Keyboard","Projector"], answer:2, why:"A keyboard sends data into the computer, so it is an input device."}
+  ];
+  let examState = null;
+  let examInterval = null;
+  let examWarnings = 0;
+
+  function saveExamState() {
+    if (!examState) return;
+    try { localStorage.setItem(EXAM_KEY, JSON.stringify(examState)); } catch (e) {}
+    renderExamNavigator();
+    $("examAnswered").textContent = examState.answers.filter((a) => a !== null).length + "/" + EXAM_QUESTIONS.length;
+    $("examReviewCount").textContent = examState.review.filter(Boolean).length;
+  }
+  function loadExamState() {
+    try {
+      const state = JSON.parse(localStorage.getItem(EXAM_KEY) || "null");
+      if (state && Array.isArray(state.answers) && state.answers.length === EXAM_QUESTIONS.length && Array.isArray(state.review) && state.review.length === EXAM_QUESTIONS.length && Number.isFinite(state.endAt)) return state;
+    } catch (e) {}
+    return null;
+  }
+  function startExam(resume) {
+    const existing = resume ? loadExamState() : null;
+    examWarnings = existing ? Number(existing.warnings || 0) : 0;
+    examState = existing || {answers:Array(EXAM_QUESTIONS.length).fill(null), review:Array(EXAM_QUESTIONS.length).fill(false), index:0, endAt:Date.now()+EXAM_DURATION*1000, warnings:0};
+    if (examState.endAt <= Date.now()) { submitExam(true); return; }
+    $("examWorkspace").classList.remove("hidden");
+    $("examResult").classList.add("hidden");
+    $("examStart").classList.add("hidden");
+    $("examResume").classList.add("hidden");
+    $("examClear").classList.remove("hidden");
+    saveExamState();
+    renderExamQuestion();
+    clearInterval(examInterval);
+    examInterval = setInterval(updateExamTimer, 1000);
+    updateExamTimer();
+  }
+  function updateExamTimer() {
+    if (!examState) return;
+    const left = Math.max(0, Math.ceil((examState.endAt-Date.now())/1000));
+    $("examTimer").textContent = Math.floor(left/60).toString().padStart(2,"0")+":"+String(left%60).padStart(2,"0");
+    if (left <= 0) submitExam(true);
+  }
+  function renderExamNavigator() {
+    if (!examState) return;
+    const grid = $("examNavGrid");
+    grid.replaceChildren();
+    examState.answers.forEach((answer, i) => {
+      const b = el("button", "exam-nav-btn" + (i === examState.index ? " current" : "") + (answer !== null ? " answered" : "") + (examState.review[i] ? " review" : ""), String(i+1));
+      b.type = "button";
+      b.setAttribute("aria-label", "Go to question " + (i+1));
+      b.addEventListener("click", () => { examState.index = i; renderExamQuestion(); saveExamState(); });
+      grid.appendChild(b);
+    });
+  }
+  function renderExamQuestion() {
+    if (!examState) return;
+    const i = examState.index, item = EXAM_QUESTIONS[i];
+    $("examProgress").textContent = "Question " + (i+1) + " of " + EXAM_QUESTIONS.length;
+    $("examQuestion").textContent = item.q;
+    const options = $("examOptions");
+    options.replaceChildren();
+    item.options.forEach((text, n) => {
+      const b = el("button", "exam-option" + (examState.answers[i] === n ? " selected" : ""), String.fromCharCode(65+n)+". "+text);
+      b.type = "button";
+      b.addEventListener("click", () => {
+        examState.answers[i] = n;
+        saveExamState();
+        renderExamQuestion();
+      });
+      options.appendChild(b);
+    });
+    $("examPrev").disabled = i === 0;
+    $("examNext").textContent = i === EXAM_QUESTIONS.length-1 ? "Finish questions" : "Next →";
+    $("examReview").textContent = examState.review[i] ? "Remove review mark" : "Mark for review";
+    renderExamNavigator();
+  }
+  function submitExam(autoSubmit) {
+    if (!examState) return;
+    clearInterval(examInterval);
+    const finalState = examState;
+    const score = finalState.answers.reduce((total, picked, i) => total + (picked === EXAM_QUESTIONS[i].answer ? 1 : 0), 0);
+    const percent = Math.round(score/EXAM_QUESTIONS.length*100);
+    try { localStorage.removeItem(EXAM_KEY); } catch (e) {}
+    $("examWorkspace").classList.add("hidden");
+    $("examStart").classList.remove("hidden");
+    $("examResume").classList.add("hidden");
+    $("examClear").classList.add("hidden");
+    const result = $("examResult");
+    result.replaceChildren();
+    result.classList.remove("hidden");
+    result.appendChild(el("h3", "", autoSubmit ? "Examination submitted" : "Your examination result"));
+    result.appendChild(el("p", "", "Score: "+score+" / "+EXAM_QUESTIONS.length+" ("+percent+"%)."));
+    result.appendChild(el("p", "", "Tab-switch warnings recorded: "+Number(finalState.warnings || 0)+". These warnings are informational only."));
+    result.appendChild(el("p", "note", "Review the answers below."));
+    EXAM_QUESTIONS.forEach((item, i) => {
+      const row = el("div", "feedback");
+      const picked = finalState.answers[i];
+      row.textContent = "Q"+(i+1)+": "+item.q+" Your answer: "+(picked === null ? "Not answered" : item.options[picked])+". Correct answer: "+item.options[item.answer]+". "+item.why;
+      result.appendChild(row);
+    });
+    examState = null;
+  }
+  $("examStart").addEventListener("click", () => startExam(false));
+  $("examResume").addEventListener("click", () => startExam(true));
+  $("examClear").addEventListener("click", () => {
+    if (!confirm("Discard the saved examination attempt?")) return;
+    try { localStorage.removeItem(EXAM_KEY); } catch (e) {}
+    clearInterval(examInterval);
+    examState = null;
+    $("examWorkspace").classList.add("hidden");
+    $("examStart").classList.remove("hidden");
+    $("examResume").classList.add("hidden");
+    $("examClear").classList.add("hidden");
+    $("examWarning").classList.add("hidden");
+  });
+  $("examPrev").addEventListener("click", () => { if (examState && examState.index > 0) { examState.index--; saveExamState(); renderExamQuestion(); } });
+  $("examNext").addEventListener("click", () => { if (examState) { if (examState.index < EXAM_QUESTIONS.length-1) { examState.index++; saveExamState(); renderExamQuestion(); } else { const unanswered = examState.answers.filter((a) => a === null).length; if (unanswered && !confirm("You still have "+unanswered+" unanswered question(s). Submit anyway?")) return; submitExam(false); } } });
+  $("examReview").addEventListener("click", () => { if (!examState) return; examState.review[examState.index] = !examState.review[examState.index]; saveExamState(); renderExamQuestion(); });
+  $("examSubmit").addEventListener("click", () => {
+    if (!examState) return;
+    const unanswered = examState.answers.filter((a) => a === null).length;
+    const marked = examState.review.filter(Boolean).length;
+    if (!confirm("Submit now? Unanswered: "+unanswered+". Marked for review: "+marked+".")) return;
+    submitExam(false);
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden && examState) {
+      examState.warnings = Number(examState.warnings || 0) + 1;
+      examWarnings = examState.warnings;
+      saveExamState();
+      $("examWarning").textContent = "Warning: this exam page became hidden. Warning count: "+examState.warnings+". This does not lock your browser or prevent tab switching.";
+      $("examWarning").classList.remove("hidden");
+    }
+  });
+  const savedExam = loadExamState();
+  if (savedExam && savedExam.endAt > Date.now()) {
+    $("examResume").classList.remove("hidden");
+    $("examClear").classList.remove("hidden");
+  } else if (savedExam) {
+    try { localStorage.removeItem(EXAM_KEY); } catch (e) {}
+  }
+
+  $("teacherReload").addEventListener("click", () => {
+    const frame = $("teacherFrame");
+    frame.src = "https://subjectspecificapp.com/?busybrains_reload=" + Date.now();
+  });
+  $("teacherOpen").addEventListener("click", () => {
+    window.location.href = "https://subjectspecificapp.com/";
+  });
+
   /* =========================================================
      STUDY PLANNER
      ========================================================= */
@@ -2320,6 +2711,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 
     const token = ++learnToken;
     $("learnInput").value = topic;
+    try { localStorage.setItem("busybrains_last_learn_topic", topic); } catch (e) {}
 
     $("learnIntro").classList.add("hidden");
     $("learnResults").classList.remove("hidden");
