@@ -612,40 +612,43 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 .ges-check input{width:16px;height:16px}
 .note a{color:var(--clay)}
 
-/* CURRENT-PHASE ADDITIONS: global search, exams, teacher hub, theme */
-.global-search-results{display:grid;gap:10px}
-.global-result{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--paper);border:1px solid var(--border);border-radius:9px}
-.global-result .result-main{flex:1;min-width:0}
-.global-result h3{font-size:14px;margin:0 0 4px;overflow-wrap:anywhere}
-.global-result p{font-size:12px;color:var(--muted);margin:0}
-.result-type{font-size:10px;font-weight:700;background:var(--clay-soft);color:var(--clay-dark);padding:4px 7px;border-radius:5px;white-space:nowrap}
-.theme-btn{border:1px solid #5b554d;background:#2c2823;color:#fff;border-radius:7px;padding:8px 10px;font-size:12px}
-.exam-layout{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:14px;align-items:start}
-.exam-option{display:block;width:100%;text-align:left;padding:12px;border:1px solid var(--border);border-radius:8px;background:var(--paper);color:var(--ink);margin:8px 0}
-.exam-option.selected{border-color:var(--clay);background:var(--clay-soft)}
-.exam-nav-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:12px 0}
-.exam-nav-btn{padding:8px 3px;border:1px solid var(--border);border-radius:6px;background:var(--paper);color:var(--ink);font-size:12px}
-.exam-nav-btn.current{outline:2px solid var(--clay)}
-.exam-nav-btn.answered{background:#e7f3eb;border-color:#a7ceb4}
-.exam-nav-btn.review{box-shadow:inset 0 -3px #d49c7e}
-.exam-timer{font-size:24px;font-weight:800;color:var(--clay)}
-.teacher-frame{width:100%;height:min(78vh,850px);border:1px solid var(--border);border-radius:10px;background:white}
-.exam-result{padding:18px;border:1px solid var(--border);border-radius:10px;background:var(--card);margin-top:14px}
-.theme-dark{
- --ink:#f2eee7;--muted:#b8b0a5;--sand:#171614;--paper:#24221f;--card:#2b2824;
- --clay:#d18b66;--clay-dark:#e0a17d;--clay-soft:#49362c;--green:#79bc91;--border:#48423a;--blue:#83b5cb;
-}
-.theme-dark .topbar{background:#0d0c0b;border-color:#39342d}
-.theme-dark .mobile-menu{background:#24221f;border-color:var(--border)}
-.theme-dark .mobile-menu button{color:var(--ink)}
-.theme-dark .quick-card,.theme-dark .resource-card,.theme-dark .panel,.theme-dark .stat-card,
-.theme-dark .formula,.theme-dark .global-result,.theme-dark .exam-option,.theme-dark .exam-nav-btn,
-.theme-dark .storage-bar,.theme-dark .download-card,.theme-dark .lightbox-box{background:var(--paper);color:var(--ink)}
-.theme-dark input,.theme-dark select,.theme-dark textarea{background:#1b1a18;color:var(--ink);border-color:var(--border)}
-.theme-dark .option{background:var(--paper);color:var(--ink)}
-.theme-dark .footer{background:#201e1b}
-@media(max-width:800px){.exam-layout{grid-template-columns:1fr}.teacher-frame{height:70vh}}
+/* QUIZ HUB + LEADERBOARD */
+.quiz-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.quiz-subject{display:flex;flex-direction:column;gap:3px;align-items:flex-start;text-align:left;padding:14px;background:white;border:1px solid var(--border);border-radius:11px;color:var(--ink)}
+.quiz-subject:hover{border-color:#c4a28c;transform:translateY(-2px)}
+.quiz-subject-icon{font-size:24px}
+.quiz-subject strong{font-size:14px}
+.quiz-subject small{font-size:11px;color:var(--muted)}
+.quiz-top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.quiz-top strong{flex:1}
+.player-bar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:14px;position:relative}
+.player-info{flex:1;min-width:200px}
+.join-form{display:flex;gap:8px;flex:1;min-width:220px}
+.join-form input{flex:1;min-width:0;padding:10px 11px;border:1px solid var(--border);border-radius:7px;background:white}
+.join-msg{flex-basis:100%;font-size:12px;color:#9b3d32;min-height:0}
+.join-msg:empty{display:none}
+.lb-head{display:flex;justify-content:space-between;margin-bottom:8px}
+.live-dot{color:var(--green)}
+.lb-list{display:grid;gap:6px}
+.lb-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:white}
+.lb-row.me{background:var(--clay-soft);border-color:#dcbfae}
+.lb-rank{width:30px;text-align:center;font-weight:700;font-size:15px}
+.lb-name{flex:1;min-width:0;display:flex;flex-direction:column}
+.lb-name strong{font-size:13px;overflow-wrap:anywhere}
+.lb-name small{font-size:11px;color:var(--muted)}
+.lb-points{font-weight:700;font-size:13px;color:var(--clay);white-space:nowrap}
+@media(max-width:800px){.quiz-picker{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.join-form{flex-direction:column}.player-bar{align-items:stretch}}
 
+/* IN-PAGE PDF READER */
+.reader{max-width:920px;margin:0 auto;padding:0 12px 50px}
+.reader-bar{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:10px 2px}
+.reader-bar strong{flex:1;min-width:160px;font-size:14px;overflow-wrap:anywhere}
+.reader-actions{display:flex;gap:6px;flex-wrap:wrap}
+.pdf-pages{display:grid;gap:10px;margin-top:8px}
+.pdf-page{background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden;min-height:120px}
+.pdf-page canvas{display:block;width:100%;height:auto}
+.pdf-frame{width:100%;height:80vh;border:1px solid var(--border);border-radius:6px;background:#fff}
 </style>
 </head>
 
@@ -658,17 +661,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     </a>
     <nav class="nav" aria-label="Main navigation">
       <button class="active" data-view="home">Home</button>
-      <button data-view="search">Search</button>
-      <button data-view="library">PDF Library</button>
+      <button data-view="library">Library</button>
       <button data-view="learn">Learn</button>
-      <button data-view="ges">GES Resources</button>
+      <button data-view="ges">GES</button>
       <button data-view="practice">Practice</button>
-      <button data-view="planner">Study Planner</button>
+      <button data-view="leaderboard">🏆 Leaderboard</button>
+      <button data-view="planner">Planner</button>
       <button data-view="saved">Saved <span id="savedCount" class="count-pill">0</span></button>
-      <button data-view="downloads">My Downloads <span id="downloadCount" class="count-pill">0</span></button>
-      <button data-view="exam">Examination Centre</button>
-      <button data-view="teacher">Teacher Hub</button>
-      <button id="themeToggle" class="theme-btn" type="button" aria-pressed="false">🌙 Dark mode</button>
+      <button data-view="downloads">Downloads <span id="downloadCount" class="count-pill">0</span></button>
     </nav>
     <button class="menu-btn" id="menuBtn" aria-label="Open navigation">☰</button>
   </div>
@@ -676,17 +676,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 
 <div id="mobileMenu" class="mobile-menu">
   <button data-view="home">Home</button>
-  <button data-view="search">Search all resources</button>
   <button data-view="library">PDF Library</button>
   <button data-view="learn">Learn a Topic (Videos &amp; Pictures)</button>
   <button data-view="ges">Ghana GES Resources</button>
   <button data-view="practice">Practice Quizzes & Flashcards</button>
+  <button data-view="leaderboard">🏆 Leaderboard</button>
   <button data-view="planner">Study Planner</button>
   <button data-view="saved">Saved Resources</button>
   <button data-view="downloads">My Downloads</button>
-  <button data-view="exam">Examination Centre</button>
-  <button data-view="teacher">Teacher Hub</button>
-  <button id="themeToggleMobile" type="button">🌙 Dark mode</button>
 </div>
 
 <main class="wrap">
@@ -718,16 +715,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
         <div class="stat-card"><span>Saved resources</span><strong id="homeSavedStat">0</strong></div>
         <div class="stat-card"><span>Downloaded resources</span><strong id="homeDownloadStat">0</strong></div>
         <div class="stat-card"><span>Study tasks completed</span><strong id="homeTaskStat">0</strong></div>
-      </div>
-    </div>
-
-
-    <div class="section" id="continueLearningSection">
-      <div class="section-head"><div><h2>Continue learning</h2><p>Your most recently searched learning topic on this browser.</p></div></div>
-      <div class="panel">
-        <strong id="lastLearnTopic">No topic searched yet</strong>
-        <p id="lastLearnNote" class="note">Use Learn a Topic to search videos, pictures and explanations. Your last topic will appear here.</p>
-        <button id="continueLearningBtn" class="btn btn-primary" type="button" disabled>Continue topic →</button>
       </div>
     </div>
 
@@ -877,80 +864,25 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
       <a href="https://curriculumresources.edu.gh/jhs/" target="_blank" rel="noopener">JHS</a>.</p>
   </section>
 
-
-  <!-- GLOBAL SEARCH -->
-  <section id="view-search" class="page-view hidden">
-    <div class="section-head"><div><h2>Search Busy Brains</h2><p>Search the PDF library and formula bank, or send a topic to the Learn section.</p></div></div>
-    <div class="search-box"><span>🔍</span><input id="globalSearchInput" type="search" placeholder="Search subjects, PDFs, topics, formulas…" autocomplete="off"></div>
-    <div class="section"><div class="section-head"><h2>Matching resources</h2><span id="globalSearchCount" class="note">Enter a search term</span></div><div id="globalSearchResults" class="global-search-results"><div class="empty"><strong>Search across your learning resources</strong>Results will appear here as you type.</div></div></div>
-    <div class="panel"><h3 style="margin-top:0">Learn a topic</h3><p class="note">Search for educational videos, pictures and a quick explanation.</p><form id="globalLearnForm" class="learn-form"><div class="search-box"><span>📘</span><input id="globalLearnInput" type="search" placeholder="e.g. cell division or algebra" maxlength="80" required></div><button class="btn btn-primary learn-submit" type="submit">Learn topic</button></form></div>
-  </section>
-
-  <!-- EXAMINATION CENTRE -->
-  <section id="view-exam" class="page-view hidden">
-    <div class="section-head"><div><h2>Examination Centre</h2><p>Try the sample timed practice examination. Your answers are saved on this browser during the attempt.</p></div></div>
-    <div class="panel">
-      <div class="eyebrow" style="color:var(--clay)">Practice examination</div>
-      <h3 style="margin:6px 0">Science & Mathematics Starter Exam</h3>
-      <p class="note">10 objective questions · 10-minute timer · automatic marking. This is a local practice exam, not an official or teacher-published examination.</p>
-      <button id="examStart" class="btn btn-primary" type="button">Start examination</button>
-      <button id="examResume" class="btn btn-outline hidden" type="button">Resume saved attempt</button>
-      <button id="examClear" class="btn btn-outline hidden" type="button">Discard saved attempt</button>
-    </div>
-    <div id="examWorkspace" class="section hidden">
-      <div class="stats-grid">
-        <div class="stat-card"><span>Time remaining</span><strong id="examTimer" class="exam-timer">10:00</strong></div>
-        <div class="stat-card"><span>Answered</span><strong id="examAnswered">0/10</strong></div>
-        <div class="stat-card"><span>Marked for review</span><strong id="examReviewCount">0</strong></div>
-      </div>
-      <p id="examWarning" class="status hidden" role="status"></p>
-      <div class="exam-layout" style="margin-top:14px">
-        <div class="panel">
-          <p id="examProgress" class="note">Question 1 of 10</p>
-          <h3 id="examQuestion" class="quiz-question"></h3>
-          <div id="examOptions" class="option-list"></div>
-          <div class="flash-controls" style="justify-content:space-between">
-            <button id="examPrev" class="btn btn-outline" type="button">← Previous</button>
-            <button id="examReview" class="btn btn-outline" type="button">Mark for review</button>
-            <button id="examNext" class="btn btn-primary" type="button">Next →</button>
-          </div>
-        </div>
-        <aside class="panel">
-          <strong>Question navigator</strong>
-          <div id="examNavGrid" class="exam-nav-grid"></div>
-          <p class="note">Green = answered. Underline = marked for review. Leaving the tab may be recorded as a warning, but this page cannot prevent switching tabs or guarantee exam security.</p>
-          <button id="examSubmit" class="btn btn-primary" type="button" style="width:100%">Submit examination</button>
-        </aside>
-      </div>
-    </div>
-    <div id="examResult" class="exam-result hidden" aria-live="polite"></div>
-  </section>
-
-  <!-- TEACHER HUB -->
-  <section id="view-teacher" class="page-view hidden">
-    <div class="section-head"><div><h2>Teacher Hub</h2><p>Access the Subject Specific App for SHS Teachers within Busy Brains when the external site allows embedding.</p></div></div>
-    <div class="panel">
-      <p class="note">This is an external service. Busy Brains does not control its content, sign-in, or availability. If the panel below is blank or displays an error, the provider may block iframe embedding; use the official website link to check access. The link opens in this page's current tab.</p>
-      <div class="flash-controls" style="justify-content:flex-start">
-        <button id="teacherReload" class="btn btn-outline" type="button">Reload embedded app</button>
-        <button id="teacherOpen" class="btn btn-primary" type="button">Open official site here</button>
-      </div>
-    </div>
-    <div class="section"><iframe id="teacherFrame" class="teacher-frame" title="Subject Specific App for SHS Teachers" src="https://subjectspecificapp.com/" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="clipboard-read; clipboard-write"></iframe></div>
-    <p class="note">If the external app does not permit embedding, this limitation cannot be fixed from this HTML file. No attempt is made to bypass its security settings.</p>
-  </section>
-
   <!-- PRACTICE -->
   <section id="view-practice" class="page-view hidden">
     <div class="section-head">
       <div><h2>Practice Zone</h2><p>Short sample quizzes and flashcards to help you revise. More question sets can be added later.</p></div>
     </div>
-    <div class="two-col">
-      <div class="panel">
-        <div class="eyebrow" style="color:var(--clay)">Quick quiz</div>
-        <h3 style="margin:6px 0 14px">Science & Maths Basics</h3>
+    <div class="section" id="quizSection">
+      <div class="section-head">
+        <div><h2>Subject Quizzes</h2><p>20 questions in each subject. Earn 10 points for every correct answer and climb the leaderboard.</p></div>
+      </div>
+      <div id="playerSlotQuiz"></div>
+      <div id="quizPicker" class="quiz-picker"></div>
+      <div id="quizPanel" class="panel hidden">
+        <div class="quiz-top">
+          <button id="quizBack" class="btn btn-outline btn-small" type="button">← All subjects</button>
+          <strong id="quizTitle"></strong>
+          <span id="quizScoreLine" class="note"></span>
+        </div>
         <div id="quizArea">
-          <p id="quizProgress" class="note">Question 1 of 5</p>
+          <p id="quizProgress" class="note"></p>
           <p id="quizQuestion" class="quiz-question"></p>
           <div id="quizOptions" class="option-list"></div>
           <div id="quizFeedback" class="feedback hidden"></div>
@@ -960,7 +892,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
           </div>
         </div>
       </div>
+    </div>
 
+    <div class="two-col">
       <div class="panel">
         <div class="eyebrow" style="color:var(--clay)">Flashcards</div>
         <h3 style="margin:6px 0 14px">Quick revision cards</h3>
@@ -972,6 +906,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
         </div>
         <p id="flashProgress" class="note" style="text-align:center;margin-top:10px"></p>
       </div>
+
+      <div class="panel">
+        <div class="eyebrow" style="color:var(--clay)">Live leaderboard</div>
+        <h3 style="margin:6px 0 14px">Top students</h3>
+        <div id="miniBoard" class="lb-list"></div>
+        <div class="flash-controls"><button class="btn btn-outline btn-small" data-go="leaderboard">Full leaderboard →</button></div>
+      </div>
     </div>
 
     <div class="section">
@@ -981,6 +922,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
       <div class="search-box"><span>🔍</span><input id="formulaSearch" type="search" placeholder="Find a formula or quantity…"></div>
       <div id="formulaGrid" class="formula-grid"></div>
     </div>
+  </section>
+
+  <!-- LEADERBOARD -->
+  <section id="view-leaderboard" class="page-view hidden">
+    <div class="section-head">
+      <div><h2>🏆 Leaderboard</h2><p>Live rankings of Busy Brains students. Scores update as people answer quiz questions.</p></div>
+    </div>
+    <div id="playerSlotBoard"></div>
+    <div class="panel">
+      <div class="lb-head"><strong>Top 50 students</strong><span class="note live-dot">● Live</span></div>
+      <div id="lbList" class="lb-list"></div>
+    </div>
+    <p class="note">Only your username and scores are stored. Don't use your real full name. Points: 10 for every correct answer.
+      <button class="btn btn-primary btn-small" data-go="practice" style="margin-left:6px">Take a quiz</button></p>
   </section>
 
   <!-- PLANNER -->
@@ -1055,7 +1010,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   <!-- DOWNLOADS -->
   <section id="view-downloads" class="page-view hidden">
     <div class="section-head">
-      <div><h2>My Downloads</h2><p>Resources you successfully started downloading on this browser.</p></div>
+      <div><h2>My Downloads</h2><p>PDFs you have opened on this browser. Tap Open to read them again.</p></div>
     </div>
     <div id="downloadsResults" class="resource-list"></div>
     <div class="storage-bar">
@@ -1078,9 +1033,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 <footer class="footer">
   <strong>🧠 Busy Brains</strong>
   <p>Study smarter. Practise consistently. Keep learning.</p>
-  <p>WASSCE-style trial papers are available for trial.</p>
-  <p>You can click download button to download resources.</p>
-  <p>Bookmarks, study tasks, theme preference and practice exam progress are stored locally in this browser.</p>
+  <p>WASSCE-style trial papers are Busy Brains practice materials and are not official WAEC examination papers.</p>
+  <p>Download availability depends on the resource and storage permissions.</p>
 </footer>
 </div>
 
@@ -1102,12 +1056,24 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
         <div id="step1" class="step-dot active"></div>
         <div id="step2" class="step-dot"></div>
       </div>
-      <div id="downloadMessage" class="download-message">Continue to prepare your download.</div>
+      <div id="downloadMessage" class="download-message">Continue to prepare your PDF.</div>
       <button id="continueButton" class="btn btn-primary" style="width:100%">Continue</button>
-      <button id="downloadNowButton" class="btn btn-primary hidden" style="width:100%">Download PDF</button>
+      <button id="downloadNowButton" class="btn btn-primary hidden" style="width:100%">Open PDF</button>
       <p id="downloadStatus" class="download-status"></p>
       <p id="downloadError" class="error"></p>
     </div>
+  </div>
+
+  <div id="reader" class="reader hidden">
+    <div class="reader-bar">
+      <strong id="readerTitle"></strong>
+      <div class="reader-actions">
+        <button id="pdfSave" class="btn btn-primary btn-small hidden" type="button">⬇ Save to my device</button>
+        <button id="readerClose" class="btn btn-outline btn-small" type="button">✕ Close PDF</button>
+      </div>
+    </div>
+    <div id="readerStatus" class="note"></div>
+    <div id="pdfPages" class="pdf-pages"></div>
   </div>
 </div>
 
@@ -1152,6 +1118,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   /* localStorage with in-memory fallback */
   const KEYS = {
     downloads: "busybrains_downloads",
+    extDownloads: "busybrains_ges_downloads",
     saved: "busybrains_saved",
     tasks: "busybrains_tasks"
   };
@@ -1222,7 +1189,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
      ========================================================= */
 
   const TRIAL = "__trial__";
-  const VIEWS = ["home", "search", "library", "learn", "ges", "practice", "planner", "saved", "downloads", "exam", "teacher"];
+  const VIEWS = ["home", "library", "learn", "ges", "practice", "leaderboard", "planner", "saved", "downloads"];
 
   let allFiles = [];
   let filesLoaded = false;
@@ -1276,7 +1243,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
      RESOURCE CARDS
      ========================================================= */
 
-  function createCard(file) {
+  function createCard(file, mode) {
     const id = String(file.id);
     const card = el(
       "article",
@@ -1312,16 +1279,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     save.setAttribute("aria-label", save.title);
     actions.appendChild(save);
 
-    const dl = el("button", "btn btn-primary btn-small", "Download");
+    const dl = el("button", "btn btn-primary btn-small", mode === "open" ? "Open" : "Download");
     dl.type = "button";
-    dl.dataset.download = id;
+    if (mode === "open") dl.dataset.open = id;
+    else dl.dataset.download = id;
     actions.appendChild(dl);
 
     card.appendChild(actions);
     return card;
   }
 
-  function fillList(container, files, emptyTitle, emptyText) {
+  function fillList(container, files, emptyTitle, emptyText, mode) {
     container.replaceChildren();
 
     if (!files.length) {
@@ -1333,7 +1301,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     }
 
     const frag = document.createDocumentFragment();
-    files.forEach((f) => frag.appendChild(createCard(f)));
+    files.forEach((f) => frag.appendChild(createCard(f, mode)));
     container.appendChild(frag);
   }
 
@@ -1373,7 +1341,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 
   function updateCounts() {
     const saved = savedFiles().length;
-    const dls = downloadedFiles().length;
+    const dls = downloadedFiles().length + extDownloads().length;
     const done = readList(KEYS.tasks).filter((t) => t.done).length;
 
     $("savedCount").textContent = saved;
@@ -1385,12 +1353,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   }
 
   function renderHome() {
-    const lastTopic = (() => { try { return localStorage.getItem("busybrains_last_learn_topic") || ""; } catch (e) { return ""; } })();
-    if ($("lastLearnTopic")) {
-      $("lastLearnTopic").textContent = lastTopic || "No topic searched yet";
-      $("lastLearnNote").textContent = lastTopic ? "Continue exploring videos, pictures and a quick explanation for this topic." : "Use Learn a Topic to search videos, pictures and explanations. Your last topic will appear here.";
-      $("continueLearningBtn").disabled = !lastTopic;
-    }
     const box = $("homeRecent");
 
     if (!filesLoaded) return;
@@ -1505,12 +1467,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   }
 
   function renderDownloads() {
-    fillList(
-      $("downloadsResults"),
-      downloadedFiles(),
-      "No downloads yet",
-      "Resources you download will appear here."
-    );
+    const box = $("downloadsResults");
+    const files = downloadedFiles();
+    const ext = extDownloads();
+
+    fillList(box, files, "No downloads yet", "PDFs you open will be saved here.", "open");
+
+    if (ext.length) {
+      if (!files.length) box.replaceChildren();
+      ext.forEach((x) => box.appendChild(createExtCard(x)));
+    }
   }
 
   function renderAll() {
@@ -1520,7 +1486,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     renderSaved();
     renderDownloads();
     renderTasks();
-    if ($("globalSearchInput") && $("globalSearchInput").value) renderGlobalSearch($("globalSearchInput").value);
   }
 
   /* =========================================================
@@ -1542,6 +1507,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     $("menuBtn").setAttribute("aria-expanded", "false");
 
     renderAll();
+    if (name === "leaderboard" || name === "practice") refreshBoard();
     if (name === "ges" && !gesStarted) {
       gesStarted = true;
       runGes("Mathematics");
@@ -1560,27 +1526,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   $("menuBtn").addEventListener("click", () => {
     const open = $("mobileMenu").classList.toggle("open");
     $("menuBtn").setAttribute("aria-expanded", String(open));
-  });
-
-
-  /* Theme preference is stored locally on this browser. */
-  const THEME_KEY = "busybrains_theme";
-  function applyTheme(dark) {
-    document.body.classList.toggle("theme-dark", dark);
-    ["themeToggle", "themeToggleMobile"].forEach((id) => {
-      const b = $(id);
-      if (!b) return;
-      b.textContent = dark ? "☀️ Light mode" : "🌙 Dark mode";
-      b.setAttribute("aria-pressed", String(dark));
-    });
-    try { localStorage.setItem(THEME_KEY, dark ? "dark" : "light"); } catch (e) {}
-  }
-  let darkTheme = false;
-  try { darkTheme = localStorage.getItem(THEME_KEY) === "dark"; } catch (e) {}
-  applyTheme(darkTheme);
-  ["themeToggle", "themeToggleMobile"].forEach((id) => {
-    const b = $(id);
-    if (b) b.addEventListener("click", () => applyTheme(!document.body.classList.contains("theme-dark")));
   });
 
   /* =========================================================
@@ -1612,86 +1557,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     renderLibrary();
   });
 
-
-  /* =========================================================
-     GLOBAL SEARCH ACROSS EXISTING LOCAL RESOURCE SOURCES
-     ========================================================= */
-  function renderGlobalSearch(raw) {
-    const q = String(raw || "").trim().toLowerCase();
-    const box = $("globalSearchResults");
-    box.replaceChildren();
-    if (!q) {
-      $("globalSearchCount").textContent = "Enter a search term";
-      box.appendChild(el("div", "empty", "Search the PDF library and formula bank."));
-      return;
-    }
-    const matches = [];
-    allFiles.forEach((f) => {
-      if ([f.title, f.subject, f.type, f.meta, f.form, f.class].filter(Boolean).join(" ").toLowerCase().includes(q)) {
-        matches.push({type:"PDF resource", title:f.title || "Untitled", meta:[f.subject, f.type].filter(Boolean).join(" • "), action:"library", fileId:String(f.id)});
-      }
-    });
-    FORMULAS.forEach((f) => {
-      if (f.join(" ").toLowerCase().includes(q)) matches.push({type:"Formula bank", title:f[0], meta:f[1] + " • " + f[2], action:"practice"});
-    });
-    const learnTopics = LEARN_TOPICS.filter((t) => t.toLowerCase().includes(q));
-    learnTopics.forEach((t) => matches.push({type:"Learn topic", title:t, meta:"Videos, pictures and quick explanation", action:"learn", topic:t}));
-    if (q.length >= 2 && !learnTopics.some((t) => t.toLowerCase() === q)) matches.push({type:"Learn topic", title:"Learn: " + raw, meta:"Search videos, pictures and a quick explanation for this topic", action:"learn", topic:String(raw).trim()});
-    $("globalSearchCount").textContent = matches.length + (matches.length === 1 ? " result" : " results");
-    if (!matches.length) {
-      box.appendChild(el("div", "empty", "No matching resource found in the current PDF library, formula bank or suggested topics. Try different words."));
-      return;
-    }
-    matches.slice(0, 60).forEach((m) => {
-      const row = el("article", "global-result");
-      const main = el("div", "result-main");
-      main.appendChild(el("h3", "", m.title));
-      main.appendChild(el("p", "", m.meta || ""));
-      row.appendChild(main);
-      row.appendChild(el("span", "result-type", m.type));
-      const action = el("button", "btn btn-outline btn-small", m.type === "Learn topic" ? "Learn" : m.type === "Formula bank" ? "View formulas" : "View PDFs");
-      action.type = "button";
-      action.addEventListener("click", () => {
-        if (m.topic) {
-          showView("learn");
-          $("learnInput").value = m.topic;
-          runLearn(m.topic);
-        } else {
-          showView(m.action);
-          if (m.fileId) {
-            $("searchInput").value = m.title;
-            query = m.title.toLowerCase();
-            renderLibrary();
-          }
-          if (m.type === "Formula bank") {
-            $("formulaSearch").value = q;
-            renderFormulas(q);
-          }
-        }
-      });
-      row.appendChild(action);
-      box.appendChild(row);
-    });
-  }
-  $("globalSearchInput").addEventListener("input", (e) => renderGlobalSearch(e.target.value));
-  $("globalLearnForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    const topic = $("globalLearnInput").value.trim();
-    if (!topic) return;
-    showView("learn");
-    $("learnInput").value = topic;
-    runLearn(topic);
-  });
-
-  $("continueLearningBtn").addEventListener("click", () => {
-    let topic = "";
-    try { topic = localStorage.getItem("busybrains_last_learn_topic") || ""; } catch (e) {}
-    if (!topic) return;
-    showView("learn");
-    $("learnInput").value = topic;
-    runLearn(topic);
-  });
-
   $("clearSaved").addEventListener("click", () => {
     if (!confirm("Remove all saved bookmarks? The PDFs are not deleted.")) return;
     writeList(KEYS.saved, []);
@@ -1701,6 +1566,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   $("clearDownloads").addEventListener("click", () => {
     if (!confirm("Clear your download history? Files on your device stay there.")) return;
     writeList(KEYS.downloads, []);
+    writeList(KEYS.extDownloads, []);
     renderAll();
   });
 
@@ -1713,6 +1579,31 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     if (save) {
       toggleSaved(save.dataset.save);
       renderAll();
+      return;
+    }
+
+    const op = e.target.closest("[data-open]");
+    if (op) {
+      openDownloadScreen(op.dataset.open, true);
+      return;
+    }
+
+    const ext = e.target.closest("[data-ext-open]");
+    if (ext) {
+      const item = extDownloads().find((x) => x.id === ext.dataset.extOpen);
+      if (item) {
+        openDownloadFile(
+          {
+            id: item.id,
+            title: item.title,
+            subject: "Ghana GES",
+            type: "Ministry of Education",
+            created_at: item.date,
+            external_url: item.url
+          },
+          true
+        );
+      }
       return;
     }
 
@@ -1733,7 +1624,64 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   const step1 = $("step1");
   const step2 = $("step2");
 
-  function openDownloadScreen(id) {
+  const readerBox = $("reader");
+  const pdfPagesBox = $("pdfPages");
+  const pdfSave = $("pdfSave");
+  const readerStatus = $("readerStatus");
+
+  const PDFJS_VERSION = "3.11.174";
+  const PDFJS_BASE = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/" + PDFJS_VERSION + "/";
+
+  let pdfDoc = null;
+  let pdfBlob = null;
+  let pdfAbort = null;
+  let pdfToken = 0;
+  let pdfObserver = null;
+  let pdfFrameUrl = "";
+  let pdfjsPromise = null;
+
+  /* ---- "My Downloads" entries for files that live on other websites (GES) ---- */
+
+  function extDownloads() {
+    return readList(KEYS.extDownloads).filter((x) => x && x.id && x.url);
+  }
+
+  function addExtDownload(file) {
+    const list = extDownloads().filter((x) => x.id !== file.id);
+    list.unshift({ id: file.id, title: file.title, url: file.external_url, date: file.created_at || "" });
+    writeList(KEYS.extDownloads, list.slice(0, 100));
+  }
+
+  function createExtCard(item) {
+    const card = el("article", "resource-card downloaded");
+    card.appendChild(el("div", "pdf-icon", "PDF"));
+
+    const info = el("div", "resource-info");
+    info.appendChild(el("h3", "resource-title", item.title || "GES resource"));
+
+    const meta = el("div", "resource-meta");
+    meta.appendChild(el("span", "subject-text", "Ghana GES"));
+    const d = formatDate(item.date);
+    if (d) {
+      meta.appendChild(el("span", "", "•"));
+      meta.appendChild(el("span", "", d));
+    }
+    info.appendChild(meta);
+    card.appendChild(info);
+
+    const actions = el("div", "resource-actions");
+    const open = el("button", "btn btn-primary btn-small", "Open");
+    open.type = "button";
+    open.dataset.extOpen = item.id;
+    actions.appendChild(open);
+    card.appendChild(actions);
+
+    return card;
+  }
+
+  /* ---- opening the download screen ---- */
+
+  function openDownloadScreen(id, direct) {
     const file = allFiles.find((f) => String(f.id) === String(id));
 
     if (!file) {
@@ -1741,15 +1689,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
       return;
     }
 
-    openDownloadFile(file);
+    openDownloadFile(file, direct);
   }
 
-  function openDownloadFile(file) {
+  function openDownloadFile(file, direct) {
     currentFile = file;
     continueStarted = false;
-    returnView = activeView === "home" ? "home" : activeView;
+    returnView = activeView;
 
     stopVideo();
+    closeReader();
+
     libraryScreen.classList.add("hidden");
     downloadScreen.classList.remove("hidden");
 
@@ -1757,7 +1707,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     $("downloadMeta").textContent = [file.subject, file.type, formatDate(file.created_at)]
       .filter(Boolean)
       .join(" • ");
-    $("downloadMessage").textContent = "Continue to prepare your download.";
+    $("downloadMessage").textContent = "Continue to prepare your PDF.";
 
     continueButton.classList.remove("hidden");
     continueButton.disabled = false;
@@ -1765,7 +1715,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 
     downloadNowButton.classList.add("hidden");
     downloadNowButton.disabled = false;
-    downloadNowButton.textContent = "Download PDF";
+    downloadNowButton.textContent = "Open PDF";
 
     downloadStatus.textContent = "";
     downloadError.textContent = "";
@@ -1774,6 +1724,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     step2.classList.remove("active");
 
     window.scrollTo(0, 0);
+
+    if (direct) {
+      /* already passed the steps once (opened from My Downloads) */
+      continueStarted = true;
+      continueButton.classList.add("hidden");
+      step1.classList.remove("active");
+      step2.classList.add("active");
+      $("downloadMessage").textContent = "Opening your PDF…";
+      openPdf();
+    }
   }
 
   continueButton.addEventListener("click", () => {
@@ -1784,13 +1744,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     continueButton.textContent = "Preparing...";
 
     let remaining = 3;
-    downloadStatus.textContent = "Preparing download... " + remaining;
+    downloadStatus.textContent = "Preparing... " + remaining;
 
     const timer = setInterval(() => {
       remaining--;
 
       if (remaining > 0) {
-        downloadStatus.textContent = "Preparing download... " + remaining;
+        downloadStatus.textContent = "Preparing... " + remaining;
         return;
       }
 
@@ -1802,97 +1762,333 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
       continueButton.classList.add("hidden");
       downloadNowButton.classList.remove("hidden");
 
-      $("downloadMessage").textContent = "Your PDF is ready.";
+      $("downloadMessage").textContent = "Your PDF is ready. It opens right here on this page.";
       downloadStatus.textContent = "";
     }, 1000);
   });
 
-  async function urlReachable(url) {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 8000);
+  /* ---- fetching the file ---- */
+
+  const fmtMB = (n) => (n / 1048576).toFixed(1) + " MB";
+
+  async function fetchBlob(url, signal, onProgress) {
+    const res = await fetch(url, { signal: signal });
+    if (!res.ok) throw new Error("The file could not be downloaded (error " + res.status + ").");
+
+    const total = Number(res.headers.get("Content-Length")) || 0;
+
+    if (!res.body || !res.body.getReader) return res.blob();
+
+    const reader = res.body.getReader();
+    const chunks = [];
+    let got = 0;
+
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+      got += value.length;
+      if (onProgress) onProgress(got, total);
+    }
+
+    return new Blob(chunks, { type: "application/pdf" });
+  }
+
+  async function getPdfBlob(file, signal, onProgress) {
+    if (file.external_url) {
+      if (String(file.external_url).indexOf(GES_SITE + "/") !== 0) {
+        throw new Error("This link is not allowed.");
+      }
+      return fetchBlob(file.external_url, signal, onProgress);
+    }
+
+    if (!sb) throw new Error("The backend is not connected.");
+
+    const path = String(file.storage_path || "").replace(/^\/+/, "");
+    if (!path) throw new Error("This file has no storage path.");
+
+    const storage = sb.storage.from(BUCKET);
+    const publicUrl = storage.getPublicUrl(path).data.publicUrl;
 
     try {
-      const res = await fetch(url, { method: "HEAD", signal: controller.signal });
-      return res.ok;
-    } catch (e) {
-      return false;
-    } finally {
-      clearTimeout(timer);
+      return await fetchBlob(publicUrl, signal, onProgress);
+    } catch (err) {
+      if (err && err.name === "AbortError") throw err;
+
+      /* private bucket: use a temporary signed link instead */
+      const { data, error } = await storage.createSignedUrl(path, 600);
+      if (error) throw error;
+      return fetchBlob(data.signedUrl, signal, onProgress);
     }
   }
 
-  downloadNowButton.addEventListener("click", async () => {
-    if (!currentFile) return;
+  /* ---- the PDF reader (PDF.js, loaded only when first needed) ---- */
+
+  function loadPdfJs() {
+    if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+
+    if (!pdfjsPromise) {
+      pdfjsPromise = new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = PDFJS_BASE + "pdf.min.js";
+        s.onload = () => {
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_BASE + "pdf.worker.min.js";
+          resolve(window.pdfjsLib);
+        };
+        s.onerror = () => {
+          pdfjsPromise = null;
+          reject(new Error("The PDF reader could not be loaded."));
+        };
+        document.head.appendChild(s);
+      });
+    }
+
+    return pdfjsPromise;
+  }
+
+  function resetReader() {
+    if (pdfAbort) {
+      pdfAbort.abort();
+      pdfAbort = null;
+    }
+    if (pdfObserver) {
+      pdfObserver.disconnect();
+      pdfObserver = null;
+    }
+    if (pdfDoc) {
+      try {
+        pdfDoc.destroy();
+      } catch (e) {}
+      pdfDoc = null;
+    }
+    if (pdfFrameUrl) {
+      URL.revokeObjectURL(pdfFrameUrl);
+      pdfFrameUrl = "";
+    }
+
+    pdfBlob = null;
+    pdfPagesBox.replaceChildren();
+    pdfSave.classList.add("hidden");
+    readerStatus.textContent = "";
+  }
+
+  function closeReader() {
+    pdfToken++;
+    resetReader();
+    readerBox.classList.add("hidden");
+  }
+
+  async function renderPdfPage(doc, n, holder, token) {
+    try {
+      const page = await doc.getPage(n);
+      if (token !== pdfToken) return;
+
+      const width = holder.clientWidth || 360;
+      const v1 = page.getViewport({ scale: 1 });
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const vp = page.getViewport({ scale: (width / v1.width) * dpr });
+
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.floor(vp.width);
+      canvas.height = Math.floor(vp.height);
+
+      await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
+      if (token !== pdfToken) return;
+
+      holder.style.height = "auto";
+      holder.replaceChildren(canvas);
+    } catch (e) {
+      if (token === pdfToken) console.warn("Could not draw page " + n, e);
+    }
+  }
+
+  async function buildPdfPages(doc, token) {
+    pdfPagesBox.replaceChildren();
+
+    const first = await doc.getPage(1);
+    const base = first.getViewport({ scale: 1 });
+    const width = pdfPagesBox.clientWidth || 360;
+    const height = Math.round((width * base.height) / base.width);
+
+    /* pages are drawn only when they scroll near the screen (keeps big books fast) */
+    pdfObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((en) => {
+          if (!en.isIntersecting) return;
+          pdfObserver.unobserve(en.target);
+          renderPdfPage(doc, Number(en.target.dataset.page), en.target, token);
+        });
+      },
+      { rootMargin: "800px 0px" }
+    );
+
+    for (let n = 1; n <= doc.numPages; n++) {
+      const holder = el("div", "pdf-page");
+      holder.dataset.page = String(n);
+      holder.style.height = height + "px";
+      pdfPagesBox.appendChild(holder);
+      pdfObserver.observe(holder);
+    }
+  }
+
+  function showFrame(src, note) {
+    pdfPagesBox.replaceChildren();
+
+    const frame = document.createElement("iframe");
+    frame.className = "pdf-frame";
+    frame.title = "PDF viewer";
+    frame.src = src;
+    pdfPagesBox.appendChild(frame);
+
+    readerStatus.textContent = note;
+  }
+
+  function recordOpened(file) {
+    if (file.external_url) addExtDownload(file);
+    else markDownloaded(file.id);
+
+    updateCounts();
+    renderDownloads();
+  }
+
+  async function openPdf() {
+    const file = currentFile;
+    if (!file) return;
+
+    const token = ++pdfToken;
+    resetReader();
+
+    readerBox.classList.remove("hidden");
+    $("readerTitle").textContent = file.title || "PDF";
+    readerStatus.textContent = "Starting…";
 
     downloadNowButton.disabled = true;
-    downloadNowButton.textContent = "Downloading...";
-    downloadStatus.textContent = "Getting your PDF...";
+    downloadNowButton.textContent = "Opening...";
+    downloadStatus.textContent = "Loading your PDF…";
     downloadError.textContent = "";
 
-    try {
-      if (currentFile.external_url) {
-        const ext = document.createElement("a");
-        ext.href = currentFile.external_url;
-        ext.target = "_blank";
-        ext.rel = "noopener";
-        ext.download = safeFileName(currentFile.title || "GES-resource") + ".pdf";
-        document.body.appendChild(ext);
-        ext.click();
-        ext.remove();
+    readerBox.scrollIntoView({ behavior: "smooth", block: "start" });
 
-        downloadStatus.textContent =
-          "Opening from the Ministry of Education website. If it opens in a viewer, use its download or save button.";
-        downloadNowButton.disabled = false;
-        downloadNowButton.textContent = "Download PDF";
+    const controller = new AbortController();
+    pdfAbort = controller;
+    const timer = setTimeout(() => controller.abort(), 180000);
+
+    try {
+      let blob = null;
+
+      try {
+        blob = await getPdfBlob(file, controller.signal, (got, total) => {
+          if (token !== pdfToken) return;
+          readerStatus.textContent =
+            "Loading… " + fmtMB(got) + (total ? " of " + fmtMB(total) : "");
+        });
+      } catch (err) {
+        if (token !== pdfToken) return;
+
+        /* the other website blocked a direct read: show it through a viewer instead */
+        if (file.external_url && !(err && err.name === "AbortError")) {
+          showFrame(
+            "https://docs.google.com/gview?embedded=1&url=" + encodeURIComponent(file.external_url),
+            "Shown through Google's viewer. Saved to My Downloads."
+          );
+          recordOpened(file);
+          downloadStatus.textContent = "Opened below and saved to My Downloads.";
+          return;
+        }
+
+        throw err;
+      }
+
+      if (token !== pdfToken) return;
+
+      readerStatus.textContent = "Preparing pages…";
+      pdfBlob = blob;
+
+      let doc = null;
+      try {
+        const lib = await loadPdfJs();
+        const buffer = await blob.arrayBuffer();
+        if (token !== pdfToken) return;
+        doc = await lib.getDocument({ data: buffer }).promise;
+      } catch (err) {
+        if (token !== pdfToken) return;
+        console.warn("PDF reader unavailable, using the browser viewer:", err);
+
+        pdfFrameUrl = URL.createObjectURL(blob);
+        showFrame(pdfFrameUrl, "Shown in your browser's viewer. Saved to My Downloads.");
+        pdfSave.classList.remove("hidden");
+        recordOpened(file);
+        downloadStatus.textContent = "Opened below and saved to My Downloads.";
         return;
       }
 
-      if (!sb) throw new Error("The backend is not connected.");
-
-      const fileName = safeFileName(currentFile.title || "Busy-Brains-PDF") + ".pdf";
-      const path = String(currentFile.storage_path || "").replace(/^\/+/, "");
-
-      if (!path) throw new Error("This file has no storage path.");
-
-      const storage = sb.storage.from(BUCKET);
-
-      /* public bucket: direct link, the browser handles the download */
-      let url = storage.getPublicUrl(path, { download: fileName }).data.publicUrl;
-
-      /* private bucket: fall back to a temporary signed link */
-      if (!(await urlReachable(url))) {
-        const { data, error } = await storage.createSignedUrl(path, 300, {
-          download: fileName
-        });
-
-        if (error) throw error;
-        url = data.signedUrl;
+      if (token !== pdfToken) {
+        doc.destroy();
+        return;
       }
 
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      pdfDoc = doc;
+      await buildPdfPages(doc, token);
+      if (token !== pdfToken) return;
 
-      markDownloaded(currentFile.id);
-      updateCounts();
+      readerStatus.textContent =
+        doc.numPages + (doc.numPages === 1 ? " page" : " pages") + " · Saved to My Downloads";
+      pdfSave.classList.remove("hidden");
 
-      downloadStatus.textContent =
-        "Download started. Check your notifications or Downloads folder.";
+      recordOpened(file);
+      downloadStatus.textContent = "Opened below and saved to My Downloads.";
     } catch (err) {
-      console.error("Download error:", err);
-      downloadStatus.textContent = "Download failed.";
-      downloadError.textContent = err && err.message ? err.message : String(err);
-    }
+      if (token !== pdfToken) return;
 
-    downloadNowButton.disabled = false;
-    downloadNowButton.textContent = "Download PDF";
+      console.error("Open PDF error:", err);
+
+      readerBox.classList.add("hidden");
+      readerStatus.textContent = "";
+      downloadStatus.textContent = "Could not open the PDF.";
+      downloadError.textContent =
+        err && err.name === "AbortError"
+          ? "It took too long to load. Check your connection and try again."
+          : err && err.message
+          ? err.message
+          : String(err);
+    } finally {
+      clearTimeout(timer);
+      if (token === pdfToken) {
+        downloadNowButton.disabled = false;
+        downloadNowButton.textContent = "Open PDF";
+        downloadNowButton.classList.remove("hidden");
+      }
+    }
+  }
+
+  downloadNowButton.addEventListener("click", openPdf);
+
+  /* save a copy to the phone/computer (no new tab: it is a download of the file already loaded) */
+  pdfSave.addEventListener("click", () => {
+    if (!pdfBlob || !currentFile) return;
+
+    const url = URL.createObjectURL(pdfBlob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = safeFileName(currentFile.title || "Busy-Brains-PDF") + ".pdf";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+
+    downloadStatus.textContent = "Saved to your device.";
+  });
+
+  $("readerClose").addEventListener("click", () => {
+    closeReader();
+    downloadStatus.textContent = "";
+    downloadNowButton.classList.remove("hidden");
+    window.scrollTo(0, 0);
   });
 
   $("backButton").addEventListener("click", () => {
     currentFile = null;
+    closeReader();
 
     downloadScreen.classList.add("hidden");
     libraryScreen.classList.remove("hidden");
@@ -1901,126 +2097,772 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   });
 
   /* =========================================================
-     PRACTICE: QUIZ
+     SUBJECT QUIZZES (20 questions each)
+     Each item: [question, correct answer, wrong, wrong, wrong]
      ========================================================= */
 
-  const QUIZ = [
-    {
-      q: "What is the SI unit of force?",
-      options: ["Joule", "Newton", "Watt", "Pascal"],
-      answer: 1,
-      why: "Force is measured in newtons (N). 1 N = 1 kg·m/s²."
+  const QUIZ_BANK = {
+    maths: {
+      name: "Core Mathematics",
+      icon: "➗",
+      items: [
+        ["Simplify 3/4 + 1/2.", "5/4", "4/6", "1 1/2", "3/8"],
+        ["Solve for x: 3x − 5 = 16.", "x = 7", "x = 3", "x = 11/3", "x = 21"],
+        ["What is 15% of 80?", "12", "15", "8", "10"],
+        ["What is the LCM of 6 and 8?", "24", "12", "48", "14"],
+        ["What is the value of 2³ × 2²?", "32", "10", "16", "64"],
+        ["Express 0.25 as a fraction in its simplest form.", "1/4", "1/2", "1/5", "2/5"],
+        ["Find the gradient of the line through (1, 2) and (3, 6).", "2", "1", "3", "4"],
+        ["What is the sum of the interior angles of a triangle?", "180°", "90°", "270°", "360°"],
+        ["Find the perimeter of a rectangle 8 cm long and 5 cm wide.", "26 cm", "13 cm", "40 cm", "30 cm"],
+        ["Simplify 5(x + 2) − 3x.", "2x + 10", "8x + 10", "2x + 2", "5x + 7"],
+        ["Which is the next prime number after 7?", "11", "9", "13", "8"],
+        ["Find the median of 3, 7, 5, 9, 1.", "5", "7", "3", "9"],
+        ["What is the square root of 144?", "12", "11", "14", "72"],
+        ["Solve x² − 9 = 0.", "x = ±3", "x = 3 only", "x = 9", "x = ±9"],
+        ["Find the mean of 4, 6, 8, 10 and 12.", "8", "6", "7", "9"],
+        ["Convert 0.5 to a percentage.", "50%", "5%", "0.5%", "500%"],
+        ["Find the simple interest on GH¢500 at 10% per year for 2 years.", "GH¢100", "GH¢50", "GH¢150", "GH¢200"],
+        ["Find the area of a triangle with base 10 cm and height 6 cm.", "30 cm²", "60 cm²", "16 cm²", "36 cm²"],
+        ["If a : b = 2 : 3 and a = 10, find b.", "15", "12", "20", "30"],
+        ["Write 4500 in standard form.", "4.5 × 10³", "4.5 × 10²", "45 × 10²", "0.45 × 10⁴"]
+      ]
     },
-    {
-      q: "What is the chemical symbol for sodium?",
-      options: ["S", "So", "Na", "Sn"],
-      answer: 2,
-      why: "Sodium's symbol Na comes from its Latin name, natrium."
+    science: {
+      name: "Integrated Science",
+      icon: "🔬",
+      items: [
+        ["What is the basic unit of life?", "The cell", "The atom", "The tissue", "The organ"],
+        ["Which gas do plants take in for photosynthesis?", "Carbon dioxide", "Oxygen", "Nitrogen", "Hydrogen"],
+        ["Which of these is a renewable source of energy?", "Solar energy", "Coal", "Petroleum", "Natural gas"],
+        ["What is the chemical symbol for gold?", "Au", "Ag", "Gd", "Go"],
+        ["Which blood vessels carry blood away from the heart?", "Arteries", "Veins", "Capillaries", "Venules"],
+        ["Which state of matter has a fixed volume but no fixed shape?", "Liquid", "Solid", "Gas", "Plasma"],
+        ["Which organ filters the blood to produce urine?", "Kidney", "Liver", "Lung", "Stomach"],
+        ["What is the SI unit of mass?", "Kilogram", "Gram", "Newton", "Litre"],
+        ["A lack of which vitamin causes scurvy?", "Vitamin C", "Vitamin A", "Vitamin B", "Vitamin D"],
+        ["Which force pulls objects towards the Earth?", "Gravity", "Friction", "Magnetism", "Tension"],
+        ["At what temperature does pure water boil at sea level?", "100 °C", "50 °C", "90 °C", "120 °C"],
+        ["Which part of a plant absorbs water from the soil?", "Roots", "Leaves", "Stem", "Flowers"],
+        ["A pure substance made of two or more elements chemically joined is a:", "Compound", "Mixture", "Solution", "Alloy"],
+        ["Which of these is a mixture?", "Air", "Pure water", "Oxygen", "Sodium chloride"],
+        ["Malaria is caused by a parasite called:", "Plasmodium", "Salmonella", "Vibrio", "Bacillus"],
+        ["The pH of an acid is:", "Less than 7", "Greater than 7", "Equal to 7", "Always 14"],
+        ["Which instrument is used to measure temperature?", "Thermometer", "Barometer", "Ammeter", "Hydrometer"],
+        ["Which part of the cell contains the genetic material?", "Nucleus", "Cell wall", "Cytoplasm", "Vacuole"],
+        ["What is the change from water vapour to liquid water called?", "Condensation", "Evaporation", "Sublimation", "Melting"],
+        ["Which planet is closest to the Sun?", "Mercury", "Venus", "Earth", "Mars"]
+      ]
     },
-    {
-      q: "Solve for x: 2x + 6 = 14",
-      options: ["x = 3", "x = 4", "x = 7", "x = 10"],
-      answer: 1,
-      why: "Subtract 6 from both sides: 2x = 8, then divide by 2: x = 4."
+    english: {
+      name: "English Language",
+      icon: "📖",
+      items: [
+        ["What is the plural of “child”?", "Children", "Childs", "Childrens", "Childes"],
+        ["Choose the antonym of “generous”.", "Stingy", "Kind", "Rich", "Polite"],
+        ["Choose the synonym of “rapid”.", "Fast", "Slow", "Weak", "Late"],
+        ["Fill in the blank: She ___ to school every day.", "goes", "go", "going", "gone"],
+        ["What is the past tense of “buy”?", "Bought", "Buyed", "Boughten", "Buying"],
+        ["Which of these words is a noun?", "Happiness", "Quickly", "Beautiful", "Run"],
+        ["In “The cat sat on the mat”, which word is the preposition?", "on", "cat", "sat", "mat"],
+        ["Choose the correct spelling.", "Necessary", "Neccessary", "Necesary", "Nessesary"],
+        ["A word that describes a noun is called a(n):", "Adjective", "Verb", "Adverb", "Pronoun"],
+        ["In “He runs quickly”, the word “quickly” is a(n):", "Adverb", "Adjective", "Noun", "Verb"],
+        ["“The wind whispered through the trees” is an example of:", "Personification", "Simile", "Metaphor", "Hyperbole"],
+        ["“As brave as a lion” is a:", "Simile", "Metaphor", "Idiom", "Proverb"],
+        ["Fill in the blank: Neither of the boys ___ present.", "was", "were", "are", "have been"],
+        ["Which punctuation mark ends a question?", "Question mark", "Full stop", "Comma", "Colon"],
+        ["Complete the proverb: A stitch in time saves ___.", "nine", "one", "ten", "time"],
+        ["Fill in the blank: I have ___ umbrella.", "an", "a", "the", "some"],
+        ["Choose the opposite of “ancient”.", "Modern", "Old", "Historic", "Past"],
+        ["Which sentence is in the passive voice?", "The ball was kicked by Kofi.", "Kofi kicked the ball.", "Kofi is kicking the ball.", "Kofi will kick the ball."],
+        ["What does the idiom “break the ice” mean?", "Start a friendly conversation", "Damage something", "Feel very cold", "End an argument"],
+        ["What is the collective noun for a group of fish?", "Shoal", "Herd", "Pride", "Flock"]
+      ]
     },
-    {
-      q: "Which process do green plants use to make their own food?",
-      options: ["Respiration", "Digestion", "Photosynthesis", "Transpiration"],
-      answer: 2,
-      why: "In photosynthesis, plants use light, water and carbon dioxide to make glucose and oxygen."
+    social: {
+      name: "Social Studies",
+      icon: "🇬🇭",
+      items: [
+        ["In which year did Ghana gain independence?", "1957", "1947", "1960", "1966"],
+        ["Who was the first President of Ghana?", "Kwame Nkrumah", "J. B. Danquah", "Kofi Busia", "Jerry Rawlings"],
+        ["What is the capital city of Ghana?", "Accra", "Kumasi", "Tamale", "Cape Coast"],
+        ["What is the name of Ghana's currency?", "Cedi", "Naira", "Rand", "Dalasi"],
+        ["How many regions does Ghana have?", "16", "10", "12", "14"],
+        ["The Black Star in Ghana's flag stands for:", "African freedom", "The sun", "Gold", "Mining"],
+        ["Which is the longest river in Ghana?", "Volta", "Pra", "Ankobra", "Tano"],
+        ["On what date is Ghana's Independence Day?", "6th March", "1st July", "7th December", "4th February"],
+        ["Which arm of government makes laws?", "The Legislature", "The Executive", "The Judiciary", "The Police"],
+        ["What is the name of Ghana's law-making body?", "Parliament", "Council of State", "Cabinet", "Supreme Court"],
+        ["What is the minimum voting age in Ghana?", "18 years", "16 years", "21 years", "25 years"],
+        ["Which crop is Ghana most famous for exporting?", "Cocoa", "Cassava", "Yam", "Maize"],
+        ["Lake Volta was formed by a dam built at:", "Akosombo", "Bui", "Kpong", "Weija"],
+        ["What is the official language of Ghana?", "English", "Twi", "Ga", "Hausa"],
+        ["Ghana was once known as the Gold Coast under which colonial power?", "Britain", "France", "Portugal", "Germany"],
+        ["Which body organises elections in Ghana?", "Electoral Commission", "NCCE", "GES", "Ghana Police Service"],
+        ["Which of these is a duty of a good citizen?", "Paying taxes", "Cheating in exams", "Littering", "Dodging duties"],
+        ["In which part of Africa is Ghana located?", "West Africa", "North Africa", "East Africa", "Southern Africa"],
+        ["The famous kente cloth is mostly associated with which people?", "Ashanti", "Ga", "Frafra", "Nzema"],
+        ["What is Ghana's national motto?", "Freedom and Justice", "Peace and Prosperity", "Unity and Progress", "Work and Happiness"]
+      ]
     },
-    {
-      q: "What is the area of a circle of radius 7 cm? (Use π = 22/7)",
-      options: ["44 cm²", "49 cm²", "154 cm²", "308 cm²"],
-      answer: 2,
-      why: "Area = πr² = 22/7 × 7 × 7 = 154 cm²."
+    physics: {
+      name: "Physics",
+      icon: "⚡",
+      items: [
+        ["What is the SI unit of force?", "Newton", "Joule", "Watt", "Pascal"],
+        ["What is the SI unit of electric current?", "Ampere", "Volt", "Ohm", "Watt"],
+        ["Which formula gives speed?", "Distance ÷ time", "Time ÷ distance", "Mass × distance", "Force × time"],
+        ["Which of these is a vector quantity?", "Velocity", "Speed", "Mass", "Time"],
+        ["The acceleration due to gravity on Earth is about:", "10 m/s²", "1 m/s²", "100 m/s²", "0.1 m/s²"],
+        ["Which instrument measures electric current?", "Ammeter", "Voltmeter", "Thermometer", "Barometer"],
+        ["Which equation represents Ohm's law?", "V = IR", "F = ma", "P = IV²", "E = mc²"],
+        ["The energy an object has because of its motion is:", "Kinetic energy", "Potential energy", "Heat energy", "Chemical energy"],
+        ["What is the SI unit of power?", "Watt", "Joule", "Newton", "Hertz"],
+        ["The bending of light as it passes from one medium to another is called:", "Refraction", "Reflection", "Diffraction", "Dispersion"],
+        ["Which type of lens converges (brings together) light rays?", "Convex lens", "Concave lens", "Plane lens", "Cylindrical lens"],
+        ["Sound cannot travel through:", "A vacuum", "Water", "Air", "Steel"],
+        ["Pressure is calculated as:", "Force ÷ area", "Force × area", "Mass ÷ volume", "Work ÷ time"],
+        ["Which of these is the best conductor of electricity?", "Copper", "Rubber", "Wood", "Plastic"],
+        ["What is the unit of frequency?", "Hertz", "Decibel", "Metre", "Kelvin"],
+        ["A force acts on a 5 kg mass giving it an acceleration of 2 m/s². What is the force?", "10 N", "2.5 N", "7 N", "25 N"],
+        ["How does heat mainly travel through liquids and gases?", "Convection", "Conduction", "Radiation only", "Insulation"],
+        ["Which electromagnetic wave has the longest wavelength?", "Radio waves", "X-rays", "Gamma rays", "Ultraviolet"],
+        ["“Every action has an equal and opposite reaction” is Newton's:", "Third law", "First law", "Second law", "Law of gravity"],
+        ["How much work is done by a 20 N force moving an object 3 m in its direction?", "60 J", "23 J", "17 J", "6.7 J"]
+      ]
+    },
+    chemistry: {
+      name: "Chemistry",
+      icon: "🧪",
+      items: [
+        ["What is the chemical symbol for sodium?", "Na", "S", "So", "Sn"],
+        ["What is the chemical formula of water?", "H₂O", "HO₂", "H₂O₂", "OH"],
+        ["What is the pH of a neutral solution?", "7", "0", "10", "14"],
+        ["Which gas is given off when a metal reacts with an acid?", "Hydrogen", "Oxygen", "Nitrogen", "Chlorine"],
+        ["The atomic number of an atom is the number of its:", "Protons", "Neutrons", "Electrons only", "Molecules"],
+        ["Which of these is a noble gas?", "Helium", "Oxygen", "Nitrogen", "Chlorine"],
+        ["What is the chemical formula of table salt?", "NaCl", "KCl", "NaOH", "CaCO₃"],
+        ["Which gas makes up most of the air?", "Nitrogen", "Oxygen", "Carbon dioxide", "Argon"],
+        ["A bond formed by the sharing of electrons is called:", "A covalent bond", "An ionic bond", "A metallic bond", "A hydrogen bond"],
+        ["A substance that turns red litmus paper blue is:", "A base", "An acid", "A salt", "Neutral"],
+        ["What charge does an electron carry?", "Negative", "Positive", "No charge", "Variable"],
+        ["Separating a liquid from a solution by boiling and condensing is called:", "Distillation", "Filtration", "Evaporation to dryness", "Chromatography"],
+        ["What is the chemical formula of carbon dioxide?", "CO₂", "CO", "C₂O", "CH₄"],
+        ["Which metal is liquid at room temperature?", "Mercury", "Iron", "Copper", "Zinc"],
+        ["Rusting of iron needs:", "Oxygen and water", "Nitrogen only", "Carbon dioxide only", "Helium"],
+        ["Group 1 elements of the periodic table are called:", "Alkali metals", "Halogens", "Noble gases", "Transition metals"],
+        ["How many electrons does a neutral sodium atom (atomic number 11) have?", "11", "1", "12", "23"],
+        ["Which of these is an acid?", "HCl", "NaOH", "NaCl", "KOH"],
+        ["What is the unit for the amount of a substance?", "Mole", "Gram", "Litre", "Kelvin"],
+        ["A mixture of two or more metals is called:", "An alloy", "A compound", "A solution", "An ore"]
+      ]
+    },
+    biology: {
+      name: "Biology",
+      icon: "🌿",
+      items: [
+        ["Which organelle is the “powerhouse” of the cell?", "Mitochondrion", "Nucleus", "Ribosome", "Vacuole"],
+        ["Which structure is found in plant cells but not animal cells?", "Cell wall", "Cell membrane", "Nucleus", "Cytoplasm"],
+        ["What is the process by which green plants make their food?", "Photosynthesis", "Respiration", "Digestion", "Excretion"],
+        ["Which blood cells carry oxygen?", "Red blood cells", "White blood cells", "Platelets", "Plasma"],
+        ["Which green pigment traps light for photosynthesis?", "Chlorophyll", "Haemoglobin", "Melanin", "Keratin"],
+        ["Which organs are used for gaseous exchange in humans?", "Lungs", "Kidneys", "Liver", "Heart"],
+        ["What is the basic unit of heredity?", "Gene", "Cell", "Tissue", "Enzyme"],
+        ["Which enzyme in saliva starts the digestion of starch?", "Amylase", "Pepsin", "Lipase", "Trypsin"],
+        ["Which vitamin is made in the skin with the help of sunlight?", "Vitamin D", "Vitamin A", "Vitamin B", "Vitamin K"],
+        ["What are the smallest blood vessels called?", "Capillaries", "Arteries", "Veins", "Aortae"],
+        ["How many legs does an insect have?", "6", "4", "8", "10"],
+        ["The loss of water vapour from the leaves of a plant is called:", "Transpiration", "Respiration", "Germination", "Osmosis"],
+        ["How many chambers does the human heart have?", "4", "2", "3", "5"],
+        ["An organism that makes its own food is called a:", "Producer", "Consumer", "Decomposer", "Parasite"],
+        ["Which cells carry nerve impulses?", "Neurones", "Red blood cells", "Muscle fibres", "Guard cells"],
+        ["What does DNA stand for?", "Deoxyribonucleic acid", "Dinitrogen acid", "Dioxy nucleic anhydride", "Double nucleic acid"],
+        ["Which mosquito transmits the malaria parasite?", "Female Anopheles", "Male Anopheles", "Culex", "Aedes only"],
+        ["Which part of a flower produces pollen?", "Anther", "Stigma", "Ovary", "Petal"],
+        ["Which ABO blood group is the universal donor?", "O", "A", "B", "AB"],
+        ["Which type of cell division produces gametes (sex cells)?", "Meiosis", "Mitosis", "Binary fission", "Budding"]
+      ]
+    },
+    ict: {
+      name: "ICT",
+      icon: "💻",
+      items: [
+        ["What does CPU stand for?", "Central Processing Unit", "Computer Personal Unit", "Central Program Utility", "Control Power Unit"],
+        ["Which of these is an input device?", "Keyboard", "Monitor", "Printer", "Speaker"],
+        ["Which of these is an output device?", "Monitor", "Mouse", "Scanner", "Keyboard"],
+        ["RAM is a type of:", "Temporary memory", "Permanent storage", "Input device", "Operating system"],
+        ["Which of these is an operating system?", "Windows", "Chrome", "Excel", "Google"],
+        ["What does WWW stand for?", "World Wide Web", "World Web Window", "Wide World Web", "Web World Wire"],
+        ["Which of these is a web browser?", "Google Chrome", "Microsoft Word", "Windows", "Photoshop"],
+        ["Which file extension is used by modern Microsoft Word documents?", ".docx", ".xlsx", ".pptx", ".jpg"],
+        ["Which keyboard shortcut copies selected text?", "Ctrl + C", "Ctrl + V", "Ctrl + X", "Ctrl + Z"],
+        ["Which keyboard shortcut pastes copied text?", "Ctrl + V", "Ctrl + C", "Ctrl + P", "Ctrl + S"],
+        ["Which program is mainly used for spreadsheets?", "Microsoft Excel", "Microsoft Word", "Notepad", "Paint"],
+        ["How many bits are in one byte?", "8", "4", "16", "10"],
+        ["Harmful software designed to damage or spy on a computer is called:", "Malware", "Freeware", "Firmware", "Hardware"],
+        ["Which of these is the strongest password?", "A mix of letters, numbers and symbols", "Your name", "12345678", "password"],
+        ["HTML is used to:", "Create web pages", "Edit photos", "Write documents only", "Play music"],
+        ["Which device connects different networks and directs data?", "Router", "Mouse", "Monitor", "Scanner"],
+        ["Which of these is a search engine?", "Google", "Excel", "Linux", "Paint"],
+        ["What is the name of a single box location in a spreadsheet, like A1?", "Cell reference", "Row title", "Macro", "Header"],
+        ["Which of these provides permanent storage in a computer?", "Hard disk", "RAM", "Cache", "Register"],
+        ["Which symbol is always found in an email address?", "@", "#", "%", "&"]
+      ]
     }
-  ];
+  };
 
-  let qi = 0;
-  let score = 0;
-  let answered = false;
+  const QUIZ_POINTS = 10;
+  const BEST_KEY = "busybrains_quiz_best";
+
+  function shuffle(list) {
+    const a = list.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function getBest() {
+    try {
+      const v = JSON.parse(localStorage.getItem(BEST_KEY) || "{}");
+      return v && typeof v === "object" ? v : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function setBest(key, value) {
+    const all = getBest();
+    if (!(all[key] >= value)) {
+      all[key] = value;
+      try {
+        localStorage.setItem(BEST_KEY, JSON.stringify(all));
+      } catch (e) {}
+    }
+  }
+
+  let quiz = null; /* { key, items, i, correct, answered } */
 
   const quizNext = $("quizNext");
   const quizRestart = $("quizRestart");
 
-  function renderQuiz() {
-    const item = QUIZ[qi];
-    answered = false;
+  function renderQuizPicker() {
+    const box = $("quizPicker");
+    const best = getBest();
+    box.replaceChildren();
 
-    $("quizProgress").textContent = "Question " + (qi + 1) + " of " + QUIZ.length;
+    Object.keys(QUIZ_BANK).forEach((key) => {
+      const subject = QUIZ_BANK[key];
+      const card = el("button", "quiz-subject");
+      card.type = "button";
+      card.dataset.quiz = key;
+      card.appendChild(el("span", "quiz-subject-icon", subject.icon));
+      card.appendChild(el("strong", "", subject.name));
+      card.appendChild(
+        el(
+          "small",
+          "",
+          subject.items.length + " questions" + (best[key] !== undefined ? " · Best " + best[key] + "/" + subject.items.length : "")
+        )
+      );
+      box.appendChild(card);
+    });
+  }
+
+  function startQuiz(key) {
+    const subject = QUIZ_BANK[key];
+    if (!subject) return;
+
+    const items = shuffle(subject.items).map((row) => ({
+      q: row[0],
+      answer: row[1],
+      options: shuffle(row.slice(1))
+    }));
+
+    quiz = { key: key, items: items, i: 0, correct: 0, answered: false };
+
+    $("quizPicker").classList.add("hidden");
+    $("quizPanel").classList.remove("hidden");
+    $("quizTitle").textContent = subject.icon + " " + subject.name;
+
+    renderQuestion();
+    $("quizPanel").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function updateQuizScoreLine() {
+    if (!quiz) return;
+    let text = "Correct: " + quiz.correct + "/" + quiz.items.length;
+    if (player) text += " · Your points: " + player.points;
+    $("quizScoreLine").textContent = text;
+  }
+
+  function renderQuestion() {
+    const item = quiz.items[quiz.i];
+    quiz.answered = false;
+
+    $("quizProgress").textContent = "Question " + (quiz.i + 1) + " of " + quiz.items.length;
     $("quizQuestion").textContent = item.q;
 
     const list = $("quizOptions");
     list.replaceChildren();
 
-    item.options.forEach((text, i) => {
+    item.options.forEach((text) => {
       const b = el("button", "option", text);
       b.type = "button";
-      b.dataset.index = i;
       list.appendChild(b);
     });
 
     $("quizFeedback").classList.add("hidden");
-    quizNext.textContent = qi === QUIZ.length - 1 ? "See my score" : "Next question";
+    quizNext.textContent = quiz.i === quiz.items.length - 1 ? "See my score" : "Next question";
     quizNext.disabled = true;
     quizNext.classList.remove("hidden");
     quizRestart.classList.add("hidden");
+    updateQuizScoreLine();
   }
 
   $("quizOptions").addEventListener("click", (e) => {
     const btn = e.target.closest(".option");
-    if (!btn || answered) return;
+    if (!btn || !quiz || quiz.answered) return;
 
-    answered = true;
+    quiz.answered = true;
 
-    const item = QUIZ[qi];
-    const picked = Number(btn.dataset.index);
-    const right = picked === item.answer;
-    if (right) score++;
+    const item = quiz.items[quiz.i];
+    const right = btn.textContent === item.answer;
+    if (right) quiz.correct++;
 
     document.querySelectorAll("#quizOptions .option").forEach((o) => {
-      const i = Number(o.dataset.index);
-      if (i === item.answer) o.classList.add("correct");
-      else if (i === picked) o.classList.add("wrong");
+      if (o.textContent === item.answer) o.classList.add("correct");
+      else if (o === btn) o.classList.add("wrong");
       o.disabled = true;
     });
 
     const fb = $("quizFeedback");
-    fb.textContent = (right ? "Correct! " : "Not quite. ") + item.why;
+    fb.textContent = right
+      ? "Correct! +" + QUIZ_POINTS + " points" + (player ? "" : " (join the leaderboard to keep your points)")
+      : "Not quite. The correct answer is: " + item.answer;
     fb.classList.remove("hidden");
 
     quizNext.disabled = false;
+    recordAnswer(right);
+    updateQuizScoreLine();
   });
 
   quizNext.addEventListener("click", () => {
-    if (qi < QUIZ.length - 1) {
-      qi++;
-      renderQuiz();
+    if (!quiz) return;
+
+    if (quiz.i < quiz.items.length - 1) {
+      quiz.i++;
+      renderQuestion();
       return;
     }
 
+    const total = quiz.items.length;
+    setBest(quiz.key, quiz.correct);
+
     $("quizProgress").textContent = "Quiz complete";
-    $("quizQuestion").textContent =
-      "You scored " + score + " out of " + QUIZ.length + ".";
+    $("quizQuestion").textContent = "You scored " + quiz.correct + " out of " + total + ".";
     $("quizOptions").replaceChildren();
 
     const fb = $("quizFeedback");
     fb.textContent =
-      score === QUIZ.length
-        ? "Excellent work! Try the flashcards to keep it fresh."
-        : "Review the explanations and try again. Practice makes progress.";
+      quiz.correct === total
+        ? "Perfect score! Brilliant work."
+        : quiz.correct >= total * 0.7
+        ? "Great job! Try again to beat your score."
+        : "Keep practising. Review the topics you missed and try again.";
     fb.classList.remove("hidden");
 
     quizNext.classList.add("hidden");
     quizRestart.classList.remove("hidden");
+
+    finishQuizOnBoard();
+    renderQuizPicker();
   });
 
   quizRestart.addEventListener("click", () => {
-    qi = 0;
-    score = 0;
-    renderQuiz();
+    if (quiz) startQuiz(quiz.key);
   });
+
+  $("quizBack").addEventListener("click", () => {
+    quiz = null;
+    $("quizPanel").classList.add("hidden");
+    $("quizPicker").classList.remove("hidden");
+    renderQuizPicker();
+  });
+
+  $("quizPicker").addEventListener("click", (e) => {
+    const card = e.target.closest(".quiz-subject");
+    if (card) startQuiz(card.dataset.quiz);
+  });
+
+  /* =========================================================
+     LEADERBOARD (Supabase: join with a username only)
+     ========================================================= */
+
+  const LB_NAME_KEY = "busybrains_player_name";
+  const LB_TOKEN_KEY = "busybrains_player_token";
+  const NAME_RE = /^[A-Za-z0-9_]{3,20}$/;
+
+  let player = null; /* { name, token, points, correct, answered, quizzes, rank } */
+  let boardRows = [];
+  let boardError = "";
+  let boardTimer = null;
+  let barMode = "";
+  let lbQueue = Promise.resolve();
+
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+  function makeToken() {
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+  }
+
+  function loadPlayer() {
+    try {
+      const name = localStorage.getItem(LB_NAME_KEY);
+      const token = localStorage.getItem(LB_TOKEN_KEY);
+      if (name && token && NAME_RE.test(name)) {
+        player = { name: name, token: token, points: 0, correct: 0, answered: 0, quizzes: 0, rank: null };
+      }
+    } catch (e) {}
+  }
+
+  function savePlayer() {
+    try {
+      if (player) {
+        localStorage.setItem(LB_NAME_KEY, player.name);
+        localStorage.setItem(LB_TOKEN_KEY, player.token);
+      } else {
+        localStorage.removeItem(LB_NAME_KEY);
+        localStorage.removeItem(LB_TOKEN_KEY);
+      }
+    } catch (e) {}
+  }
+
+  function clearPlayer() {
+    player = null;
+    savePlayer();
+    barMode = "";
+    renderPlayerSlots();
+  }
+
+  function friendlyError(err) {
+    const msg = err && err.message ? err.message : "";
+    if (msg.includes("username_taken")) return "That username is already taken. Please choose another.";
+    if (msg.includes("invalid_username")) return "Use 3 to 20 letters, numbers or underscores (_) only.";
+    if (/does not exist|schema cache|42P01|PGRST/i.test(msg) || (err && err.code === "42883"))
+      return "The leaderboard has not been set up yet.";
+    return "Could not reach the leaderboard. Please try again.";
+  }
+
+  /* ---- player bar (shown on Practice and Leaderboard pages) ---- */
+
+  function buildPlayerBar() {
+    const wrap = el("div", "panel player-bar");
+
+    if (player) {
+      const info = el("div", "player-info");
+      const name = el("div", "player-name");
+      name.appendChild(el("strong", "", "👤 " + player.name));
+      info.appendChild(name);
+
+      const stats = el(
+        "div",
+        "note",
+        player.points +
+          " points · " +
+          player.correct +
+          " correct · " +
+          player.quizzes +
+          " quizzes finished" +
+          (player.rank ? " · Rank #" + player.rank : "")
+      );
+      info.appendChild(stats);
+      wrap.appendChild(info);
+
+      const actions = el("div", "player-actions");
+      const leave = el("button", "btn btn-outline btn-small", "Leave leaderboard");
+      leave.type = "button";
+      leave.dataset.leave = "1";
+      actions.appendChild(leave);
+      wrap.appendChild(actions);
+      return wrap;
+    }
+
+    const text = el("div", "player-info");
+    text.appendChild(el("strong", "", "🏆 Join the leaderboard"));
+    text.appendChild(
+      el("div", "note", "Pick a username (3–20 letters, numbers or _). No email or password needed. Your points update as you answer.")
+    );
+    wrap.appendChild(text);
+
+    const form = el("form", "join-form");
+    form.setAttribute("autocomplete", "off");
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.name = "username";
+    input.placeholder = "Choose a username";
+    input.maxLength = 20;
+    input.required = true;
+    input.setAttribute("aria-label", "Username");
+    form.appendChild(input);
+
+    const btn = el("button", "btn btn-primary", "Join");
+    btn.type = "submit";
+    form.appendChild(btn);
+
+    wrap.appendChild(form);
+    wrap.appendChild(el("div", "join-msg error"));
+    return wrap;
+  }
+
+  function renderPlayerSlots() {
+    const mode = player ? "in" : "out";
+    if (mode === "out" && barMode === "out") return; /* don't wipe what is being typed */
+    barMode = mode;
+
+    ["playerSlotQuiz", "playerSlotBoard"].forEach((id) => {
+      const slot = $(id);
+      if (slot) slot.replaceChildren(buildPlayerBar());
+    });
+  }
+
+  document.addEventListener("submit", async (e) => {
+    const form = e.target.closest(".join-form");
+    if (!form) return;
+    e.preventDefault();
+
+    const msg = form.parentElement.querySelector(".join-msg");
+    const name = form.elements.username.value.trim();
+
+    if (!NAME_RE.test(name)) {
+      msg.textContent = "Use 3 to 20 letters, numbers or underscores (_) only.";
+      return;
+    }
+    if (!sb) {
+      msg.textContent = "The leaderboard is not connected.";
+      return;
+    }
+
+    msg.textContent = "Joining…";
+    form.querySelector("button").disabled = true;
+
+    let token = "";
+    try {
+      token = localStorage.getItem(LB_TOKEN_KEY) || "";
+    } catch (err) {}
+    if (token.length < 16) token = makeToken();
+
+    const { error } = await sb.rpc("join_leaderboard", { p_username: name, p_token: token });
+
+    if (error) {
+      msg.textContent = friendlyError(error);
+      form.querySelector("button").disabled = false;
+      return;
+    }
+
+    player = { name: name, token: token, points: 0, correct: 0, answered: 0, quizzes: 0, rank: null };
+    savePlayer();
+    barMode = "";
+    renderPlayerSlots();
+    refreshBoard();
+  });
+
+  document.addEventListener("click", async (e) => {
+    const leave = e.target.closest("[data-leave]");
+    if (!leave || !player) return;
+
+    if (!confirm("Leave the leaderboard? Your username and points will be removed.")) return;
+
+    const { name, token } = player;
+    if (sb) await sb.rpc("leave_leaderboard", { p_username: name, p_token: token });
+
+    clearPlayer();
+    refreshBoard();
+  });
+
+  /* ---- sending answers (queued so they stay in order) ---- */
+
+  function queueRpc(fn, args) {
+    lbQueue = lbQueue.then(async () => {
+      let data = null;
+      try {
+        const res = await sb.rpc(fn, args);
+        if (res.error) throw res.error;
+        data = res.data;
+      } catch (err) {
+        const msg = err && err.message ? err.message : "";
+        if (msg.includes("invalid_player")) clearPlayer();
+        else if (!/too_fast|slow_down/.test(msg)) console.warn("Leaderboard update failed:", msg);
+      }
+      await sleep(700);
+      return data;
+    });
+    return lbQueue;
+  }
+
+  function applyStats(d) {
+    if (!d || !player) return;
+    player.points = d.points;
+    player.correct = d.correct_answers;
+    player.answered = d.questions_answered;
+    player.quizzes = d.quizzes_completed;
+    barMode = "";
+    renderPlayerSlots();
+    updateQuizScoreLine();
+  }
+
+  function recordAnswer(correct) {
+    if (!player || !sb) return;
+
+    /* show the points straight away, the server confirms right after */
+    if (correct) player.points += QUIZ_POINTS;
+
+    queueRpc("record_answer", {
+      p_username: player.name,
+      p_token: player.token,
+      p_correct: !!correct
+    }).then(applyStats);
+  }
+
+  function finishQuizOnBoard() {
+    if (!player || !sb) return;
+
+    queueRpc("finish_quiz", { p_username: player.name, p_token: player.token }).then((d) => {
+      applyStats(d);
+      refreshBoard();
+    });
+  }
+
+  /* ---- reading the board ---- */
+
+  function renderRows(container, rows, limit) {
+    container.replaceChildren();
+
+    if (boardError) {
+      container.appendChild(el("div", "empty", boardError));
+      return;
+    }
+
+    if (!rows.length) {
+      const e = el("div", "empty");
+      e.appendChild(el("strong", "", "No scores yet"));
+      e.appendChild(document.createTextNode("Join and be the first on the board!"));
+      container.appendChild(e);
+      return;
+    }
+
+    const medals = ["🥇", "🥈", "🥉"];
+
+    rows.slice(0, limit).forEach((row, i) => {
+      const mine = player && row.username_key === player.name.toLowerCase();
+      const line = el("div", "lb-row" + (mine ? " me" : ""));
+
+      line.appendChild(el("span", "lb-rank", i < 3 ? medals[i] : String(i + 1)));
+
+      const who = el("span", "lb-name");
+      who.appendChild(el("strong", "", row.display_name + (mine ? " (you)" : "")));
+      who.appendChild(el("small", "", row.correct_answers + " correct · " + row.quizzes_completed + " quizzes"));
+      line.appendChild(who);
+
+      line.appendChild(el("span", "lb-points", row.points + " pts"));
+      container.appendChild(line);
+    });
+  }
+
+  function renderBoards() {
+    renderRows($("lbList"), boardRows, 50);
+    renderRows($("miniBoard"), boardRows, 5);
+  }
+
+  async function syncMe() {
+    if (!player || !sb) return;
+
+    const { data, error } = await sb
+      .from("leaderboard")
+      .select("points,correct_answers,questions_answered,quizzes_completed")
+      .eq("username_key", player.name.toLowerCase())
+      .maybeSingle();
+
+    if (error) return;
+
+    if (!data) {
+      /* the account was removed on the server */
+      clearPlayer();
+      return;
+    }
+
+    player.points = data.points;
+    player.correct = data.correct_answers;
+    player.answered = data.questions_answered;
+    player.quizzes = data.quizzes_completed;
+
+    const ahead = await sb
+      .from("leaderboard")
+      .select("username_key", { count: "exact", head: true })
+      .gt("points", data.points);
+
+    player.rank = ahead.error ? null : (ahead.count || 0) + 1;
+
+    barMode = "";
+    renderPlayerSlots();
+    updateQuizScoreLine();
+  }
+
+  async function refreshBoard() {
+    if (!sb) {
+      boardError = "The leaderboard is not connected.";
+      renderBoards();
+      return;
+    }
+
+    const { data, error } = await sb
+      .from("leaderboard")
+      .select("username_key,display_name,points,correct_answers,quizzes_completed")
+      .order("points", { ascending: false })
+      .order("updated_at", { ascending: true })
+      .limit(50);
+
+    if (error) {
+      console.error("Leaderboard error:", error);
+      boardError = friendlyError(error);
+      boardRows = [];
+    } else {
+      boardError = "";
+      boardRows = data || [];
+    }
+
+    renderBoards();
+    syncMe();
+  }
+
+  function scheduleBoardRefresh() {
+    if (activeView !== "leaderboard" && activeView !== "practice") return;
+    clearTimeout(boardTimer);
+    boardTimer = setTimeout(refreshBoard, 900);
+  }
+
+  function startLiveBoard() {
+    /* instant updates when other students score */
+    try {
+      if (sb) {
+        sb.channel("busybrains-leaderboard")
+          .on("postgres_changes", { event: "*", schema: "public", table: "leaderboard" }, scheduleBoardRefresh)
+          .subscribe();
+      }
+    } catch (e) {
+      console.warn("Live updates unavailable:", e);
+    }
+
+    /* safety net: refresh every 25 seconds while the board is on screen */
+    setInterval(() => {
+      if (!document.hidden && (activeView === "leaderboard" || activeView === "practice")) refreshBoard();
+    }, 25000);
+  }
 
   /* =========================================================
      PRACTICE: FLASHCARDS
@@ -2128,172 +2970,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   }
 
   $("formulaSearch").addEventListener("input", (e) => renderFormulas(e.target.value));
-
-
-  /* =========================================================
-     LOCAL TIMED PRACTICE EXAMINATION
-     ========================================================= */
-  const EXAM_KEY = "busybrains_exam_attempt_v1";
-  const EXAM_DURATION = 10 * 60;
-  const EXAM_QUESTIONS = [
-    {q:"What is the SI unit of electric current?", options:["Volt","Ampere","Ohm","Watt"], answer:1, why:"Electric current is measured in amperes (A)."},
-    {q:"Which organelle is the main site of aerobic respiration?", options:["Ribosome","Chloroplast","Mitochondrion","Golgi apparatus"], answer:2, why:"Mitochondria are the main site of aerobic respiration in eukaryotic cells."},
-    {q:"Solve: 3x − 5 = 16.", options:["5","6","7","8"], answer:2, why:"Add 5 to both sides to get 3x = 21, then divide by 3."},
-    {q:"What is the chemical formula of calcium carbonate?", options:["CaCO₃","CaCl₂","CaO","Ca(OH)₂"], answer:0, why:"Calcium carbonate contains calcium, carbonate and has the formula CaCO₃."},
-    {q:"Which gas is used by green plants during photosynthesis?", options:["Oxygen","Nitrogen","Carbon dioxide","Hydrogen"], answer:2, why:"Plants use carbon dioxide and water to make sugars during photosynthesis."},
-    {q:"A force of 12 N acts on a mass of 3 kg. What is the acceleration?", options:["2 m/s²","4 m/s²","9 m/s²","36 m/s²"], answer:1, why:"Using F = ma, a = F/m = 12/3 = 4 m/s²."},
-    {q:"Which blood vessels generally carry blood away from the heart?", options:["Veins","Arteries","Capillaries","Venules"], answer:1, why:"Arteries carry blood away from the heart; veins carry blood toward it."},
-    {q:"What is the value of 2³ × 2²?", options:["16","24","32","64"], answer:2, why:"For the same base, add exponents: 2³ × 2² = 2⁵ = 32."},
-    {q:"A solution with pH 3 is best described as:", options:["Acidic","Neutral","Alkaline","Pure water"], answer:0, why:"A pH below 7 indicates an acidic solution."},
-    {q:"Which of these is an input device?", options:["Monitor","Speaker","Keyboard","Projector"], answer:2, why:"A keyboard sends data into the computer, so it is an input device."}
-  ];
-  let examState = null;
-  let examInterval = null;
-  let examWarnings = 0;
-
-  function saveExamState() {
-    if (!examState) return;
-    try { localStorage.setItem(EXAM_KEY, JSON.stringify(examState)); } catch (e) {}
-    renderExamNavigator();
-    $("examAnswered").textContent = examState.answers.filter((a) => a !== null).length + "/" + EXAM_QUESTIONS.length;
-    $("examReviewCount").textContent = examState.review.filter(Boolean).length;
-  }
-  function loadExamState() {
-    try {
-      const state = JSON.parse(localStorage.getItem(EXAM_KEY) || "null");
-      if (state && Array.isArray(state.answers) && state.answers.length === EXAM_QUESTIONS.length && Array.isArray(state.review) && state.review.length === EXAM_QUESTIONS.length && Number.isFinite(state.endAt)) return state;
-    } catch (e) {}
-    return null;
-  }
-  function startExam(resume) {
-    const existing = resume ? loadExamState() : null;
-    examWarnings = existing ? Number(existing.warnings || 0) : 0;
-    examState = existing || {answers:Array(EXAM_QUESTIONS.length).fill(null), review:Array(EXAM_QUESTIONS.length).fill(false), index:0, endAt:Date.now()+EXAM_DURATION*1000, warnings:0};
-    if (examState.endAt <= Date.now()) { submitExam(true); return; }
-    $("examWorkspace").classList.remove("hidden");
-    $("examResult").classList.add("hidden");
-    $("examStart").classList.add("hidden");
-    $("examResume").classList.add("hidden");
-    $("examClear").classList.remove("hidden");
-    saveExamState();
-    renderExamQuestion();
-    clearInterval(examInterval);
-    examInterval = setInterval(updateExamTimer, 1000);
-    updateExamTimer();
-  }
-  function updateExamTimer() {
-    if (!examState) return;
-    const left = Math.max(0, Math.ceil((examState.endAt-Date.now())/1000));
-    $("examTimer").textContent = Math.floor(left/60).toString().padStart(2,"0")+":"+String(left%60).padStart(2,"0");
-    if (left <= 0) submitExam(true);
-  }
-  function renderExamNavigator() {
-    if (!examState) return;
-    const grid = $("examNavGrid");
-    grid.replaceChildren();
-    examState.answers.forEach((answer, i) => {
-      const b = el("button", "exam-nav-btn" + (i === examState.index ? " current" : "") + (answer !== null ? " answered" : "") + (examState.review[i] ? " review" : ""), String(i+1));
-      b.type = "button";
-      b.setAttribute("aria-label", "Go to question " + (i+1));
-      b.addEventListener("click", () => { examState.index = i; renderExamQuestion(); saveExamState(); });
-      grid.appendChild(b);
-    });
-  }
-  function renderExamQuestion() {
-    if (!examState) return;
-    const i = examState.index, item = EXAM_QUESTIONS[i];
-    $("examProgress").textContent = "Question " + (i+1) + " of " + EXAM_QUESTIONS.length;
-    $("examQuestion").textContent = item.q;
-    const options = $("examOptions");
-    options.replaceChildren();
-    item.options.forEach((text, n) => {
-      const b = el("button", "exam-option" + (examState.answers[i] === n ? " selected" : ""), String.fromCharCode(65+n)+". "+text);
-      b.type = "button";
-      b.addEventListener("click", () => {
-        examState.answers[i] = n;
-        saveExamState();
-        renderExamQuestion();
-      });
-      options.appendChild(b);
-    });
-    $("examPrev").disabled = i === 0;
-    $("examNext").textContent = i === EXAM_QUESTIONS.length-1 ? "Finish questions" : "Next →";
-    $("examReview").textContent = examState.review[i] ? "Remove review mark" : "Mark for review";
-    renderExamNavigator();
-  }
-  function submitExam(autoSubmit) {
-    if (!examState) return;
-    clearInterval(examInterval);
-    const finalState = examState;
-    const score = finalState.answers.reduce((total, picked, i) => total + (picked === EXAM_QUESTIONS[i].answer ? 1 : 0), 0);
-    const percent = Math.round(score/EXAM_QUESTIONS.length*100);
-    try { localStorage.removeItem(EXAM_KEY); } catch (e) {}
-    $("examWorkspace").classList.add("hidden");
-    $("examStart").classList.remove("hidden");
-    $("examResume").classList.add("hidden");
-    $("examClear").classList.add("hidden");
-    const result = $("examResult");
-    result.replaceChildren();
-    result.classList.remove("hidden");
-    result.appendChild(el("h3", "", autoSubmit ? "Examination submitted" : "Your examination result"));
-    result.appendChild(el("p", "", "Score: "+score+" / "+EXAM_QUESTIONS.length+" ("+percent+"%)."));
-    result.appendChild(el("p", "", "Tab-switch warnings recorded: "+Number(finalState.warnings || 0)+". These warnings are informational only."));
-    result.appendChild(el("p", "note", "Review the answers below."));
-    EXAM_QUESTIONS.forEach((item, i) => {
-      const row = el("div", "feedback");
-      const picked = finalState.answers[i];
-      row.textContent = "Q"+(i+1)+": "+item.q+" Your answer: "+(picked === null ? "Not answered" : item.options[picked])+". Correct answer: "+item.options[item.answer]+". "+item.why;
-      result.appendChild(row);
-    });
-    examState = null;
-  }
-  $("examStart").addEventListener("click", () => startExam(false));
-  $("examResume").addEventListener("click", () => startExam(true));
-  $("examClear").addEventListener("click", () => {
-    if (!confirm("Discard the saved examination attempt?")) return;
-    try { localStorage.removeItem(EXAM_KEY); } catch (e) {}
-    clearInterval(examInterval);
-    examState = null;
-    $("examWorkspace").classList.add("hidden");
-    $("examStart").classList.remove("hidden");
-    $("examResume").classList.add("hidden");
-    $("examClear").classList.add("hidden");
-    $("examWarning").classList.add("hidden");
-  });
-  $("examPrev").addEventListener("click", () => { if (examState && examState.index > 0) { examState.index--; saveExamState(); renderExamQuestion(); } });
-  $("examNext").addEventListener("click", () => { if (examState) { if (examState.index < EXAM_QUESTIONS.length-1) { examState.index++; saveExamState(); renderExamQuestion(); } else { const unanswered = examState.answers.filter((a) => a === null).length; if (unanswered && !confirm("You still have "+unanswered+" unanswered question(s). Submit anyway?")) return; submitExam(false); } } });
-  $("examReview").addEventListener("click", () => { if (!examState) return; examState.review[examState.index] = !examState.review[examState.index]; saveExamState(); renderExamQuestion(); });
-  $("examSubmit").addEventListener("click", () => {
-    if (!examState) return;
-    const unanswered = examState.answers.filter((a) => a === null).length;
-    const marked = examState.review.filter(Boolean).length;
-    if (!confirm("Submit now? Unanswered: "+unanswered+". Marked for review: "+marked+".")) return;
-    submitExam(false);
-  });
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden && examState) {
-      examState.warnings = Number(examState.warnings || 0) + 1;
-      examWarnings = examState.warnings;
-      saveExamState();
-      $("examWarning").textContent = "Warning: this exam page became hidden. Warning count: "+examState.warnings+". This does not lock your browser or prevent tab switching.";
-      $("examWarning").classList.remove("hidden");
-    }
-  });
-  const savedExam = loadExamState();
-  if (savedExam && savedExam.endAt > Date.now()) {
-    $("examResume").classList.remove("hidden");
-    $("examClear").classList.remove("hidden");
-  } else if (savedExam) {
-    try { localStorage.removeItem(EXAM_KEY); } catch (e) {}
-  }
-
-  $("teacherReload").addEventListener("click", () => {
-    const frame = $("teacherFrame");
-    frame.src = "https://subjectspecificapp.com/?busybrains_reload=" + Date.now();
-  });
-  $("teacherOpen").addEventListener("click", () => {
-    window.location.href = "https://subjectspecificapp.com/";
-  });
 
   /* =========================================================
      STUDY PLANNER
@@ -2711,7 +3387,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 
     const token = ++learnToken;
     $("learnInput").value = topic;
-    try { localStorage.setItem("busybrains_last_learn_topic", topic); } catch (e) {}
 
     $("learnIntro").classList.add("hidden");
     $("learnResults").classList.remove("hidden");
@@ -3022,11 +3697,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
      ========================================================= */
 
   $("taskDate").value = todayLocal();
-  renderQuiz();
+  renderQuizPicker();
+  loadPlayer();
+  renderPlayerSlots();
   renderFlash();
   renderFormulas("");
   renderAll();
   loadFiles();
+  refreshBoard();
+  startLiveBoard();
 })();
 
 </script>
