@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="monetag" content="c2932cc88513fbaeeca95271dd2094ba">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9038474948414314" crossorigin="anonymous"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#1c1a17">
 <meta name="description" content="Busy Brains — study smarter with SHS resources, quizzes, flashcards, formulas and WASSCE-style practice.">
@@ -650,6 +651,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 .pdf-page{background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden;min-height:120px}
 .pdf-page canvas{display:block;width:100%;height:auto}
 .pdf-frame{width:100%;height:80vh;border:1px solid var(--border);border-radius:6px;background:#fff}
+
+.apod{display:grid;grid-template-columns:minmax(0,1fr);gap:0;background:var(--paper);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+.apod img{width:100%;max-height:360px;object-fit:cover;display:block;background:var(--sand)}
+.apod-body{padding:18px}
+.apod-body h3{margin:0 0 6px;font-size:1.1rem}
+.apod-body .apod-meta{color:var(--muted);font-size:.85rem;margin-bottom:10px}
+.apod-body p{margin:0 0 12px;line-height:1.6}
+.apod-body .apod-more{background:none;border:0;color:var(--clay-dark);font-weight:700;cursor:pointer;padding:0}
+@media(min-width:760px){.apod{grid-template-columns:1fr 1fr}.apod img{max-height:none;height:100%}}
 </style>
 </head>
 
@@ -727,6 +737,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
       <div id="homeRecent" class="resource-list">
         <div class="empty"><strong>Loading resources…</strong>Connecting to the PDF library.</div>
       </div>
+    </div>
+
+    <div class="section" id="apodSection">
+      <div class="section-head">
+        <div><h2>🔭 Space picture of the day</h2><p>A new picture and explanation from NASA every day.</p></div>
+      </div>
+      <div id="apodBox"><div class="empty"><strong>Loading…</strong>Contacting NASA.</div></div>
     </div>
 
     <div class="section">
@@ -1095,6 +1112,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
      Paste your key between the quotes. Restrict it to your website
      (HTTP referrers) and to "YouTube Data API v3" in Google Cloud. */
   const YOUTUBE_API_KEY = "AIzaSyBEEFgIZ_-WG_lsBE7-kJTLZB0M2YxdfW4";
+
+  /* NASA API key (free, from https://api.nasa.gov). Paste it between the quotes.
+     Leave it empty to use NASA's shared DEMO_KEY (works, but has a low limit). */
+  const NASA_API_KEY = "";
 
   let sb = null;
   try {
@@ -1478,6 +1499,67 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
       if (!files.length) box.replaceChildren();
       ext.forEach((x) => box.appendChild(createExtCard(x)));
     }
+  }
+
+
+  /* ---------- NASA Astronomy Picture of the Day (home page) ---------- */
+  async function loadApod() {
+    const box = $("apodBox");
+    if (!box) return;
+    const sec = $("apodSection");
+    const today = new Date().toISOString().slice(0, 10);
+    let data = null;
+    try {
+      const c = JSON.parse(localStorage.getItem("bb_apod") || "null");
+      if (c && c.day === today && c.data) data = c.data;
+    } catch (e) {}
+    if (!data) {
+      try {
+        const url = "https://api.nasa.gov/planetary/apod?thumbs=true&api_key=" +
+          encodeURIComponent(NASA_API_KEY || "DEMO_KEY");
+        const r = await fetch(url);
+        if (!r.ok) throw new Error("http " + r.status);
+        data = await r.json();
+        try { localStorage.setItem("bb_apod", JSON.stringify({ day: today, data: data })); } catch (e) {}
+      } catch (e) {
+        if (sec) sec.classList.add("hidden");
+        return;
+      }
+    }
+    const img = data.media_type === "video" ? data.thumbnail_url : (data.url || data.hdurl);
+    const card = el("div", "apod");
+    if (img && /^https:\/\//.test(img)) {
+      const im = el("img");
+      im.src = img;
+      im.alt = data.title || "NASA picture of the day";
+      im.loading = "lazy";
+      card.appendChild(im);
+    }
+    const body = el("div", "apod-body");
+    body.appendChild(el("h3", "", data.title || "Picture of the day"));
+    body.appendChild(el("div", "apod-meta", [data.date, data.copyright ? "© " + String(data.copyright).trim() : "Credit: NASA"].filter(Boolean).join(" · ")));
+    const full = String(data.explanation || "");
+    const short = full.length > 260 ? full.slice(0, 260).replace(/\s+\S*$/, "") + "…" : full;
+    const p = el("p", "", short);
+    body.appendChild(p);
+    if (short !== full) {
+      const more = el("button", "apod-more", "Read more");
+      let open = false;
+      more.type = "button";
+      more.addEventListener("click", () => {
+        open = !open;
+        p.textContent = open ? full : short;
+        more.textContent = open ? "Show less" : "Read more";
+      });
+      body.appendChild(more);
+    }
+    if (data.media_type === "video" && data.url && /^https:\/\//.test(data.url)) {
+      const a = el("a", "btn btn-outline btn-small", "Watch the video →");
+      a.href = data.url; a.target = "_blank"; a.rel = "noopener noreferrer";
+      body.appendChild(a);
+    }
+    card.appendChild(body);
+    box.replaceChildren(card);
   }
 
   function renderAll() {
@@ -2690,1025 +2772,4 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 
   function queueRpc(fn, args) {
     lbQueue = lbQueue.then(async () => {
-      let data = null;
-      try {
-        const res = await sb.rpc(fn, args);
-        if (res.error) throw res.error;
-        data = res.data;
-      } catch (err) {
-        const msg = err && err.message ? err.message : "";
-        if (msg.includes("invalid_player")) clearPlayer();
-        else if (!/too_fast|slow_down/.test(msg)) console.warn("Leaderboard update failed:", msg);
-      }
-      await sleep(700);
-      return data;
-    });
-    return lbQueue;
-  }
-
-  function applyStats(d) {
-    if (!d || !player) return;
-    player.points = d.points;
-    player.correct = d.correct_answers;
-    player.answered = d.questions_answered;
-    player.quizzes = d.quizzes_completed;
-    barMode = "";
-    renderPlayerSlots();
-    updateQuizScoreLine();
-  }
-
-  function recordAnswer(correct) {
-    if (!player || !sb) return;
-
-    /* show the points straight away, the server confirms right after */
-    if (correct) player.points += QUIZ_POINTS;
-
-    queueRpc("record_answer", {
-      p_username: player.name,
-      p_token: player.token,
-      p_correct: !!correct
-    }).then(applyStats);
-  }
-
-  function finishQuizOnBoard() {
-    if (!player || !sb) return;
-
-    queueRpc("finish_quiz", { p_username: player.name, p_token: player.token }).then((d) => {
-      applyStats(d);
-      refreshBoard();
-    });
-  }
-
-  /* ---- reading the board ---- */
-
-  function renderRows(container, rows, limit) {
-    container.replaceChildren();
-
-    if (boardError) {
-      container.appendChild(el("div", "empty", boardError));
-      return;
-    }
-
-    if (!rows.length) {
-      const e = el("div", "empty");
-      e.appendChild(el("strong", "", "No scores yet"));
-      e.appendChild(document.createTextNode("Join and be the first on the board!"));
-      container.appendChild(e);
-      return;
-    }
-
-    const medals = ["🥇", "🥈", "🥉"];
-
-    rows.slice(0, limit).forEach((row, i) => {
-      const mine = player && row.username_key === player.name.toLowerCase();
-      const line = el("div", "lb-row" + (mine ? " me" : ""));
-
-      line.appendChild(el("span", "lb-rank", i < 3 ? medals[i] : String(i + 1)));
-
-      const who = el("span", "lb-name");
-      who.appendChild(el("strong", "", row.display_name + (mine ? " (you)" : "")));
-      who.appendChild(el("small", "", row.correct_answers + " correct · " + row.quizzes_completed + " quizzes"));
-      line.appendChild(who);
-
-      line.appendChild(el("span", "lb-points", row.points + " pts"));
-      container.appendChild(line);
-    });
-  }
-
-  function renderBoards() {
-    renderRows($("lbList"), boardRows, 50);
-    renderRows($("miniBoard"), boardRows, 5);
-  }
-
-  async function syncMe() {
-    if (!player || !sb) return;
-
-    const { data, error } = await sb
-      .from("leaderboard")
-      .select("points,correct_answers,questions_answered,quizzes_completed")
-      .eq("username_key", player.name.toLowerCase())
-      .maybeSingle();
-
-    if (error) return;
-
-    if (!data) {
-      /* the account was removed on the server */
-      clearPlayer();
-      return;
-    }
-
-    player.points = data.points;
-    player.correct = data.correct_answers;
-    player.answered = data.questions_answered;
-    player.quizzes = data.quizzes_completed;
-
-    const ahead = await sb
-      .from("leaderboard")
-      .select("username_key", { count: "exact", head: true })
-      .gt("points", data.points);
-
-    player.rank = ahead.error ? null : (ahead.count || 0) + 1;
-
-    barMode = "";
-    renderPlayerSlots();
-    updateQuizScoreLine();
-  }
-
-  async function refreshBoard() {
-    if (!sb) {
-      boardError = "The leaderboard is not connected.";
-      renderBoards();
-      return;
-    }
-
-    const { data, error } = await sb
-      .from("leaderboard")
-      .select("username_key,display_name,points,correct_answers,quizzes_completed")
-      .order("points", { ascending: false })
-      .order("updated_at", { ascending: true })
-      .limit(50);
-
-    if (error) {
-      console.error("Leaderboard error:", error);
-      boardError = friendlyError(error);
-      boardRows = [];
-    } else {
-      boardError = "";
-      boardRows = data || [];
-    }
-
-    renderBoards();
-    syncMe();
-  }
-
-  function scheduleBoardRefresh() {
-    if (activeView !== "leaderboard" && activeView !== "practice") return;
-    clearTimeout(boardTimer);
-    boardTimer = setTimeout(refreshBoard, 900);
-  }
-
-  function startLiveBoard() {
-    /* instant updates when other students score */
-    try {
-      if (sb) {
-        sb.channel("busybrains-leaderboard")
-          .on("postgres_changes", { event: "*", schema: "public", table: "leaderboard" }, scheduleBoardRefresh)
-          .subscribe();
-      }
-    } catch (e) {
-      console.warn("Live updates unavailable:", e);
-    }
-
-    /* safety net: refresh every 25 seconds while the board is on screen */
-    setInterval(() => {
-      if (!document.hidden && (activeView === "leaderboard" || activeView === "practice")) refreshBoard();
-    }, 25000);
-  }
-
-  /* =========================================================
-     PRACTICE: FLASHCARDS
-     ========================================================= */
-
-  const CARDS = [
-    ["What is the SI unit of force?", "The newton (N)"],
-    ["Formula for speed?", "Speed = distance ÷ time"],
-    ["Which organelle is the 'powerhouse' of the cell?", "The mitochondrion"],
-    ["Chemical formula of water?", "H₂O"],
-    ["What does the atomic number tell you?", "The number of protons in the atom"],
-    ["State Ohm's law.", "V = IR (voltage = current × resistance)"],
-    ["What is the pH of a neutral solution?", "7"],
-    ["State Pythagoras' theorem.", "In a right-angled triangle, a² + b² = c², where c is the hypotenuse"],
-    ["What gas do plants take in for photosynthesis?", "Carbon dioxide (CO₂)"],
-    ["What is the formula for density?", "Density = mass ÷ volume"]
-  ];
-
-  let ci = 0;
-  let flipped = false;
-
-  function renderFlash() {
-    const card = $("flashcard");
-    const [front, back] = CARDS[ci];
-
-    card.replaceChildren();
-    card.appendChild(document.createTextNode(flipped ? back : front));
-    card.appendChild(el("small", "", flipped ? "Tap to see the question" : "Tap to reveal answer"));
-
-    $("flashFlip").textContent = flipped ? "Show question" : "Reveal answer";
-    $("flashProgress").textContent = "Card " + (ci + 1) + " of " + CARDS.length;
-  }
-
-  function flipCard() {
-    flipped = !flipped;
-    renderFlash();
-  }
-
-  $("flashcard").addEventListener("click", flipCard);
-  $("flashcard").addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      flipCard();
-    }
-  });
-  $("flashFlip").addEventListener("click", flipCard);
-
-  $("flashPrev").addEventListener("click", () => {
-    ci = (ci - 1 + CARDS.length) % CARDS.length;
-    flipped = false;
-    renderFlash();
-  });
-
-  $("flashNext").addEventListener("click", () => {
-    ci = (ci + 1) % CARDS.length;
-    flipped = false;
-    renderFlash();
-  });
-
-  /* =========================================================
-     PRACTICE: FORMULA BANK
-     ========================================================= */
-
-  const FORMULAS = [
-    ["Speed", "speed = distance ÷ time", "Physics"],
-    ["Acceleration", "v = u + at", "Physics"],
-    ["Force", "F = ma", "Physics"],
-    ["Pressure", "P = F ÷ A", "Physics"],
-    ["Work done", "W = F × d", "Physics"],
-    ["Power", "P = W ÷ t", "Physics"],
-    ["Ohm's law", "V = IR", "Physics"],
-    ["Density", "ρ = m ÷ V", "Physics / Chemistry"],
-    ["Number of moles", "n = m ÷ M", "Chemistry"],
-    ["Area of a circle", "A = πr²", "Mathematics"],
-    ["Circumference", "C = 2πr", "Mathematics"],
-    ["Pythagoras", "a² + b² = c²", "Mathematics"],
-    ["Quadratic formula", "x = (−b ± √(b² − 4ac)) ÷ 2a", "Mathematics"],
-    ["Gradient", "m = (y₂ − y₁) ÷ (x₂ − x₁)", "Mathematics"],
-    ["Simple interest", "I = PRT ÷ 100", "Mathematics"]
-  ];
-
-  function renderFormulas(filter) {
-    const grid = $("formulaGrid");
-    const q = (filter || "").trim().toLowerCase();
-
-    const list = FORMULAS.filter((f) => !q || f.join(" ").toLowerCase().includes(q));
-
-    grid.replaceChildren();
-
-    if (!list.length) {
-      const box = el("div", "empty");
-      box.appendChild(el("strong", "", "No match"));
-      box.appendChild(document.createTextNode("Try another word."));
-      grid.appendChild(box);
-      return;
-    }
-
-    list.forEach(([name, formula, topic]) => {
-      const card = el("div", "formula");
-      card.appendChild(el("strong", "", name));
-      card.appendChild(el("code", "", formula));
-      card.appendChild(el("small", "", topic));
-      grid.appendChild(card);
-    });
-  }
-
-  $("formulaSearch").addEventListener("input", (e) => renderFormulas(e.target.value));
-
-  /* =========================================================
-     STUDY PLANNER
-     ========================================================= */
-
-  function todayLocal() {
-    const d = new Date();
-    const pad = (n) => String(n).padStart(2, "0");
-    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
-  }
-
-  function renderTasks() {
-    const list = $("taskList");
-    const tasks = readList(KEYS.tasks);
-
-    list.replaceChildren();
-
-    if (!tasks.length) {
-      const box = el("div", "empty");
-      box.appendChild(el("strong", "", "No study tasks yet"));
-      box.appendChild(document.createTextNode("Add your first revision task above."));
-      list.appendChild(box);
-      return;
-    }
-
-    const sorted = tasks.slice().sort((a, b) => {
-      if (a.done !== b.done) return a.done ? 1 : -1;
-      return String(a.date || "9999").localeCompare(String(b.date || "9999"));
-    });
-
-    sorted.forEach((t) => {
-      const row = el("div", "task" + (t.done ? " done" : ""));
-
-      const box = document.createElement("input");
-      box.type = "checkbox";
-      box.checked = !!t.done;
-      box.dataset.task = t.id;
-      box.setAttribute("aria-label", "Mark task done");
-      row.appendChild(box);
-
-      const main = el("div", "task-main");
-      main.appendChild(el("div", "task-title", t.title));
-
-      const sub = [t.subject, t.date ? formatDate(t.date + "T00:00:00") : "", t.duration]
-        .filter(Boolean)
-        .join(" • ");
-      main.appendChild(el("div", "task-sub", sub));
-      row.appendChild(main);
-
-      const del = el("button", "icon-btn", "✕");
-      del.type = "button";
-      del.dataset.deleteTask = t.id;
-      del.title = "Delete task";
-      del.setAttribute("aria-label", "Delete task");
-      row.appendChild(del);
-
-      list.appendChild(row);
-    });
-  }
-
-  $("taskForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const title = $("taskTitle").value.trim();
-    if (!title) return;
-
-    const tasks = readList(KEYS.tasks);
-    tasks.push({
-      id: String(Date.now()) + Math.random().toString(36).slice(2, 6),
-      title: title,
-      subject: $("taskSubject").value,
-      date: $("taskDate").value,
-      duration: $("taskDuration").value,
-      done: false
-    });
-
-    writeList(KEYS.tasks, tasks);
-    $("taskTitle").value = "";
-
-    updateCounts();
-    renderTasks();
-  });
-
-  $("taskList").addEventListener("change", (e) => {
-    const box = e.target.closest("input[data-task]");
-    if (!box) return;
-
-    const tasks = readList(KEYS.tasks);
-    const t = tasks.find((x) => x.id === box.dataset.task);
-    if (t) t.done = box.checked;
-
-    writeList(KEYS.tasks, tasks);
-    updateCounts();
-    renderTasks();
-  });
-
-  $("taskList").addEventListener("click", (e) => {
-    const del = e.target.closest("[data-delete-task]");
-    if (!del) return;
-
-    writeList(
-      KEYS.tasks,
-      readList(KEYS.tasks).filter((x) => x.id !== del.dataset.deleteTask)
-    );
-
-    updateCounts();
-    renderTasks();
-  });
-
-  $("clearCompleted").addEventListener("click", () => {
-    writeList(KEYS.tasks, readList(KEYS.tasks).filter((x) => !x.done));
-    updateCounts();
-    renderTasks();
-  });
-
-  /* =========================================================
-     LEARN: VIDEOS + EXPLANATION + PICTURES
-     ========================================================= */
-
-  const LEARN_TOPICS = [
-    "Photosynthesis",
-    "Quadratic equations",
-    "Ohm's law",
-    "Acids and bases",
-    "Cell division",
-    "Newton's laws of motion",
-    "Fractions",
-    "Chemical bonding"
-  ];
-  const LEARN_CACHE = "busybrains_learn_cache";
-  const CACHE_MS = 24 * 60 * 60 * 1000;
-
-  let learnToken = 0;
-  let pictures = [];
-
-  function cacheGet(topic) {
-    try {
-      const all = JSON.parse(localStorage.getItem(LEARN_CACHE) || "{}");
-      const hit = all[topic.toLowerCase()];
-      if (hit && Date.now() - hit.t < CACHE_MS) return hit.v;
-    } catch (e) {}
-    return null;
-  }
-
-  function cacheSet(topic, value) {
-    try {
-      const all = JSON.parse(localStorage.getItem(LEARN_CACHE) || "{}");
-      all[topic.toLowerCase()] = { t: Date.now(), v: value };
-      const keys = Object.keys(all);
-      if (keys.length > 30) {
-        keys
-          .sort((a, b) => all[a].t - all[b].t)
-          .slice(0, keys.length - 30)
-          .forEach((k) => delete all[k]);
-      }
-      localStorage.setItem(LEARN_CACHE, JSON.stringify(all));
-    } catch (e) {}
-  }
-
-  function decodeText(html) {
-    const t = document.createElement("textarea");
-    t.innerHTML = html;
-    return t.value;
-  }
-
-  function stripHtml(html) {
-    try {
-      return new DOMParser().parseFromString(html || "", "text/html").body.textContent.trim();
-    } catch (e) {
-      return "";
-    }
-  }
-
-  function stopVideo() {
-    const frame = $("videoFrame");
-    if (frame && frame.getAttribute("src")) frame.removeAttribute("src");
-  }
-
-  /* ---- fetchers ---- */
-
-  async function fetchVideos(topic) {
-    const cached = cacheGet(topic);
-    if (cached) return cached;
-
-    if (!YOUTUBE_API_KEY) throw new Error("no-key");
-
-    const params = new URLSearchParams({
-      part: "snippet",
-      type: "video",
-      maxResults: "8",
-      q: topic + " lesson",
-      safeSearch: "strict",
-      videoEmbeddable: "true",
-      relevanceLanguage: "en",
-      key: YOUTUBE_API_KEY
-    });
-
-    const res = await fetch("https://www.googleapis.com/youtube/v3/search?" + params);
-    const json = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      const reason =
-        json && json.error && json.error.errors && json.error.errors[0]
-          ? json.error.errors[0].reason
-          : "error";
-      throw new Error(reason);
-    }
-
-    const videos = (json.items || [])
-      .filter((i) => i.id && /^[\w-]{11}$/.test(i.id.videoId || ""))
-      .map((i) => ({
-        id: i.id.videoId,
-        title: decodeText(i.snippet.title || "Video"),
-        channel: decodeText(i.snippet.channelTitle || ""),
-        thumb:
-          (i.snippet.thumbnails &&
-            (i.snippet.thumbnails.medium || i.snippet.thumbnails.default || {}).url) ||
-          ""
-      }));
-
-    cacheSet(topic, videos);
-    return videos;
-  }
-
-  async function fetchSummary(topic) {
-    const params = new URLSearchParams({
-      action: "query",
-      generator: "search",
-      gsrsearch: topic,
-      gsrlimit: "1",
-      prop: "extracts|info",
-      exintro: "1",
-      explaintext: "1",
-      exsentences: "5",
-      inprop: "url",
-      redirects: "1",
-      format: "json",
-      origin: "*"
-    });
-
-    const res = await fetch("https://en.wikipedia.org/w/api.php?" + params);
-    if (!res.ok) throw new Error("wiki");
-
-    const json = await res.json();
-    const pages = json.query && json.query.pages ? Object.values(json.query.pages) : [];
-    if (!pages.length) return null;
-
-    pages.sort((a, b) => (a.index || 0) - (b.index || 0));
-    const page = pages[0];
-    if (!page.extract) return null;
-
-    return { title: page.title, text: page.extract.trim(), url: page.fullurl };
-  }
-
-  async function fetchPictures(topic) {
-    const params = new URLSearchParams({
-      action: "query",
-      generator: "search",
-      gsrnamespace: "6",
-      gsrsearch: topic,
-      gsrlimit: "16",
-      prop: "imageinfo",
-      iiprop: "url|mime|extmetadata",
-      iiurlwidth: "480",
-      format: "json",
-      origin: "*"
-    });
-
-    const res = await fetch("https://commons.wikimedia.org/w/api.php?" + params);
-    if (!res.ok) throw new Error("commons");
-
-    const json = await res.json();
-    const pages = json.query && json.query.pages ? Object.values(json.query.pages) : [];
-    pages.sort((a, b) => (a.index || 0) - (b.index || 0));
-
-    const okMime = ["image/jpeg", "image/png", "image/svg+xml", "image/webp", "image/gif"];
-
-    return pages
-      .map((pg) => {
-        const info = pg.imageinfo && pg.imageinfo[0];
-        if (!info || !okMime.includes(info.mime) || !info.thumburl) return null;
-
-        const meta = info.extmetadata || {};
-        return {
-          thumb: info.thumburl,
-          caption: String(pg.title || "").replace(/^File:/, "").replace(/\.[a-z0-9]+$/i, "").replace(/_/g, " "),
-          page: info.descriptionurl || "",
-          artist: stripHtml(meta.Artist && meta.Artist.value) || "Unknown author",
-          licence: stripHtml(meta.LicenseShortName && meta.LicenseShortName.value) || ""
-        };
-      })
-      .filter(Boolean)
-      .slice(0, 12);
-  }
-
-  /* ---- renderers ---- */
-
-  function showStatus(box, text) {
-    box.textContent = text;
-    box.classList.remove("hidden");
-  }
-
-  function playVideo(video, scroll) {
-    $("videoStage").classList.remove("hidden");
-    $("videoFrame").src =
-      "https://www.youtube-nocookie.com/embed/" + video.id + "?rel=0&modestbranding=1";
-    $("videoTitle").textContent = video.title;
-    $("videoLink").href = "https://www.youtube.com/watch?v=" + video.id;
-
-    document.querySelectorAll("#videoGrid .video-card").forEach((c) => {
-      c.classList.toggle("active", c.dataset.video === video.id);
-    });
-
-    if (scroll) $("videoStage").scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-
-  let currentVideos = [];
-
-  function renderVideos(videos) {
-    const grid = $("videoGrid");
-    grid.replaceChildren();
-    currentVideos = videos;
-
-    if (!videos.length) {
-      showStatus($("videoStatus"), "No videos found for this topic. Try different words.");
-      return;
-    }
-
-    videos.forEach((v) => {
-      const card = el("button", "video-card");
-      card.type = "button";
-      card.dataset.video = v.id;
-
-      if (/^https:\/\/i\.ytimg\.com\//.test(v.thumb)) {
-        const img = document.createElement("img");
-        img.src = v.thumb;
-        img.alt = "";
-        img.loading = "lazy";
-        card.appendChild(img);
-      }
-
-      card.appendChild(el("span", "vc-title", v.title));
-      card.appendChild(el("span", "vc-channel", v.channel));
-      grid.appendChild(card);
-    });
-
-    playVideo(videos[0], false);
-  }
-
-  function videoErrorText(err) {
-    const msg = err && err.message ? err.message : "";
-    if (msg === "no-key") return "Video search is being set up. Please check back soon. The explanation and pictures below still work.";
-    if (msg === "quotaExceeded" || msg === "dailyLimitExceeded" || msg === "rateLimitExceeded")
-      return "Video search has reached its limit for today. Please try again tomorrow. The explanation and pictures below still work.";
-    return "Videos could not be loaded right now. The explanation and pictures below still work.";
-  }
-
-  function renderSummary(data) {
-    const box = $("learnSummary");
-    box.replaceChildren();
-
-    if (!data) {
-      box.appendChild(el("p", "note", "No quick explanation found for this topic. Try different words."));
-      return;
-    }
-
-    const h = el("h3", "", data.title);
-    h.style.margin = "0 0 8px";
-    box.appendChild(h);
-
-    const p = el("p", "", data.text);
-    p.style.margin = "0 0 10px";
-    box.appendChild(p);
-
-    if (data.url) {
-      const a = el("a", "note", "Read more on Wikipedia ↗");
-      a.href = data.url;
-      a.target = "_blank";
-      a.rel = "noopener";
-      box.appendChild(a);
-    }
-  }
-
-  function renderPictures(list) {
-    const grid = $("pictureGrid");
-    grid.replaceChildren();
-    pictures = list;
-
-    if (!list.length) {
-      showStatus($("pictureStatus"), "No pictures found for this topic. Try different words.");
-      return;
-    }
-
-    list.forEach((pic, i) => {
-      const b = el("button", "picture-card");
-      b.type = "button";
-      b.dataset.pic = i;
-      b.setAttribute("aria-label", "View picture: " + pic.caption);
-
-      const img = document.createElement("img");
-      img.src = pic.thumb;
-      img.alt = pic.caption;
-      img.loading = "lazy";
-      b.appendChild(img);
-
-      grid.appendChild(b);
-    });
-  }
-
-  /* ---- main search ---- */
-
-  async function runLearn(raw) {
-    const topic = String(raw || "").trim().slice(0, 80);
-    if (!topic) return;
-
-    const token = ++learnToken;
-    $("learnInput").value = topic;
-
-    $("learnIntro").classList.add("hidden");
-    $("learnResults").classList.remove("hidden");
-
-    stopVideo();
-    $("videoStage").classList.add("hidden");
-    $("videoStatus").classList.add("hidden");
-    $("pictureStatus").classList.add("hidden");
-    $("videoGrid").replaceChildren(el("div", "empty", "Loading videos…"));
-    $("pictureGrid").replaceChildren(el("div", "empty", "Loading pictures…"));
-    $("learnSummary").replaceChildren(el("p", "note", "Loading explanation…"));
-
-    const [v, s, p] = await Promise.allSettled([
-      fetchVideos(topic),
-      fetchSummary(topic),
-      fetchPictures(topic)
-    ]);
-
-    if (token !== learnToken) return;
-
-    $("videoGrid").replaceChildren();
-    $("pictureGrid").replaceChildren();
-
-    if (v.status === "fulfilled") renderVideos(v.value);
-    else {
-      if (!v.reason || v.reason.message !== "no-key") console.error("Video search failed:", v.reason);
-      showStatus($("videoStatus"), videoErrorText(v.reason));
-    }
-
-    if (s.status === "fulfilled") renderSummary(s.value);
-    else {
-      console.error("Explanation failed:", s.reason);
-      renderSummary(null);
-    }
-
-    if (p.status === "fulfilled") renderPictures(p.value);
-    else {
-      console.error("Pictures failed:", p.reason);
-      showStatus($("pictureStatus"), "Pictures could not be loaded right now.");
-    }
-  }
-
-  $("learnForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    runLearn($("learnInput").value);
-  });
-
-  (function buildSuggestions() {
-    const row = $("learnSuggest");
-    LEARN_TOPICS.forEach((t) => {
-      const b = el("button", "chip", t);
-      b.type = "button";
-      b.dataset.topic = t;
-      row.appendChild(b);
-    });
-    row.addEventListener("click", (e) => {
-      const chip = e.target.closest(".chip");
-      if (chip) runLearn(chip.dataset.topic);
-    });
-  })();
-
-  $("videoGrid").addEventListener("click", (e) => {
-    const card = e.target.closest(".video-card");
-    if (!card) return;
-    const v = currentVideos.find((x) => x.id === card.dataset.video);
-    if (v) playVideo(v, true);
-  });
-
-  /* ---- picture viewer ---- */
-
-  const lightbox = $("lightbox");
-
-  function closeLightbox() {
-    lightbox.classList.add("hidden");
-    $("lightboxImg").removeAttribute("src");
-  }
-
-  $("pictureGrid").addEventListener("click", (e) => {
-    const card = e.target.closest(".picture-card");
-    if (!card) return;
-
-    const pic = pictures[Number(card.dataset.pic)];
-    if (!pic) return;
-
-    $("lightboxImg").src = pic.thumb;
-    $("lightboxImg").alt = pic.caption;
-    $("lightboxCaption").textContent =
-      pic.caption + " — " + pic.artist + (pic.licence ? " (" + pic.licence + ")" : "");
-
-    const link = $("lightboxLink");
-    if (pic.page) {
-      link.href = pic.page;
-      link.classList.remove("hidden");
-    } else {
-      link.classList.add("hidden");
-    }
-
-    lightbox.classList.remove("hidden");
-  });
-
-  $("lightboxClose").addEventListener("click", closeLightbox);
-  lightbox.addEventListener("click", (e) => {
-    if (e.target === lightbox) closeLightbox();
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !lightbox.classList.contains("hidden")) closeLightbox();
-  });
-
-  /* =========================================================
-     GHANA GES RESOURCES (curriculumresources.edu.gh)
-     ========================================================= */
-
-  const GES_SITE = "https://curriculumresources.edu.gh";
-  const GES_PER_PAGE = 30;
-  const GES_SUBJECTS = [
-    "Mathematics",
-    "English",
-    "Integrated Science",
-    "Social Studies",
-    "Physics",
-    "Chemistry",
-    "Biology",
-    "ICT",
-    "Economics",
-    "Geography",
-    "History"
-  ];
-
-  let gesStarted = false;
-  let gesTerm = "";
-  let gesPage = 1;
-  let gesItems = [];
-  let gesMore = false;
-  let gesBusy = false;
-  let gesToken = 0;
-
-  function gesCleanTitle(raw) {
-    return stripHtml(raw).replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim() || "GES resource";
-  }
-
-  async function fetchGes(term, page) {
-    const params = new URLSearchParams({
-      mime_type: "application/pdf",
-      per_page: String(GES_PER_PAGE),
-      page: String(page),
-      _fields: "id,title,source_url,date"
-    });
-    if (term) params.set("search", term);
-
-    const res = await fetch(GES_SITE + "/wp-json/wp/v2/media?" + params);
-
-    /* WordPress answers 400 when the page number is past the last page */
-    if (res.status === 400 && page > 1) return [];
-    if (!res.ok) throw new Error("ges " + res.status);
-
-    const json = await res.json();
-    if (!Array.isArray(json)) throw new Error("ges format");
-
-    return json
-      .map((i) => ({
-        id: i.id,
-        title: gesCleanTitle(i.title && i.title.rendered),
-        url: String(i.source_url || ""),
-        date: i.date || ""
-      }))
-      .filter((i) => i.url.indexOf(GES_SITE + "/") === 0 && /\.pdf$/i.test(i.url));
-  }
-
-  function gesVisible() {
-    const hide = $("gesHideTeacher").checked;
-    return gesItems.filter((i) => !hide || !/teacher|\btm\b/i.test(i.title));
-  }
-
-  function renderGes() {
-    const box = $("gesResults");
-    const list = gesVisible();
-
-    box.replaceChildren();
-
-    if (!list.length) {
-      const e = el("div", "empty");
-      e.appendChild(el("strong", "", gesBusy ? "Searching…" : "No resources found"));
-      e.appendChild(
-        document.createTextNode(
-          gesBusy ? "Contacting the Ministry of Education website." : "Try another subject or untick “Hide teacher manuals”."
-        )
-      );
-      box.appendChild(e);
-    }
-
-    list.forEach((item) => {
-      const card = el("article", "resource-card");
-      card.appendChild(el("div", "pdf-icon", "PDF"));
-
-      const info = el("div", "resource-info");
-      info.appendChild(el("h3", "resource-title", item.title));
-
-      const meta = el("div", "resource-meta");
-      meta.appendChild(el("span", "subject-text", "Ghana GES"));
-      const d = formatDate(item.date);
-      if (d) {
-        meta.appendChild(el("span", "", "•"));
-        meta.appendChild(el("span", "", d));
-      }
-      info.appendChild(meta);
-      card.appendChild(info);
-
-      const actions = el("div", "resource-actions");
-      const dl = el("button", "btn btn-primary btn-small", "Download");
-      dl.type = "button";
-      dl.dataset.ges = String(item.id);
-      actions.appendChild(dl);
-      card.appendChild(actions);
-
-      box.appendChild(card);
-    });
-
-    $("gesMore").classList.toggle("hidden", !gesMore || gesBusy);
-  }
-
-  async function runGes(term, append) {
-    const token = ++gesToken;
-    const status = $("gesStatus");
-
-    if (!append) {
-      gesTerm = String(term || "").trim().slice(0, 80);
-      gesPage = 1;
-      gesItems = [];
-      gesMore = false;
-      $("gesInput").value = gesTerm;
-      document.querySelectorAll("#gesSubjects .chip").forEach((c) => {
-        c.classList.toggle("active", c.dataset.subject.toLowerCase() === gesTerm.toLowerCase());
-      });
-    }
-
-    status.classList.add("hidden");
-    gesBusy = true;
-    renderGes();
-
-    try {
-      const found = await fetchGes(gesTerm, gesPage);
-      if (token !== gesToken) return;
-
-      const seen = new Set(gesItems.map((i) => i.id));
-      found.forEach((i) => {
-        if (!seen.has(i.id)) gesItems.push(i);
-      });
-      gesMore = found.length > 0;
-    } catch (err) {
-      if (token !== gesToken) return;
-      console.error("GES search failed:", err);
-      showStatus(
-        status,
-        "Could not reach the Ministry of Education website right now. Use the links below to browse it directly, or try again later."
-      );
-    }
-
-    gesBusy = false;
-    renderGes();
-  }
-
-  (function buildGesChips() {
-    const row = $("gesSubjects");
-    GES_SUBJECTS.forEach((t) => {
-      const b = el("button", "chip", t);
-      b.type = "button";
-      b.dataset.subject = t;
-      row.appendChild(b);
-    });
-    row.addEventListener("click", (e) => {
-      const chip = e.target.closest(".chip");
-      if (chip) runGes(chip.dataset.subject);
-    });
-  })();
-
-  $("gesForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    runGes($("gesInput").value);
-  });
-
-  $("gesHideTeacher").addEventListener("change", renderGes);
-
-  $("gesMore").addEventListener("click", () => {
-    gesPage++;
-    runGes(gesTerm, true);
-  });
-
-  $("gesResults").addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-ges]");
-    if (!btn) return;
-
-    const item = gesItems.find((i) => String(i.id) === btn.dataset.ges);
-    if (!item) return;
-
-    returnView = "ges";
-    openDownloadFile({
-      id: "ges-" + item.id,
-      title: item.title,
-      subject: "Ghana GES",
-      type: "Ministry of Education",
-      created_at: item.date,
-      external_url: item.url
-    });
-  });
-
-  /* =========================================================
-     START
-     ========================================================= */
-
-  $("taskDate").value = todayLocal();
-  renderQuizPicker();
-  loadPlayer();
-  renderPlayerSlots();
-  renderFlash();
-  renderFormulas("");
-  renderAll();
-  loadFiles();
-  refreshBoard();
-  startLiveBoard();
-})();
-
-</script>
-</body>
-</html>
+      l
