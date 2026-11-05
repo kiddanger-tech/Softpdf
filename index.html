@@ -652,14 +652,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 .pdf-page canvas{display:block;width:100%;height:auto}
 .pdf-frame{width:100%;height:80vh;border:1px solid var(--border);border-radius:6px;background:#fff}
 
-.apod{display:grid;grid-template-columns:minmax(0,1fr);gap:0;background:var(--paper);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
-.apod img{width:100%;max-height:360px;object-fit:cover;display:block;background:var(--sand)}
-.apod-body{padding:18px}
-.apod-body h3{margin:0 0 6px;font-size:1.1rem}
-.apod-body .apod-meta{color:var(--muted);font-size:.85rem;margin-bottom:10px}
-.apod-body p{margin:0 0 12px;line-height:1.6}
-.apod-body .apod-more{background:none;border:0;color:var(--clay-dark);font-weight:700;cursor:pointer;padding:0}
-@media(min-width:760px){.apod{grid-template-columns:1fr 1fr}.apod img{max-height:none;height:100%}}
 </style>
 </head>
 
@@ -739,13 +731,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
       </div>
     </div>
 
-    <div class="section" id="apodSection">
-      <div class="section-head">
-        <div><h2>🔭 Space picture of the day</h2><p>A new picture and explanation from NASA every day.</p></div>
-      </div>
-      <div id="apodBox"><div class="empty"><strong>Loading…</strong>Contacting NASA.</div></div>
-    </div>
-
     <div class="section">
       <div class="section-head">
         <div><h2>WASSCE preparation</h2><p>Practise topics, test yourself and review your notes.</p></div>
@@ -768,16 +753,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
     </div>
     <div class="search-box"><span>🔍</span><input id="searchInput" type="search" placeholder="Search PDFs, subjects or topics…" autocomplete="off"></div>
 
-    <div class="ad-container banner-ad">
-      <script>
-        var atOptions={'key':'232ed7b82026d98d03cefffdaacb5d80','format':'iframe','height':50,'width':320,'params':{}};
-      </script>
-      <script src="https://ransomescapesmooth.com/232ed7b82026d98d03cefffdaacb5d80/invoke.js"></script>
-    </div>
-    <div class="ad-container native-ad">
-      <script async="async" data-cfasync="false" src="https://ransomescapesmooth.com/2aaa6d636939a9cc6825010316fd8ca6/invoke.js"></script>
-      <div id="container-2aaa6d636939a9cc6825010316fd8ca6"></div>
-    </div>
+    <div class="ad-container banner-ad" data-ad="banner"></div>
+    <div class="ad-container native-ad" data-ad="native"></div>
 
     <div class="section">
       <div class="section-head"><h2>Class</h2></div>
@@ -1060,12 +1037,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 <div id="downloadScreen" class="download-screen hidden">
   <div class="download-main">
     <button id="backButton" class="top-back">← Back to library</button>
-    <div class="ad-container banner-ad">
-      <script>
-        var atOptions={'key':'232ed7b82026d98d03cefffdaacb5d80','format':'iframe','height':50,'width':320,'params':{}};
-      </script>
-      <script src="https://ransomescapesmooth.com/232ed7b82026d98d03cefffdaacb5d80/invoke.js"></script>
-    </div>
+    <div class="ad-container banner-ad" data-ad="banner"></div>
     <div class="download-card">
       <div class="eyebrow" style="color:var(--clay)">Busy Brains PDF Library</div>
       <h2 id="downloadTitle">Your PDF</h2>
@@ -1113,9 +1085,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
      (HTTP referrers) and to "YouTube Data API v3" in Google Cloud. */
   const YOUTUBE_API_KEY = "AIzaSyBEEFgIZ_-WG_lsBE7-kJTLZB0M2YxdfW4";
 
-  /* NASA API key (free, from https://api.nasa.gov). Paste it between the quotes.
-     Leave it empty to use NASA's shared DEMO_KEY (works, but has a low limit). */
-  const NASA_API_KEY = "";
 
   let sb = null;
   try {
@@ -1502,64 +1471,40 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
   }
 
 
-  /* ---------- NASA Astronomy Picture of the Day (home page) ---------- */
-  async function loadApod() {
-    const box = $("apodBox");
-    if (!box) return;
-    const sec = $("apodSection");
-    const today = new Date().toISOString().slice(0, 10);
-    let data = null;
-    try {
-      const c = JSON.parse(localStorage.getItem("bb_apod") || "null");
-      if (c && c.day === today && c.data) data = c.data;
-    } catch (e) {}
-    if (!data) {
-      try {
-        const url = "https://api.nasa.gov/planetary/apod?thumbs=true&api_key=" +
-          encodeURIComponent(NASA_API_KEY || "DEMO_KEY");
-        const r = await fetch(url);
-        if (!r.ok) throw new Error("http " + r.status);
-        data = await r.json();
-        try { localStorage.setItem("bb_apod", JSON.stringify({ day: today, data: data })); } catch (e) {}
-      } catch (e) {
-        if (sec) sec.classList.add("hidden");
-        return;
-      }
-    }
-    const img = data.media_type === "video" ? data.thumbnail_url : (data.url || data.hdurl);
-    const card = el("div", "apod");
-    if (img && /^https:\/\//.test(img)) {
-      const im = el("img");
-      im.src = img;
-      im.alt = data.title || "NASA picture of the day";
-      im.loading = "lazy";
-      card.appendChild(im);
-    }
-    const body = el("div", "apod-body");
-    body.appendChild(el("h3", "", data.title || "Picture of the day"));
-    body.appendChild(el("div", "apod-meta", [data.date, data.copyright ? "© " + String(data.copyright).trim() : "Credit: NASA"].filter(Boolean).join(" · ")));
-    const full = String(data.explanation || "");
-    const short = full.length > 260 ? full.slice(0, 260).replace(/\s+\S*$/, "") + "…" : full;
-    const p = el("p", "", short);
-    body.appendChild(p);
-    if (short !== full) {
-      const more = el("button", "apod-more", "Read more");
-      let open = false;
-      more.type = "button";
-      more.addEventListener("click", () => {
-        open = !open;
-        p.textContent = open ? full : short;
-        more.textContent = open ? "Show less" : "Read more";
-      });
-      body.appendChild(more);
-    }
-    if (data.media_type === "video" && data.url && /^https:\/\//.test(data.url)) {
-      const a = el("a", "btn btn-outline btn-small", "Watch the video →");
-      a.href = data.url; a.target = "_blank"; a.rel = "noopener noreferrer";
-      body.appendChild(a);
-    }
-    card.appendChild(body);
-    box.replaceChildren(card);
+
+
+  /* ---------- Ads: loaded after the page, inside sandboxed frames ----------
+     The ad scripts used to sit inline in the page and could freeze the whole site
+     when the ad server was slow or blocked. Now each ad loads in its own frame,
+     only when it scrolls into view, so the site never waits for it. */
+  const AD_KEY_BANNER = "232ed7b82026d98d03cefffdaacb5d80";
+  const AD_KEY_NATIVE = "2aaa6d636939a9cc6825010316fd8ca6";
+  const AD_HOST = "https://ransomescapesmooth.com/";
+
+  function mountAd(box) {
+    if (box.dataset.mounted) return;
+    box.dataset.mounted = "1";
+    const isBanner = box.dataset.ad === "banner";
+    const doc = isBanner
+      ? '<body style="margin:0"><script>atOptions={"key":"' + AD_KEY_BANNER + '","format":"iframe","height":50,"width":320,"params":{}};<\/script><script src="' + AD_HOST + AD_KEY_BANNER + '/invoke.js"><\/script></body>'
+      : '<body style="margin:0"><script async data-cfasync="false" src="' + AD_HOST + AD_KEY_NATIVE + '/invoke.js"><\/script><div id="container-' + AD_KEY_NATIVE + '"></div></body>';
+    const f = document.createElement("iframe");
+    f.setAttribute("sandbox", "allow-scripts allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation");
+    f.setAttribute("scrolling", "no");
+    f.setAttribute("title", "Advertisement");
+    f.loading = "lazy";
+    f.style.cssText = "border:0;max-width:100%;display:block;margin:0 auto;width:" + (isBanner ? "320px" : "100%") + ";height:" + (isBanner ? "50px" : "280px");
+    f.srcdoc = doc;
+    box.appendChild(f);
+  }
+
+  function startAds() {
+    const boxes = document.querySelectorAll("[data-ad]");
+    if (!("IntersectionObserver" in window)) { boxes.forEach(mountAd); return; }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) { mountAd(en.target); io.unobserve(en.target); } });
+    }, { rootMargin: "200px" });
+    boxes.forEach((b) => io.observe(b));
   }
 
   function renderAll() {
@@ -2772,4 +2717,81 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
 
   function queueRpc(fn, args) {
     lbQueue = lbQueue.then(async () => {
-      l
+      let data = null;
+      try {
+        const res = await sb.rpc(fn, args);
+        if (res.error) throw res.error;
+        data = res.data;
+      } catch (err) {
+        const msg = err && err.message ? err.message : "";
+        if (msg.includes("invalid_player")) clearPlayer();
+        else if (!/too_fast|slow_down/.test(msg)) console.warn("Leaderboard update failed:", msg);
+      }
+      await sleep(700);
+      return data;
+    });
+    return lbQueue;
+  }
+
+  function applyStats(d) {
+    if (!d || !player) return;
+    player.points = d.points;
+    player.correct = d.correct_answers;
+    player.answered = d.questions_answered;
+    player.quizzes = d.quizzes_completed;
+    barMode = "";
+    renderPlayerSlots();
+    updateQuizScoreLine();
+  }
+
+  function recordAnswer(correct) {
+    if (!player || !sb) return;
+
+    /* show the points straight away, the server confirms right after */
+    if (correct) player.points += QUIZ_POINTS;
+
+    queueRpc("record_answer", {
+      p_username: player.name,
+      p_token: player.token,
+      p_correct: !!correct
+    }).then(applyStats);
+  }
+
+  function finishQuizOnBoard() {
+    if (!player || !sb) return;
+
+    queueRpc("finish_quiz", { p_username: player.name, p_token: player.token }).then((d) => {
+      applyStats(d);
+      refreshBoard();
+    });
+  }
+
+  /* ---- reading the board ---- */
+
+  function renderRows(container, rows, limit) {
+    container.replaceChildren();
+
+    if (boardError) {
+      container.appendChild(el("div", "empty", boardError));
+      return;
+    }
+
+    if (!rows.length) {
+      const e = el("div", "empty");
+      e.appendChild(el("strong", "", "No scores yet"));
+      e.appendChild(document.createTextNode("Join and be the first on the board!"));
+      container.appendChild(e);
+      return;
+    }
+
+    const medals = ["🥇", "🥈", "🥉"];
+
+    rows.slice(0, limit).forEach((row, i) => {
+      const mine = player && row.username_key === player.name.toLowerCase();
+      const line = el("div", "lb-row" + (mine ? " me" : ""));
+
+      line.appendChild(el("span", "lb-rank", i < 3 ? medals[i] : String(i + 1)));
+
+      const who = el("span", "lb-name");
+      who.appendChild(el("strong", "", row.display_name + (mine ? " (you)" : "")));
+      who.appendChild(el("small", "", row.correct_answers + " correct · " + row.quizzes_complet
